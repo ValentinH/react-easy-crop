@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container, Img, CropArea } from './styles'
 
-const DEFAULT_ASPECT = 4 / 3
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
@@ -50,17 +49,16 @@ class Cropper extends React.Component {
         naturalWidth: this.image.naturalWidth,
         naturalHeight: this.image.naturalHeight,
       }
-      const aspect = this.props.aspect || DEFAULT_ASPECT
       let cropSize
-      if (this.image.width >= this.image.height * aspect) {
+      if (this.image.width >= this.image.height * this.props.aspect) {
         cropSize = {
-          width: this.image.height * aspect,
+          width: this.image.height * this.props.aspect,
           height: this.image.height,
         }
       } else {
         cropSize = {
           width: this.image.width,
-          height: this.image.width / aspect,
+          height: this.image.width / this.props.aspect,
         }
       }
       this.setState({ cropSize }, this.recomputeCropPosition)
@@ -206,6 +204,11 @@ class Cropper extends React.Component {
       </Container>
     )
   }
+}
+
+Cropper.defaultProps = {
+  zoom: 1,
+  aspect: 4 / 3,
 }
 
 export default Cropper
