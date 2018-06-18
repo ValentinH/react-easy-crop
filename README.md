@@ -79,11 +79,11 @@ class App extends React.Component {
 | [`onCropComplete`](#onCropCompleteProp) | Function |  | Called when the user stops moving the image or stops zooming. It will be passed the corresponding cropped area on the image in percentages and pixels |
 
 <a name="onCropCompleteProp"></a>
-#### onCropComplete
+#### onCropComplete(croppedArea, cropperAreaPixels)
 
 This callback is the one you should use to save the cropped area of the image. It's passed 2 arguments:
-1. croppedArea: coordinates and dimensions of the cropped area in percentage of the image dimension
-1. cropperAreaPixels: coordinates and dimensions of the cropped area in pixels.
+1. `croppedArea`: coordinates and dimensions of the cropped area in percentage of the image dimension
+1. `cropperAreaPixels`: coordinates and dimensions of the cropped area in pixels.
 
 Both arguments have the following shape:
 ```js
@@ -106,4 +106,4 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 
 ## License
 
-[MIT](https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE).
+[MIT](https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE)
