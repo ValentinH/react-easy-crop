@@ -1,7 +1,8 @@
 # react-easy-crop [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 A React component to crop images with easy interactions
 
-![image](https://user-images.githubusercontent.com/2678610/41558654-c6347da2-7341-11e8-9607-3cbbe6b5905b.png)
+
+![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
 ## Demo
 
