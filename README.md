@@ -18,19 +18,19 @@ Check out the [CodeSandbox example](https://codesandbox.io/s/q80jom5ql6).
 ## Installation
 
 ```shell
-yarn add @ricardo-ch/react-easy-crop
+yarn add react-easy-crop
 ```
 
 or
 
 ```shell
-npm install @ricardo-ch/react-easy-crop --save
+npm install react-easy-crop --save
 ```
 
 ## Basic usage
 
 ```js
-import Cropper from '@ricardo-ch/react-easy-crop'
+import Cropper from 'react-easy-crop'
 
 class App extends React.Component {
   state = {
