@@ -1,6 +1,6 @@
 {
   "name": "react-easy-crop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React component to crop images with easy interactions",
   "main": "dist/index.js",
   "repository": "git@github.com:ricardo-ch/react-easy-crop.git",
