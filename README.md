@@ -1,4 +1,4 @@
-# react-easy-crop [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+# react-easy-crop [![npm version](https://img.shields.io/npm/v/react-easy-crop.svg?style=flat-square)](https://www.npmjs.com/package/react-easy-crop)  ![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 A React component to crop images with easy interactions
 
 
