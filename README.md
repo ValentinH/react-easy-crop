@@ -12,6 +12,7 @@ Check out the [CodeSandbox example](https://codesandbox.io/s/q80jom5ql6).
 
 * Supports drag and zoom (using wheel) interactions
 * Provides crop dimensions as pixels and percentages
+* Supports any images format (JPEG, PNG, even GIF) as url or base 64 string
 * Mobile friendly
 
 ## Installation
