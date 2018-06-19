@@ -2,14 +2,14 @@
   "name": "react-easy-crop",
   "version": "1.0.0",
   "description": "A React component to crop images with easy interactions",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "git@github.com:ricardo-ch/react-easy-crop.git",
   "author": "Ricardo.ch",
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "build": "babel src -d dist",
-    "prepublishOnly": "yarn run build",
+    "prepublishOnly": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
