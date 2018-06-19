@@ -6,7 +6,9 @@ A React component to crop images with easy interactions
 
 ## Demo
 
-Check out the [CodeSandbox example](https://codesandbox.io/s/q80jom5ql6).
+Check out the examples:
+- [Basic example](https://codesandbox.io/s/q80jom5ql6)
+- [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
 
 ## Features
 
