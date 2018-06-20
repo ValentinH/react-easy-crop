@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
   template: path.join(__dirname, 'examples/src/index.html'),
@@ -21,11 +22,17 @@ module.exports = {
       },
     ],
   },
-  plugins: [htmlWebpackPlugin],
+  plugins: [
+    htmlWebpackPlugin,
+    new CopyWebpackPlugin([{ from: 'examples/src/images', to: 'images' }]),
+  ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   devServer: {
     port: 3001,
+  },
+  output: {
+    //publicPath: '/images/',
   },
 }

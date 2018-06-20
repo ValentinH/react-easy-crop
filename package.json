@@ -9,8 +9,10 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "build": "babel src -d dist",
+    "test": "yarn cypress:run",
     "prepublishOnly": "yarn build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
@@ -28,7 +30,9 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
+    "cypress": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.13.5",
     "react": "^16.4.1",
