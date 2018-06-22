@@ -1,6 +1,11 @@
-# react-easy-crop [![version][version-badge]][package]  [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+# react-easy-crop 
 
 A React component to crop images with easy interactions
+
+
+[![version][version-badge]][package] ![gzip size][gzip-badge] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+
+
 
 ![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
@@ -118,7 +123,8 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 [package]: https://www.npmjs.com/package/react-easy-crop
 [downloads-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
 [npmcharts]: http://npmcharts.com/compare/react-easy-crop
-[license-badge]: https://img.shields.io/npm/l/react-easy-crop.svg?style=flat-square
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/dist/index.js?compression=gzip&style=flat-square
+[license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
