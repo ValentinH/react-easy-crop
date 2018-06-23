@@ -17,7 +17,7 @@ Check out the examples:
 
 ## Features
 
-* Supports drag and zoom (using wheel) interactions
+* Supports drag and zoom interactions
 * Provides crop dimensions as pixels and percentages
 * Supports any images format (JPEG, PNG, even GIF) as url or base 64 string
 * Mobile friendly
