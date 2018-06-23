@@ -6,6 +6,7 @@ const MAX_ZOOM = 3
 
 class Cropper extends React.Component {
   image = null
+  container = null
   imageSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
@@ -17,10 +18,12 @@ class Cropper extends React.Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.computeSizes)
+    this.container.addEventListener('gesturestart', this.preventZoomSafari)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.computeSizes)
+    this.container.removeEventListener('gesturestart', this.preventZoomSafari)
     this.cleanEvents()
   }
 
@@ -29,6 +32,9 @@ class Cropper extends React.Component {
       this.recomputeCropPosition()
     }
   }
+
+  // this is to prevent Safari on iOS >= 10 to zoom the page
+  preventZoomSafari = e => e.preventDefault()
 
   cleanEvents = () => {
     document.removeEventListener('mousemove', this.onMouseMove)
@@ -237,6 +243,7 @@ class Cropper extends React.Component {
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
         onWheel={this.onWheel}
+        innerRef={el => (this.container = el)}
       >
         <Img
           src={this.props.image}
