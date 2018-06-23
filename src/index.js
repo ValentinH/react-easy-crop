@@ -9,6 +9,7 @@ class Cropper extends React.Component {
   imageSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
+  lastPinchDistance = 0
   rafTimeout = null
   state = {
     cropSize: null,
@@ -30,10 +31,10 @@ class Cropper extends React.Component {
   }
 
   cleanEvents = () => {
-    document.removeEventListener('mousemove', this.onDrag)
-    document.removeEventListener('touchmove', this.onDrag)
-    document.removeEventListener('mouseup', this.dragStopped)
-    document.removeEventListener('touchend', this.dragStopped)
+    document.removeEventListener('mousemove', this.onMouseMove)
+    document.removeEventListener('mouseup', this.onDragStopped)
+    document.removeEventListener('touchmove', this.onTouchMove)
+    document.removeEventListener('touchend', this.onDragStopped)
   }
 
   onImgLoad = () => {
@@ -65,27 +66,50 @@ class Cropper extends React.Component {
     }
   }
 
-  static getEventXY = e => ({
-    x: Number(e.clientX || (e.touches && e.touches[0].clientX)),
-    y: Number(e.clientY || (e.touches && e.touches[0].clientY)),
+  static getMousePoint = e => ({ x: Number(e.clientX), y: Number(e.clientY) })
+
+  static getTouchPoint = touch => ({
+    x: Number(touch.clientX),
+    y: Number(touch.clientY),
   })
 
-  dragStart = e => {
+  onMouseDown = e => {
     e.preventDefault()
-    const { x, y } = Cropper.getEventXY(e)
-    this.dragStartPosition = { x, y }
-    this.dragStartCrop = { x: this.props.crop.x, y: this.props.crop.y }
-    document.addEventListener('mousemove', this.onDrag)
-    document.addEventListener('touchmove', this.onDrag)
-    document.addEventListener('mouseup', this.dragStopped)
-    document.addEventListener('touchend', this.dragStopped)
+    document.addEventListener('mousemove', this.onMouseMove)
+    document.addEventListener('mouseup', this.onDragStopped)
+    this.onDragStart(Cropper.getMousePoint(e))
   }
 
-  onDrag = e => {
+  onMouseMove = e => this.onDrag(Cropper.getMousePoint(e))
+
+  onTouchStart = e => {
+    e.preventDefault()
+    document.addEventListener('touchmove', this.onTouchMove)
+    document.addEventListener('touchend', this.onDragStopped)
+    if (e.touches.length === 2) {
+      this.onPinchStart(e)
+    } else if (e.touches.length === 1) {
+      this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
+    }
+  }
+
+  onTouchMove = e => {
+    if (e.touches.length === 2) {
+      this.onPinchMove(e)
+    } else if (e.touches.length === 1) {
+      this.onDrag(Cropper.getTouchPoint(e.touches[0]))
+    }
+  }
+
+  onDragStart = ({ x, y }) => {
+    this.dragStartPosition = { x, y }
+    this.dragStartCrop = { x: this.props.crop.x, y: this.props.crop.y }
+  }
+
+  onDrag = ({ x, y }) => {
     if (this.rafTimeout) window.cancelAnimationFrame(this.rafTimeout)
 
     this.rafTimeout = window.requestAnimationFrame(() => {
-      const { x, y } = Cropper.getEventXY(e)
       if (x === undefined || y === undefined) return
       const offsetX = x - this.dragStartPosition.x
       const offsetY = y - this.dragStartPosition.y
@@ -107,15 +131,41 @@ class Cropper extends React.Component {
     })
   }
 
-  dragStopped = () => {
+  onDragStopped = () => {
     this.cleanEvents()
     this.emitCropData()
   }
 
+  static getDistanceBetweenPoints = (pointA, pointB) =>
+    Math.sqrt(Math.pow(pointA.y - pointB.y, 2) + Math.pow(pointA.x - pointB.x, 2))
+
+  onPinchStart(e) {
+    const pointA = Cropper.getTouchPoint(e.touches[0])
+    const pointB = Cropper.getTouchPoint(e.touches[1])
+    this.lastPinchDistance = Cropper.getDistanceBetweenPoints(pointA, pointB)
+  }
+
+  onPinchMove(e) {
+    if (this.rafTimeout) window.cancelAnimationFrame(this.rafTimeout)
+    this.rafTimeout = window.requestAnimationFrame(() => {
+      const pointA = Cropper.getTouchPoint(e.touches[0])
+      const pointB = Cropper.getTouchPoint(e.touches[1])
+      const distance = Cropper.getDistanceBetweenPoints(pointA, pointB)
+
+      const newZoom = (this.props.zoom * distance) / this.lastPinchDistance
+      this.setNewZoom(newZoom)
+      this.lastPinchDistance = distance
+    })
+  }
+
   onWheel = e => {
     e.preventDefault()
-    let newZoom = this.props.zoom - e.deltaY / 200
-    newZoom = Math.min(MAX_ZOOM, Math.max(newZoom, MIN_ZOOM))
+    const newZoom = this.props.zoom - e.deltaY / 200
+    this.setNewZoom(newZoom)
+  }
+
+  setNewZoom = zoom => {
+    const newZoom = Math.min(MAX_ZOOM, Math.max(zoom, MIN_ZOOM))
     this.props.onZoomChange && this.props.onZoomChange(newZoom)
   }
 
@@ -183,7 +233,11 @@ class Cropper extends React.Component {
       zoom,
     } = this.props
     return (
-      <Container onMouseDown={this.dragStart} onTouchStart={this.dragStart} onWheel={this.onWheel}>
+      <Container
+        onMouseDown={this.onMouseDown}
+        onTouchStart={this.onTouchStart}
+        onWheel={this.onWheel}
+      >
         <Img
           src={this.props.image}
           innerRef={el => (this.image = el)}
