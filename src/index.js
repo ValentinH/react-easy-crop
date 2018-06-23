@@ -19,11 +19,13 @@ class Cropper extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.computeSizes)
     this.container.addEventListener('gesturestart', this.preventZoomSafari)
+    this.container.addEventListener('gesturechange', this.preventZoomSafari)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.computeSizes)
     this.container.removeEventListener('gesturestart', this.preventZoomSafari)
+    this.container.removeEventListener('gesturechange', this.preventZoomSafari)
     this.cleanEvents()
   }
 
