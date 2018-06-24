@@ -160,7 +160,7 @@ class Cropper extends React.Component {
       const pointB = Cropper.getTouchPoint(e.touches[1])
       const distance = Cropper.getDistanceBetweenPoints(pointA, pointB)
 
-      const newZoom = (this.props.zoom * distance) / this.lastPinchDistance
+      const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom)
       this.lastPinchDistance = distance
     })
@@ -246,6 +246,7 @@ class Cropper extends React.Component {
         onTouchStart={this.onTouchStart}
         onWheel={this.onWheel}
         innerRef={el => (this.container = el)}
+        data-testid="container"
       >
         <Img
           src={this.props.image}
@@ -262,6 +263,7 @@ class Cropper extends React.Component {
               width: this.state.cropSize.width,
               height: this.state.cropSize.height,
             }}
+            data-testid="cropper"
           />
         )}
       </Container>

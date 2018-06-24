@@ -5,8 +5,7 @@ import './styles.css'
 
 class App extends React.Component {
   state = {
-    imageSrc:
-      'https://img.huffingtonpost.com/asset/5ab4d4ac2000007d06eb2c56.jpeg?cache=sih0jwle4e&ops=1910_1000',
+    imageSrc: '/images/dog.jpeg',
     crop: { x: 0, y: 0 },
     zoom: 1,
     aspect: 4 / 3,
