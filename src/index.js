@@ -160,7 +160,7 @@ class Cropper extends React.Component {
       const pointB = Cropper.getTouchPoint(e.touches[1])
       const distance = Cropper.getDistanceBetweenPoints(pointA, pointB)
 
-      const newZoom = (this.props.zoom * distance) / this.lastPinchDistance
+      const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom)
       this.lastPinchDistance = distance
     })
