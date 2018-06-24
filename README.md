@@ -3,7 +3,7 @@
 A React component to crop images with easy interactions
 
 
-[![version][version-badge]][package] ![gzip size][gzip-badge] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] ![gzip size][gzip-badge] [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
 
 
 
@@ -128,3 +128,5 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 [license]: https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
+[build-badge]: https://travis-ci.org/ricardo-ch/react-easy-crop.svg?branch=master
+[build-page]: https://travis-ci.org/ricardo-ch/react-easy-crop
