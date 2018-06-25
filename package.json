@@ -8,7 +8,9 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "babel src -d dist",
+    "build": "rm -rf dist/* && yarn build:dist && yarn build:standalone",
+    "build:dist": "babel src -d dist",
+    "build:standalone": "webpack -p --config webpack.standalone.config.js",
     "test": "yarn e2e",
     "start:ci": "webpack-dev-server --mode production",
     "e2e": "start-server-and-test start http://localhost:3001 cy:run",
