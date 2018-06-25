@@ -1,7 +1,0 @@
-src
-examples
-.babelrc
-.gitignore
-.prettierrc
-yarn.lock
-webpack.config.js
