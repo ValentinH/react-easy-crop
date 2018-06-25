@@ -36,6 +36,9 @@ npm install react-easy-crop --save
 
 ## Basic usage
 
+> The Cropper is styled with `position: absolute` to take the full space of its parent.
+> Thus, you need to wrap it with an element that uses `position: relative` or the Cropper will fill the whole page.
+
 ```js
 import Cropper from 'react-easy-crop'
 
