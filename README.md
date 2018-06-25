@@ -123,7 +123,7 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 [package]: https://www.npmjs.com/package/react-easy-crop
 [downloads-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
 [npmcharts]: http://npmcharts.com/compare/react-easy-crop
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/dist/index.js?compression=gzip&style=flat-square
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/dist/standalone/react-easy-crop.min.js?compression=gzip&style=flat-square
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
