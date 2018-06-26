@@ -92,7 +92,7 @@ class Cropper extends React.Component {
 
   onTouchStart = e => {
     e.preventDefault()
-    document.addEventListener('touchmove', this.onTouchMove)
+    document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
     if (e.touches.length === 2) {
       this.onPinchStart(e)
