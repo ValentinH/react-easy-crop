@@ -22,6 +22,7 @@ export const Img = styled('img')({
   bottom: 0,
   left: 0,
   right: 0,
+  willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
 })
 
 const lineBorder = '1px solid rgba(255, 255, 255, 0.5)'
