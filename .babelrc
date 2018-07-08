@@ -1,5 +1,4 @@
 {
   "presets": ["env", "react"],
-  "plugins": ["transform-class-properties", "transform-object-rest-spread"],
-  "ignore": ["src/*.test.js"]
+  "plugins": ["transform-class-properties", "transform-object-rest-spread"]
 }

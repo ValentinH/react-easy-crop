@@ -168,8 +168,15 @@ class Cropper extends React.Component {
 
   emitCropData = () => {
     if (!this.state.cropSize) return
-    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
+    // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
+    const restrictedPosition = restrictPosition(
       this.props.crop,
+      this.imageSize,
+      this.state.cropSize,
+      this.props.zoom
+    )
+    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
+      restrictedPosition,
       this.imageSize,
       this.state.cropSize,
       this.props.zoom

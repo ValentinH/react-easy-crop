@@ -9,7 +9,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "build": "rm -rf dist/* && yarn build:dist && yarn build:standalone",
-    "build:dist": "babel src -d dist",
+    "build:dist": "babel src -d dist --ignore 'src/*.test.js'",
     "build:standalone": "webpack -p --config webpack.standalone.config.js",
     "test": "jest && yarn e2e",
     "unit": "jest",
