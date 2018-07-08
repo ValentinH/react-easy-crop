@@ -8,4 +8,5 @@ cache:
 install:
   - yarn install --frozen-lockfile
 script:
+  - yarn unit
   - yarn e2e:ci

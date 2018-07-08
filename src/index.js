@@ -1,4 +1,10 @@
 import React from 'react'
+import {
+  getCropSize,
+  restrictPosition,
+  getDistanceBetweenPoints,
+  computeCroppedArea,
+} from './helpers'
 import { Container, Img, CropArea } from './styles'
 
 const MIN_ZOOM = 1
@@ -58,18 +64,7 @@ class Cropper extends React.Component {
         naturalWidth: this.image.naturalWidth,
         naturalHeight: this.image.naturalHeight,
       }
-      let cropSize
-      if (this.image.width >= this.image.height * this.props.aspect) {
-        cropSize = {
-          width: this.image.height * this.props.aspect,
-          height: this.image.height,
-        }
-      } else {
-        cropSize = {
-          width: this.image.width,
-          height: this.image.width / this.props.aspect,
-        }
-      }
+      const cropSize = getCropSize(this.image.width, this.image.height, this.props.aspect)
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
   }
@@ -121,21 +116,18 @@ class Cropper extends React.Component {
       if (x === undefined || y === undefined) return
       const offsetX = x - this.dragStartPosition.x
       const offsetY = y - this.dragStartPosition.y
+      const requestedPosition = {
+        x: this.dragStartCrop.x + offsetX,
+        y: this.dragStartCrop.y + offsetY,
+      }
 
-      this.props.onCropChange({
-        x: Cropper.restrictDrag(
-          this.dragStartCrop.x + offsetX,
-          this.imageSize.width,
-          this.state.cropSize.width,
-          this.props.zoom
-        ),
-        y: Cropper.restrictDrag(
-          this.dragStartCrop.y + offsetY,
-          this.imageSize.height,
-          this.state.cropSize.height,
-          this.props.zoom
-        ),
-      })
+      const newPosition = restrictPosition(
+        requestedPosition,
+        this.imageSize,
+        this.state.cropSize,
+        this.props.zoom
+      )
+      this.props.onCropChange(newPosition)
     })
   }
 
@@ -144,13 +136,10 @@ class Cropper extends React.Component {
     this.emitCropData()
   }
 
-  static getDistanceBetweenPoints = (pointA, pointB) =>
-    Math.sqrt(Math.pow(pointA.y - pointB.y, 2) + Math.pow(pointA.x - pointB.x, 2))
-
   onPinchStart(e) {
     const pointA = Cropper.getTouchPoint(e.touches[0])
     const pointB = Cropper.getTouchPoint(e.touches[1])
-    this.lastPinchDistance = Cropper.getDistanceBetweenPoints(pointA, pointB)
+    this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
   }
 
   onPinchMove(e) {
@@ -158,7 +147,7 @@ class Cropper extends React.Component {
     this.rafTimeout = window.requestAnimationFrame(() => {
       const pointA = Cropper.getTouchPoint(e.touches[0])
       const pointB = Cropper.getTouchPoint(e.touches[1])
-      const distance = Cropper.getDistanceBetweenPoints(pointA, pointB)
+      const distance = getDistanceBetweenPoints(pointA, pointB)
 
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom)
@@ -177,61 +166,26 @@ class Cropper extends React.Component {
     this.props.onZoomChange && this.props.onZoomChange(newZoom)
   }
 
-  static restrictDrag(position, imageSize, cropSize, zoom) {
-    const maxDrag = (imageSize * zoom) / 2 - cropSize / 2
-    return Math.min(maxDrag, Math.max(position, -maxDrag))
-  }
-
   emitCropData = () => {
     if (!this.state.cropSize) return
-    const croppedArea = this.computeCroppedArea()
-    const croppedAreaPixels = {
-      x: (croppedArea.x * this.imageSize.naturalWidth) / 100,
-      y: (croppedArea.y * this.imageSize.naturalHeight) / 100,
-      width: (croppedArea.width * this.imageSize.naturalWidth) / 100,
-      height: (croppedArea.height * this.imageSize.naturalHeight) / 100,
-    }
-    this.props.onCropComplete && this.props.onCropComplete(croppedArea, croppedAreaPixels)
-  }
-
-  /**
-   * Compute the cropped area of the image in percent.
-   * x and y are the center coordinates of the crop area.
-   */
-  computeCroppedArea = () => {
-    const {
-      crop: { x, y },
-      zoom,
-    } = this.props
-    return {
-      x:
-        (((this.imageSize.width - this.state.cropSize.width / zoom) / 2 - x / zoom) /
-          this.imageSize.width) *
-        100,
-      y:
-        (((this.imageSize.height - this.state.cropSize.height / zoom) / 2 - y / zoom) /
-          this.imageSize.height) *
-        100,
-      width: ((this.state.cropSize.width / this.imageSize.width) * 100) / zoom,
-      height: ((this.state.cropSize.height / this.imageSize.height) * 100) / zoom,
-    }
+    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
+      this.props.crop,
+      this.imageSize,
+      this.state.cropSize,
+      this.props.zoom
+    )
+    this.props.onCropComplete &&
+      this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
   }
 
   recomputeCropPosition = () => {
-    this.props.onCropChange({
-      x: Cropper.restrictDrag(
-        this.props.crop.x,
-        this.imageSize.width,
-        this.state.cropSize.width,
-        this.props.zoom
-      ),
-      y: Cropper.restrictDrag(
-        this.props.crop.y,
-        this.imageSize.height,
-        this.state.cropSize.height,
-        this.props.zoom
-      ),
-    })
+    const newPosition = restrictPosition(
+      this.props.crop,
+      this.imageSize,
+      this.state.cropSize,
+      this.props.zoom
+    )
+    this.props.onCropChange(newPosition)
     this.emitCropData()
   }
 
