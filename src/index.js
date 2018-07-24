@@ -38,6 +38,8 @@ class Cropper extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.zoom !== this.props.zoom) {
       this.recomputeCropPosition()
+    } else if (prevProps.aspect !== this.props.aspect) {
+      this.computeSizes()
     }
   }
 
