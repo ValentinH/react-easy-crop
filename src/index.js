@@ -164,7 +164,7 @@ class Cropper extends React.Component {
   }
 
   setNewZoom = zoom => {
-    const newZoom = Math.min(MAX_ZOOM, Math.max(zoom, MIN_ZOOM))
+    const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))
     this.props.onZoomChange && this.props.onZoomChange(newZoom)
   }
 
@@ -237,6 +237,8 @@ class Cropper extends React.Component {
 Cropper.defaultProps = {
   zoom: 1,
   aspect: 4 / 3,
+  maxZoom: MAX_ZOOM,
+  minZoom: MIN_ZOOM,
 }
 
 export default Cropper
