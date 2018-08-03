@@ -85,8 +85,10 @@ class App extends React.Component {
 | :--- | :--- | :---: | :--- |
 | `image` | string | ✓ | The image to be cropped. |
 | `crop` | `{ x: number, y: number }` | ✓ | Position of the image. `{ x: 0, y: 0 }` will center the image under the cropper. |
-| `zoom` | number | | Zoom of the image between 1 and 3. Defaults to 1. |
+| `zoom` | number | | Zoom of the image between `minZoom` and `maxZoom`. Defaults to 1. |
 | `aspect` | number |  | Aspect of the cropper. The value is the ratio between its width and its height. The default value is `4/3`|
+| `minZoom` | number | | minimum zoom of the image. Defaults to 1. |
+| `maxZoom` | number | | maximum zoom of the image. Defaults to 3. |
 | `onCropChange` | Function | ✓ | Called everytime the crop is changed. Use it to update your `crop` state.|
 | `onZoomChange` | Function |  | Called everytime the zoom is changed. Use it to update your `zoom` state. |
 | [`onCropComplete`](#onCropCompleteProp) | Function |  | Called when the user stops moving the image or stops zooming. It will be passed the corresponding cropped area on the image in percentages and pixels |
