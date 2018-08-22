@@ -13,6 +13,7 @@ const MAX_ZOOM = 3
 class Cropper extends React.Component {
   image = null
   container = null
+  containerRect = {}
   imageSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
@@ -68,6 +69,9 @@ class Cropper extends React.Component {
       }
       const cropSize = getCropSize(this.image.width, this.image.height, this.props.aspect)
       this.setState({ cropSize }, this.recomputeCropPosition)
+    }
+    if (this.container) {
+      this.containerRect = this.container.getBoundingClientRect()
     }
   }
 
@@ -150,21 +154,59 @@ class Cropper extends React.Component {
       const pointA = Cropper.getTouchPoint(e.touches[0])
       const pointB = Cropper.getTouchPoint(e.touches[1])
       const distance = getDistanceBetweenPoints(pointA, pointB)
+      const center = {
+        x: (pointB.x + pointA.x) / 2,
+        y: (pointB.y + pointA.y) / 2,
+      }
 
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
-      this.setNewZoom(newZoom)
+      this.setNewZoom(newZoom, center)
       this.lastPinchDistance = distance
     })
   }
 
   onWheel = e => {
     e.preventDefault()
+    const point = Cropper.getMousePoint(e)
     const newZoom = this.props.zoom - e.deltaY / 200
-    this.setNewZoom(newZoom)
+    this.setNewZoom(newZoom, point)
   }
 
-  setNewZoom = zoom => {
+  getPointOnContainer = ({ x, y }, zoom) => {
+    if (!this.containerRect) {
+      throw new Error('The Cropper is not mounted')
+    }
+    return {
+      x: this.containerRect.width / 2 - (x - this.containerRect.x),
+      y: this.containerRect.height / 2 - (y - this.containerRect.y),
+    }
+  }
+
+  getPointOnImage = ({ x, y }) => {
+    const { crop, zoom } = this.props
+    return {
+      x: (x + crop.x) / zoom,
+      y: (y + crop.y) / zoom,
+    }
+  }
+
+  setNewZoom = (zoom, point) => {
+    const zoomPoint = this.getPointOnContainer(point)
+    const zoomTarget = this.getPointOnImage(zoomPoint)
     const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))
+    const requestedPosition = {
+      x: zoomTarget.x * newZoom - zoomPoint.x,
+      y: zoomTarget.y * newZoom - zoomPoint.y,
+    }
+    const newPosition = restrictPosition(
+      requestedPosition,
+      this.imageSize,
+      this.state.cropSize,
+      newZoom
+    )
+
+    this.props.onCropChange(newPosition)
+
     this.props.onZoomChange && this.props.onZoomChange(newZoom)
   }
 
