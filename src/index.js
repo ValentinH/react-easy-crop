@@ -177,8 +177,8 @@ class Cropper extends React.Component {
       throw new Error('The Cropper is not mounted')
     }
     return {
-      x: this.containerRect.width / 2 - (x - this.containerRect.x),
-      y: this.containerRect.height / 2 - (y - this.containerRect.y),
+      x: this.containerRect.width / 2 - (x - this.containerRect.left),
+      y: this.containerRect.height / 2 - (y - this.containerRect.top),
     }
   }
 
