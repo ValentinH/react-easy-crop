@@ -21,8 +21,8 @@ describe('Touch assertions', function() {
 
   it('Zoom in and out with pinch', function() {
     cy.get('[data-testid=container]').pinch({ distance: 10 })
-    cy.get('img').should('have.css', 'transform', 'matrix(2, 0, 0, 2, 0, 0)')
+    cy.get('img').should('have.css', 'transform', 'matrix(2, 0, 0, 2, 500, 262)')
     cy.get('[data-testid=container]').pinch({ distance: -4 })
-    cy.get('img').should('have.css', 'transform', 'matrix(1.2, 0, 0, 1.2, 0, 0)')
+    cy.get('img').should('have.css', 'transform', 'matrix(1.2, 0, 0, 1.2, 100, 38.4)')
   })
 })
