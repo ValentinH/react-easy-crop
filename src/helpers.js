@@ -85,3 +85,15 @@ export function computeCroppedArea(crop, imgSize, cropSize, zoom) {
 function limitArea(max, value) {
   return Math.min(max, Math.max(0, value))
 }
+
+/**
+ * Return the point that is the center of point a and b
+ * @param {{x: number, y: number}} a
+ * @param {{x: number, y: number}} b
+ */
+export function getCenter(a, b) {
+  return {
+    x: (b.x + a.x) / 2,
+    y: (b.y + a.y) / 2,
+  }
+}
