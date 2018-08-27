@@ -117,4 +117,22 @@ describe('Helpers', () => {
       expect(areas.croppedAreaPixels).toEqual({ height: 300, width: 500, x: 750, y: 450 })
     })
   })
+
+  describe('getCenter', () => {
+    test('should simply return the center between a and b', () => {
+      const center = helpers.getCenter({ x: 0, y: 0 }, { x: 100, y: 0 })
+      expect(center).toEqual({ x: 50, y: 0 })
+    })
+
+    test.each([
+      [{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 50, y: 0 }],
+      [{ x: 0, y: 0 }, { x: 0, y: 100 }, { x: 0, y: 50 }],
+      [{ x: 0, y: 0 }, { x: 100, y: 100 }, { x: 50, y: 50 }],
+      [{ x: 100, y: 1000 }, { x: 0, y: 400 }, { x: 50, y: 700 }],
+      [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }],
+    ])('.getCenter(%o, %o)', (a, b, expected) => {
+      const center = helpers.getCenter(a, b)
+      expect(center).toEqual(expected)
+    })
+  })
 })

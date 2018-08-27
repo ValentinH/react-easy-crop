@@ -26,6 +26,13 @@ describe('Mouse assertions', function() {
     cy.get('img').should('have.css', 'transform', 'matrix(1.25, 0, 0, 1.25, 0, 0)')
   })
 
+  it('Mouse wheel should zoom in and out following the pointer', function() {
+    cy.get('[data-testid=container]').trigger('wheel', { deltaY: -100, clientX: 0, clientY: 0 })
+    cy.get('img').should('have.css', 'transform', 'matrix(1.5, 0, 0, 1.5, 250, 131)')
+    cy.get('[data-testid=container]').trigger('wheel', { deltaY: 50, clientX: 800, clientY: 400 })
+    cy.get('img').should('have.css', 'transform', 'matrix(1.25, 0, 0, 1.25, 258.333, 65.5)')
+  })
+
   it('Move down and right after zoom', function() {
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: -100, clientX: 500, clientY: 300 })
     cy.get('[data-testid=container]').dragAndDrop({ x: 50, y: 50 })

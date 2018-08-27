@@ -4,6 +4,7 @@ import {
   restrictPosition,
   getDistanceBetweenPoints,
   computeCroppedArea,
+  getCenter,
 } from './helpers'
 import { Container, Img, CropArea } from './styles'
 
@@ -18,7 +19,8 @@ class Cropper extends React.Component {
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
   lastPinchDistance = 0
-  rafTimeout = null
+  rafDragTimeout = null
+  rafZoomTimeout = null
   state = {
     cropSize: null,
   }
@@ -116,9 +118,9 @@ class Cropper extends React.Component {
   }
 
   onDrag = ({ x, y }) => {
-    if (this.rafTimeout) window.cancelAnimationFrame(this.rafTimeout)
+    if (this.rafDragTimeout) window.cancelAnimationFrame(this.rafDragTimeout)
 
-    this.rafTimeout = window.requestAnimationFrame(() => {
+    this.rafDragTimeout = window.requestAnimationFrame(() => {
       if (x === undefined || y === undefined) return
       const offsetX = x - this.dragStartPosition.x
       const offsetY = y - this.dragStartPosition.y
@@ -146,19 +148,18 @@ class Cropper extends React.Component {
     const pointA = Cropper.getTouchPoint(e.touches[0])
     const pointB = Cropper.getTouchPoint(e.touches[1])
     this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
+    this.onDragStart(getCenter(pointA, pointB))
   }
 
   onPinchMove(e) {
-    if (this.rafTimeout) window.cancelAnimationFrame(this.rafTimeout)
-    this.rafTimeout = window.requestAnimationFrame(() => {
-      const pointA = Cropper.getTouchPoint(e.touches[0])
-      const pointB = Cropper.getTouchPoint(e.touches[1])
-      const distance = getDistanceBetweenPoints(pointA, pointB)
-      const center = {
-        x: (pointB.x + pointA.x) / 2,
-        y: (pointB.y + pointA.y) / 2,
-      }
+    const pointA = Cropper.getTouchPoint(e.touches[0])
+    const pointB = Cropper.getTouchPoint(e.touches[1])
+    const center = getCenter(pointA, pointB)
+    this.onDrag(center)
 
+    if (this.rafZoomTimeout) window.cancelAnimationFrame(this.rafZoomTimeout)
+    this.rafZoomTimeout = window.requestAnimationFrame(() => {
+      const distance = getDistanceBetweenPoints(pointA, pointB)
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom, center)
       this.lastPinchDistance = distance
