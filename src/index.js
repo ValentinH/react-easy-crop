@@ -6,7 +6,7 @@ import {
   computeCroppedArea,
   getCenter,
 } from './helpers'
-import { Container, Img, CropArea } from './styles'
+import { Container, Img, RectCropArea, RoundCropArea } from './styles'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
@@ -245,7 +245,19 @@ class Cropper extends React.Component {
     const {
       crop: { x, y },
       zoom,
+      cropType,
     } = this.props
+
+    const CropArea = (() => {
+      switch (cropType) {
+        case 'round':
+          return RoundCropArea
+        case 'rect':
+        default:
+          return RectCropArea
+      }
+    })()
+
     return (
       <Container
         onMouseDown={this.onMouseDown}
