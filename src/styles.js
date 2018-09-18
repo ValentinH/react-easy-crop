@@ -42,8 +42,7 @@ const cropperArea = {
   boxShadow: '0 0 0 9999em rgba(0, 0, 0, 0.5)',
 }
 
-export const RectCropArea = styled('div')({
-  ...cropperArea,
+const thirds = {
   '&::before': {
     ...cropperLines,
     top: 0,
@@ -62,9 +61,16 @@ export const RectCropArea = styled('div')({
     borderLeft: 0,
     borderRight: 0,
   },
+}
+
+export const RectCropArea = styled('div')({
+  ...cropperArea,
+  ...thirds,
 })
 
 export const RoundCropArea = styled('div')({
   ...cropperArea,
   borderRadius: '50%',
+  overflow: 'hidden',
+  ...thirds,
 })
