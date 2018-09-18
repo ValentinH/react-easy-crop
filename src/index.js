@@ -245,10 +245,11 @@ class Cropper extends React.Component {
     const {
       crop: { x, y },
       zoom,
-      cropArea: { shape, showGrid },
+      cropShape,
+      showGrid,
     } = this.props
 
-    const CropArea = createCropArea({ shape, showGrid })
+    const CropArea = createCropArea({ shape: cropShape, showGrid })
 
     return (
       <Container
@@ -286,7 +287,7 @@ Cropper.defaultProps = {
   aspect: 4 / 3,
   maxZoom: MAX_ZOOM,
   minZoom: MIN_ZOOM,
-  cropArea: { shape: 'rect', showGrid: true },
+  showGrid: true,
 }
 
 export default Cropper
