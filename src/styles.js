@@ -68,7 +68,14 @@ const roundShape = {
 
 export const createCropArea = ({ shape, showGrid }) =>
   styled('div')({
-    ...cropperArea,
-    ...(shape === 'round' ? roundShape : {}),
+    ...(() => {
+      switch (shape) {
+        case 'round':
+          return { ...cropperArea, ...roundShape }
+        case 'rect':
+        default:
+          return cropperArea
+      }
+    })(),
     ...(showGrid ? gridLines : {}),
   })

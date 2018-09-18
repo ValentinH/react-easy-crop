@@ -287,6 +287,7 @@ Cropper.defaultProps = {
   aspect: 4 / 3,
   maxZoom: MAX_ZOOM,
   minZoom: MIN_ZOOM,
+  cropShape: 'rect',
   showGrid: true,
 }
 

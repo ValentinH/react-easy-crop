@@ -13,7 +13,7 @@ class App extends React.Component {
     crop: { x: 0, y: 0 },
     zoom: 1,
     aspect: 4 / 3,
-    cropShape: 'square',
+    cropShape: 'rect',
     showGrid: true,
   }
 
