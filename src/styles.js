@@ -40,9 +40,9 @@ const cropperArea = {
   border: lineBorder,
   boxSizing: 'border-box',
   boxShadow: '0 0 0 9999em rgba(0, 0, 0, 0.5)',
+  overflow: 'hidden',
 }
-
-const thirds = {
+const gridLines = {
   '&::before': {
     ...cropperLines,
     top: 0,
@@ -62,15 +62,13 @@ const thirds = {
     borderRight: 0,
   },
 }
-
-export const RectCropArea = styled('div')({
-  ...cropperArea,
-  ...thirds,
-})
-
-export const RoundCropArea = styled('div')({
-  ...cropperArea,
+const roundShape = {
   borderRadius: '50%',
-  overflow: 'hidden',
-  ...thirds,
-})
+}
+
+export const createCropArea = ({ shape, showGrid }) =>
+  styled('div')({
+    ...cropperArea,
+    ...(shape === 'round' ? roundShape : {}),
+    ...(showGrid ? gridLines : {}),
+  })

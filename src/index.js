@@ -6,7 +6,7 @@ import {
   computeCroppedArea,
   getCenter,
 } from './helpers'
-import { Container, Img, RectCropArea, RoundCropArea } from './styles'
+import { Container, Img, createCropArea } from './styles'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
@@ -245,18 +245,10 @@ class Cropper extends React.Component {
     const {
       crop: { x, y },
       zoom,
-      cropType,
+      cropArea: { shape, showGrid },
     } = this.props
 
-    const CropArea = (() => {
-      switch (cropType) {
-        case 'round':
-          return RoundCropArea
-        case 'rect':
-        default:
-          return RectCropArea
-      }
-    })()
+    const CropArea = createCropArea({ shape, showGrid })
 
     return (
       <Container
@@ -294,6 +286,7 @@ Cropper.defaultProps = {
   aspect: 4 / 3,
   maxZoom: MAX_ZOOM,
   minZoom: MIN_ZOOM,
+  cropArea: { shape: 'rect', showGrid: true },
 }
 
 export default Cropper
