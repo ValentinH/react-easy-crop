@@ -66,16 +66,15 @@ const roundShape = {
   borderRadius: '50%',
 }
 
-export const createCropArea = ({ shape, showGrid }) =>
-  styled('div')({
-    ...(() => {
-      switch (shape) {
-        case 'round':
-          return { ...cropperArea, ...roundShape }
-        case 'rect':
-        default:
-          return cropperArea
-      }
-    })(),
-    ...(showGrid ? gridLines : {}),
-  })
+export const CropArea = styled('div')({}, ({ cropShape, showGrid }) => ({
+  ...(() => {
+    switch (cropShape) {
+      case 'round':
+        return { ...cropperArea, ...roundShape }
+      case 'rect':
+      default:
+        return cropperArea
+    }
+  })(),
+  ...(showGrid ? gridLines : {}),
+}))

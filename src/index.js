@@ -6,7 +6,7 @@ import {
   computeCroppedArea,
   getCenter,
 } from './helpers'
-import { Container, Img, createCropArea } from './styles'
+import { Container, Img, CropArea } from './styles'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
@@ -249,8 +249,6 @@ class Cropper extends React.Component {
       showGrid,
     } = this.props
 
-    const CropArea = createCropArea({ shape: cropShape, showGrid })
-
     return (
       <Container
         onMouseDown={this.onMouseDown}
@@ -270,6 +268,8 @@ class Cropper extends React.Component {
         />
         {this.state.cropSize && (
           <CropArea
+            cropShape={cropShape}
+            showGrid={showGrid}
             style={{
               width: this.state.cropSize.width,
               height: this.state.cropSize.height,
