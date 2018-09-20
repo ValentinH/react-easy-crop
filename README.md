@@ -15,6 +15,7 @@ Check out the examples:
 - [Basic example](https://codesandbox.io/s/q80jom5ql6)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
 - [Example with image selected by the user](https://codesandbox.io/s/y09komm059)
+- [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 
 ## Features
 
