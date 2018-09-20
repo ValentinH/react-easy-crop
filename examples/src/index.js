@@ -13,6 +13,8 @@ class App extends React.Component {
     crop: { x: 0, y: 0 },
     zoom: 1,
     aspect: 4 / 3,
+    cropShape: 'rect',
+    showGrid: true,
   }
 
   onCropChange = crop => {
@@ -36,6 +38,8 @@ class App extends React.Component {
             crop={this.state.crop}
             zoom={this.state.zoom}
             aspect={this.state.aspect}
+            cropShape={this.state.cropShape}
+            showGrid={this.state.showGrid}
             onCropChange={this.onCropChange}
             onCropComplete={this.onCropComplete}
             onZoomChange={this.onZoomChange}

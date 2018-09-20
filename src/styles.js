@@ -32,8 +32,7 @@ const cropperLines = {
   position: 'absolute',
   border: lineBorder,
 }
-
-export const CropArea = styled('div')({
+const cropperArea = {
   position: 'absolute',
   left: '50%',
   top: '50%',
@@ -41,6 +40,9 @@ export const CropArea = styled('div')({
   border: lineBorder,
   boxSizing: 'border-box',
   boxShadow: '0 0 0 9999em rgba(0, 0, 0, 0.5)',
+  overflow: 'hidden',
+}
+const gridLines = {
   '&::before': {
     ...cropperLines,
     top: 0,
@@ -59,4 +61,20 @@ export const CropArea = styled('div')({
     borderLeft: 0,
     borderRight: 0,
   },
-})
+}
+const roundShape = {
+  borderRadius: '50%',
+}
+
+export const CropArea = styled('div')({}, ({ cropShape, showGrid }) => ({
+  ...(() => {
+    switch (cropShape) {
+      case 'round':
+        return { ...cropperArea, ...roundShape }
+      case 'rect':
+      default:
+        return cropperArea
+    }
+  })(),
+  ...(showGrid ? gridLines : {}),
+}))
