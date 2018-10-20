@@ -247,6 +247,9 @@ class Cropper extends React.Component {
       zoom,
       cropShape,
       showGrid,
+      containerStyle,
+      cropAreaStyle,
+      imageStyle,
     } = this.props
 
     return (
@@ -256,6 +259,7 @@ class Cropper extends React.Component {
         onWheel={this.onWheel}
         innerRef={el => (this.container = el)}
         data-testid="container"
+        containerStyle={containerStyle}
       >
         <Img
           src={this.props.image}
@@ -265,6 +269,7 @@ class Cropper extends React.Component {
           style={{
             transform: `translate(${x}px, ${y}px) scale(${zoom})`,
           }}
+          imageStyle={imageStyle}
         />
         {this.state.cropSize && (
           <CropArea
@@ -275,6 +280,7 @@ class Cropper extends React.Component {
               height: this.state.cropSize.height,
             }}
             data-testid="cropper"
+            cropAreaStyle={cropAreaStyle}
           />
         )}
       </Container>

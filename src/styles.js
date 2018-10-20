@@ -1,29 +1,34 @@
 import styled from 'react-emotion'
 
-export const Container = styled('div')({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  overflow: 'hidden',
-  background: '#222',
-  userSelect: 'none',
-  touchAction: 'none',
-  cursor: 'move',
-})
+export const Container = styled('div')(
+  {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'hidden',
+    userSelect: 'none',
+    touchAction: 'none',
+    cursor: 'move',
+  },
+  ({ containerStyle }) => ({ ...containerStyle })
+)
 
-export const Img = styled('img')({
-  maxWidth: '100%',
-  maxHeight: '100%',
-  margin: 'auto',
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
-})
+export const Img = styled('img')(
+  {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    margin: 'auto',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
+  },
+  ({ imageStyle }) => ({ ...imageStyle })
+)
 
 const lineBorder = '1px solid rgba(255, 255, 255, 0.5)'
 const cropperLines = {
@@ -39,7 +44,8 @@ const cropperArea = {
   transform: 'translate(-50%, -50%)',
   border: lineBorder,
   boxSizing: 'border-box',
-  boxShadow: '0 0 0 9999em rgba(0, 0, 0, 0.5)',
+  boxShadow: '0 0 0 9999em',
+  color: 'rgba(0,0,0,0.5)',
   overflow: 'hidden',
 }
 const gridLines = {
@@ -66,7 +72,7 @@ const roundShape = {
   borderRadius: '50%',
 }
 
-export const CropArea = styled('div')({}, ({ cropShape, showGrid }) => ({
+export const CropArea = styled('div')({}, ({ cropShape, showGrid, cropAreaStyle }) => ({
   ...(() => {
     switch (cropShape) {
       case 'round':
@@ -77,4 +83,5 @@ export const CropArea = styled('div')({}, ({ cropShape, showGrid }) => ({
     }
   })(),
   ...(showGrid ? gridLines : {}),
+  ...cropAreaStyle,
 }))
