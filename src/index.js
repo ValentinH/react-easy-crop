@@ -293,6 +293,7 @@ Cropper.defaultProps = {
   minZoom: MIN_ZOOM,
   cropShape: 'rect',
   showGrid: true,
+  style: {},
 }
 
 export default Cropper
