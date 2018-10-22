@@ -247,9 +247,7 @@ class Cropper extends React.Component {
       zoom,
       cropShape,
       showGrid,
-      containerStyle,
-      cropAreaStyle,
-      imageStyle,
+      style: { containerStyle, cropAreaStyle, imageStyle },
     } = this.props
 
     return (
