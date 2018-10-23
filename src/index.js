@@ -282,7 +282,7 @@ class Cropper extends React.Component {
             }}
             data-testid="cropper"
             cropAreaStyle={cropAreaStyle}
-            className={imageClassName}
+            className={cropAreaClassName}
           />
         )}
       </Container>
