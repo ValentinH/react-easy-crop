@@ -270,7 +270,7 @@ class Cropper extends React.Component {
             transform: `translate(${x}px, ${y}px) scale(${zoom})`,
           }}
           imageStyle={imageStyle}
-          className={cropAreaClassName}
+          className={imageClassName}
         />
         {this.state.cropSize && (
           <CropArea
