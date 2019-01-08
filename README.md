@@ -92,6 +92,7 @@ class App extends React.Component {
 | `maxZoom` | number | | maximum zoom of the image. Defaults to 3. |
 | `cropShape` | 'rect' \| 'round' | | Shape of the crop area. Defaults to 'rect'. |
 | `showGrid` | boolean | | Whether to show or not the grid (third-lines). Defaults to `true`. |
+| `zoomSpeed` | number | | Multiplies the value by which the zoom changes. Defaults to 1. |
 | `onCropChange` | Function | ✓ | Called everytime the crop is changed. Use it to update your `crop` state.|
 | `onZoomChange` | Function |  | Called everytime the zoom is changed. Use it to update your `zoom` state. |
 | [`onCropComplete`](#onCropCompleteProp) | Function |  | Called when the user stops moving the image or stops zooming. It will be passed the corresponding cropped area on the image in percentages and pixels |

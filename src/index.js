@@ -169,7 +169,7 @@ class Cropper extends React.Component {
   onWheel = e => {
     e.preventDefault()
     const point = Cropper.getMousePoint(e)
-    const newZoom = this.props.zoom - e.deltaY / 200
+    const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
     this.setNewZoom(newZoom, point)
   }
 
@@ -300,6 +300,7 @@ Cropper.defaultProps = {
   showGrid: true,
   style: {},
   classes: {},
+  zoomSpeed: 1,
 }
 
 export default Cropper
