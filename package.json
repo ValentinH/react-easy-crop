@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/ricardo-ch/react-easy-crop"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Ricardo.ch",
   "license": "MIT",
   "scripts": {
