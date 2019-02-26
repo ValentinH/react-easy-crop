@@ -99,6 +99,7 @@ class App extends React.Component {
 | `onImgError` | Function |  | Called when error occurs while loading an external image |
 | `style` | `{ containerStyle: object, imageStyle: object, cropAreaStyle: object }` |  | Custom styles to be used with the Cropper. Styles passed via the style prop are merged with the defaults. |
 | `classes` | `{ containerClassName: string, imageClassName: string, cropAreaClassName: string }` |  | Custom class names to be used with the Cropper. Classes passed via the classes prop are merged with the defaults. |
+| `crossOrigin` | string |  | Allows setting the crossOrigin attribute on the image. |
 
 <a name="onCropCompleteProp"></a>
 #### onCropComplete(croppedArea, cropperAreaPixels)

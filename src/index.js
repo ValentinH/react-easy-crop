@@ -1,12 +1,13 @@
-import React from 'react'
+import { Container, CropArea, Img } from './styles'
 import {
-  getCropSize,
-  restrictPosition,
-  getDistanceBetweenPoints,
   computeCroppedArea,
   getCenter,
+  getCropSize,
+  getDistanceBetweenPoints,
+  restrictPosition,
 } from './helpers'
-import { Container, Img, CropArea } from './styles'
+
+import React from 'react'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
@@ -249,6 +250,7 @@ class Cropper extends React.Component {
       showGrid,
       style: { containerStyle, cropAreaStyle, imageStyle },
       classes: { containerClassName, cropAreaClassName, imageClassName },
+      crossOrigin,
     } = this.props
 
     return (
@@ -272,6 +274,7 @@ class Cropper extends React.Component {
           }}
           imageStyle={imageStyle}
           className={imageClassName}
+          crossOrigin={crossOrigin}
         />
         {this.state.cropSize && (
           <CropArea
@@ -301,6 +304,7 @@ Cropper.defaultProps = {
   style: {},
   classes: {},
   zoomSpeed: 1,
+  crossOrigin: undefined,
 }
 
 export default Cropper
