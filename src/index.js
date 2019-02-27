@@ -1,13 +1,12 @@
-import { Container, CropArea, Img } from './styles'
+import React from 'react'
 import {
+  getCropSize,
+  restrictPosition,
+  getDistanceBetweenPoints,
   computeCroppedArea,
   getCenter,
-  getCropSize,
-  getDistanceBetweenPoints,
-  restrictPosition,
 } from './helpers'
-
-import React from 'react'
+import { Container, Img, CropArea } from './styles'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
