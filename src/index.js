@@ -249,6 +249,7 @@ class Cropper extends React.Component {
       showGrid,
       style: { containerStyle, cropAreaStyle, imageStyle },
       classes: { containerClassName, cropAreaClassName, imageClassName },
+      crossOrigin,
     } = this.props
 
     return (
@@ -272,6 +273,7 @@ class Cropper extends React.Component {
           }}
           imageStyle={imageStyle}
           className={imageClassName}
+          crossOrigin={crossOrigin}
         />
         {this.state.cropSize && (
           <CropArea
@@ -301,6 +303,7 @@ Cropper.defaultProps = {
   style: {},
   classes: {},
   zoomSpeed: 1,
+  crossOrigin: undefined,
 }
 
 export default Cropper
