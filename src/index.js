@@ -105,6 +105,8 @@ class Cropper extends React.Component {
   }
 
   onTouchMove = e => {
+    // Prevent whole page from scrolling on iOS.
+    e.preventDefault()
     if (e.touches.length === 2) {
       this.onPinchMove(e)
     } else if (e.touches.length === 1) {
