@@ -259,14 +259,14 @@ class Cropper extends React.Component {
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
         onWheel={this.onWheel}
-        innerRef={el => (this.container = el)}
+        ref={el => (this.container = el)}
         data-testid="container"
         containerStyle={containerStyle}
         className={containerClassName}
       >
         <Img
           src={this.props.image}
-          innerRef={el => (this.image = el)}
+          ref={el => (this.image = el)}
           onLoad={this.onImgLoad}
           onError={this.props.onImgError}
           alt=""

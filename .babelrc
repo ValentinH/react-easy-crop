@@ -1,4 +1,8 @@
 {
-  "presets": ["env", "react"],
-  "plugins": ["transform-class-properties", "transform-object-rest-spread"]
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "@babel/plugin-proposal-object-rest-spread",
+    "emotion"
+  ]
 }
