@@ -46,7 +46,6 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
-    "babel-plugin-emotion": "^10.0.7",
     "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^2.1.1",
     "cypress": "^3.0.1",
