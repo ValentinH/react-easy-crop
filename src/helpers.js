@@ -47,9 +47,10 @@ export function getDistanceBetweenPoints(pointA, pointB) {
  * @param {{x: number, y number}} crop x/y position of the current center of the image
  * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
  * @param {{width: number, height: number}} cropSize width/height of the crop area
+ * @param {number} aspect aspect value
  * @param {number} zoom zoom value
  */
-export function computeCroppedArea(crop, imgSize, cropSize, zoom) {
+export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom) {
   const croppedAreaPercentages = {
     x: limitArea(
       100,
@@ -62,16 +63,44 @@ export function computeCroppedArea(crop, imgSize, cropSize, zoom) {
     width: limitArea(100, ((cropSize.width / imgSize.width) * 100) / zoom),
     height: limitArea(100, ((cropSize.height / imgSize.height) * 100) / zoom),
   }
+
+  // we compute the pixels size naively
+  const widthInPixels = limitArea(
+    imgSize.naturalWidth,
+    (croppedAreaPercentages.width * imgSize.naturalWidth) / 100,
+    true
+  )
+  const heightInPixels = limitArea(
+    imgSize.naturalHeight,
+    (croppedAreaPercentages.height * imgSize.naturalHeight) / 100,
+    true
+  )
+  const isImgWiderThanHigh = imgSize.naturalWidth >= imgSize.naturalHeight * aspect
+
+  // then we ensure the width and height exactly match the aspect (to avoid rounding approximations)
+  // if the image is wider than high, when zoom is 0, the crop height will be equals to iamge height
+  // thus we want to compute the width from the height and aspect for accuracy.
+  // Otherwise, we compute the height from width and aspect.
+  const sizePixels = isImgWiderThanHigh
+    ? {
+        width: Math.round(heightInPixels * aspect),
+        height: heightInPixels,
+      }
+    : {
+        width: widthInPixels,
+        height: Math.round(widthInPixels / aspect),
+      }
   const croppedAreaPixels = {
-    x: limitArea(imgSize.naturalWidth, (croppedAreaPercentages.x * imgSize.naturalWidth) / 100),
-    y: limitArea(imgSize.naturalHeight, (croppedAreaPercentages.y * imgSize.naturalHeight) / 100),
-    width: limitArea(
-      imgSize.naturalWidth,
-      (croppedAreaPercentages.width * imgSize.naturalWidth) / 100
+    ...sizePixels,
+    x: limitArea(
+      imgSize.naturalWidth - sizePixels.width,
+      (croppedAreaPercentages.x * imgSize.naturalWidth) / 100,
+      true
     ),
-    height: limitArea(
-      imgSize.naturalHeight,
-      (croppedAreaPercentages.height * imgSize.naturalHeight) / 100
+    y: limitArea(
+      imgSize.naturalHeight - sizePixels.height,
+      (croppedAreaPercentages.y * imgSize.naturalHeight) / 100,
+      true
     ),
   }
   return { croppedAreaPercentages, croppedAreaPixels }
@@ -81,9 +110,11 @@ export function computeCroppedArea(crop, imgSize, cropSize, zoom) {
  * Ensure the returned value is between 0 and max
  * @param {number} max
  * @param {number} value
+ * @param {boolean} shouldRound
  */
-function limitArea(max, value) {
-  return Math.min(max, Math.max(0, value))
+function limitArea(max, value, shouldRound = false) {
+  const v = shouldRound ? Math.round(value) : value
+  return Math.min(max, Math.max(0, v))
 }
 
 /**

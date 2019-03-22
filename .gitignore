@@ -2,3 +2,4 @@ node_modules
 dist
 cypress/fixtures
 cypress/videos
+cypress/screenshots
