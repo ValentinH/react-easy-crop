@@ -91,8 +91,9 @@ describe('Helpers', () => {
       const crop = { x: 0, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 500, height: 300 }
+      const aspect = 5 / 3
       const zoom = 1
-      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, zoom)
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom)
       expect(areas.croppedAreaPercentages).toEqual({ x: 25, y: 25, width: 50, height: 50 })
       expect(areas.croppedAreaPixels).toEqual({ height: 600, width: 1000, x: 500, y: 300 })
     })
@@ -101,8 +102,9 @@ describe('Helpers', () => {
       const crop = { x: 100, y: 30 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 500, height: 300 }
+      const aspect = 5 / 3
       const zoom = 1
-      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, zoom)
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom)
       expect(areas.croppedAreaPercentages).toEqual({ height: 50, width: 50, x: 15, y: 20 })
       expect(areas.croppedAreaPixels).toEqual({ height: 600, width: 1000, x: 300, y: 240 })
     })
@@ -111,8 +113,9 @@ describe('Helpers', () => {
       const crop = { x: 0, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 500, height: 300 }
+      const aspect = 5 / 3
       const zoom = 2
-      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, zoom)
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom)
       expect(areas.croppedAreaPercentages).toEqual({ height: 25, width: 25, x: 37.5, y: 37.5 })
       expect(areas.croppedAreaPixels).toEqual({ height: 300, width: 500, x: 750, y: 450 })
     })

@@ -12,7 +12,7 @@ describe('Basic assertions', function() {
   })
 
   it('Display tall images and set the image and cropper with correct dimension', function() {
-    cy.visit('/?img=/images/cat.jpg')
+    cy.visit('/?img=/images/cat.jpeg')
     cy.get('img').should('have.css', 'width', '338px')
     cy.get('img').should('have.css', 'height', '600px')
     cy.get('[data-testid=cropper]').should('have.css', 'width', '338px') // width of the image
