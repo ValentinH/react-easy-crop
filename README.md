@@ -3,7 +3,7 @@
 A React component to crop images with easy interactions
 
 
-[![version][version-badge]][package] ![npmstats][npmstats-badge] ![gzip size][gzip-badge] [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
 
 
 
