@@ -3,6 +3,7 @@
   "version": "1.9.1",
   "description": "A React component to crop images with easy interactions",
   "main": "dist/index.js",
+  "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
   "repository": {
     "type": "git",
     "url": "https://github.com/ricardo-ch/react-easy-crop"
