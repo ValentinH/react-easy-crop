@@ -3,3 +3,6 @@ dist
 cypress/fixtures
 cypress/videos
 cypress/screenshots
+
+docs/.cache
+docs/public
