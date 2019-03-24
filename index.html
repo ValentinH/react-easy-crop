@@ -1,1 +1,582 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta name="generator" content="Gatsby 2.2.9"/><title data-react-helmet="true">react-easy-crop</title><meta data-react-helmet="true" name="description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" property="og:title" content="react-easy-crop"/><meta data-react-helmet="true" property="og:description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="@ricardo-ch"/><meta data-react-helmet="true" name="twitter:title" content="react-easy-crop"/><meta data-react-helmet="true" name="twitter:description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" name="keywords" content="react-easy-crop, image cropper, crop image, react"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2"/><style type="text/css">@font-face{font-family:Roboto;font-style:normal;font-weight:300;src:local('Roboto Light'),local('Roboto-Light'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc4.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc-.woff) format('woff');font-display: swap}@font-face{font-family:Roboto;font-style:normal;font-weight:400;src:local('Roboto'),local('Roboto-Regular'),url(/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff) format('woff');font-display: swap}@font-face{font-family:Roboto;font-style:normal;font-weight:500;src:local('Roboto Medium'),local('Roboto-Medium'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc-.woff) format('woff');font-display: swap}</style><link as="script" rel="preload" href="/4-5408da43def25e114503.js"/><link as="script" rel="preload" href="/component---src-pages-index-js-79c5cc922a3110303ba9.js"/><link as="script" rel="preload" href="/app-377b58400f79944a4bfe.js"/><link as="script" rel="preload" href="/webpack-runtime-4564dd511634e990e4ca.js"/><link as="fetch" rel="preload" href="/static/d/140/path---index-6a9-0SUcWyAf8ecbYDsMhQkEfPzV8.json" crossorigin="use-credentials"/></head><body><noscript id="gatsby-noscript">This app works best with JavaScript enabled.</noscript><div id="___gatsby"><div style="outline:none" tabindex="-1" role="group"><header class="jss1"><div class="jss2"><a aria-current="page" class="jss3" href="/"><h1 class="jss5 jss9 jss34">react-easy-crop</h1></a><a href="https://github.com/ricardo-ch/react-easy-crop"><img class="jss4" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"/></a></div></header><div style="margin:0 auto;max-width:960px;padding:0px 1.0875rem 1.45rem;padding-top:0"><main><div class="jss5 jss14"><h6 class="jss5 jss23">A React component to crop images with easy interactions</h6><h4 class="jss5 jss20">Demo</h4><div><div class="jss41"><style data-emotion-css="1dkwqii">.css-1dkwqii{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;touch-action:none;cursor:move;}</style><div data-testid="container" class="css-1dkwqii"><style data-emotion-css="ebdd77">.css-ebdd77{max-width:100%;max-height:100%;margin:auto;position:absolute;top:0;bottom:0;left:0;right:0;will-change:transform;}</style><img src="/static/dog-26b9422dccf83dc4e809f679c0f2b78e.jpeg" alt="" style="transform:translate(0px, 0px) scale(1)" class="css-ebdd77"/></div></div><div class="jss43"><div role="slider" class="jss45" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" aria-orientation="horizontal" aria-labelledby="Zoom"><div class="jss46 jss44"><div class="jss47 jss48" style="transform:translateY(-50%) scaleX(0)"></div><div class="jss50" style="transform:translateX(0%)"><button class="jss59 jss51" tabindex="0" type="button"></button></div><div class="jss47 jss49" style="transform:translateY(-50%) scaleX(1)"></div></div></div><button class="jss59 jss62 jss42 jss73 jss74 jss76 jss77" tabindex="0" type="button"><span class="jss63">Show Result</span></button></div></div><h4 class="jss5 jss20">Features</h4><ul><li>Supports drag and zoom interactions</li><li>Provides crop dimensions as pixels and percentages</li><li>Supports any images format (JPEG, PNG, even GIF) as url or base 64 string</li><li>Mobile friendly</li></ul><h4 class="jss5 jss20 jss32">Codesandboxes</h4><h5 class="jss5 jss21">Basic example with hooks</h5><iframe title="Codesandbox example v69ly910ql" src="https://codesandbox.io/embed/v69ly910ql?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Basic example with class</h5><iframe title="Codesandbox example q80jom5ql6" src="https://codesandbox.io/embed/q80jom5ql6?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with output of the cropped image</h5><iframe title="Codesandbox example q8q1mnr01w" src="https://codesandbox.io/embed/q8q1mnr01w?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with image selected by the user</h5><iframe title="Codesandbox example y09komm059" src="https://codesandbox.io/embed/y09komm059?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with round crop area and no grid</h5><iframe title="Codesandbox example 53w20p2o3n" src="https://codesandbox.io/embed/53w20p2o3n?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe></div></main></div></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.page={"componentChunkName":"component---src-pages-index-js","jsonName":"index","path":"/"};window.dataPath="140/path---index-6a9-0SUcWyAf8ecbYDsMhQkEfPzV8";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"app":["/app-377b58400f79944a4bfe.js"],"component---src-pages-index-js":["/component---src-pages-index-js-79c5cc922a3110303ba9.js"],"pages-manifest":["/pages-manifest-b2bd7ef5ec9abf23d7fd.js"]};/*]]>*/</script><script src="/webpack-runtime-4564dd511634e990e4ca.js" async=""></script><script src="/app-377b58400f79944a4bfe.js" async=""></script><script src="/component---src-pages-index-js-79c5cc922a3110303ba9.js" async=""></script><script src="/4-5408da43def25e114503.js" async=""></script></body></html>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta name="generator" content="Gatsby 2.2.9"/><title data-react-helmet="true">react-easy-crop</title><meta data-react-helmet="true" name="description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" property="og:title" content="react-easy-crop"/><meta data-react-helmet="true" property="og:description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="@ricardo-ch"/><meta data-react-helmet="true" name="twitter:title" content="react-easy-crop"/><meta data-react-helmet="true" name="twitter:description" content="A React component to crop images with easy interactions"/><meta data-react-helmet="true" name="keywords" content="react-easy-crop, image cropper, crop image, react"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2"/><style type="text/css">@font-face{font-family:Roboto;font-style:normal;font-weight:300;src:local('Roboto Light'),local('Roboto-Light'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc4.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmSU5fBBc-.woff) format('woff');font-display: swap}@font-face{font-family:Roboto;font-style:normal;font-weight:400;src:local('Roboto'),local('Roboto-Regular'),url(/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff) format('woff');font-display: swap}@font-face{font-family:Roboto;font-style:normal;font-weight:500;src:local('Roboto Medium'),local('Roboto-Medium'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2) format('woff2'),url(/google-fonts/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc-.woff) format('woff');font-display: swap}</style><style type="text/css" id="server-side-jss">html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  background-color: #fafafa;
+}
+@media print {
+  body {
+    background-color: #fff;
+  }
+}
+.jss5 {
+  margin: 0;
+  display: block;
+}
+.jss6 {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 7rem;
+  font-weight: 300;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.14286em;
+  margin-left: -.04em;
+  letter-spacing: -.04em;
+}
+.jss7 {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 3.5rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.30357em;
+  margin-left: -.02em;
+  letter-spacing: -.02em;
+}
+.jss8 {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 2.8125rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.13333em;
+  margin-left: -.02em;
+}
+.jss9 {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 2.125rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.20588em;
+}
+.jss10 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.35417em;
+}
+.jss11 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1.3125rem;
+  font-weight: 500;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.16667em;
+}
+.jss12 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.5em;
+}
+.jss13 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.71429em;
+}
+.jss14 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.46429em;
+}
+.jss15 {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.375em;
+}
+.jss16 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  text-transform: uppercase;
+}
+.jss17 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 6rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.01562em;
+}
+.jss18 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 3.75rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.00833em;
+}
+.jss19 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 3rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: 0em;
+}
+.jss20 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 2.125rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.17;
+  letter-spacing: 0.00735em;
+}
+.jss21 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1.5rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: 0em;
+}
+.jss22 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1.25rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+.jss23 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.00938em;
+}
+.jss24 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.875rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.57;
+  letter-spacing: 0.00714em;
+}
+.jss25 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.75rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 2.66;
+  letter-spacing: 0.08333em;
+  text-transform: uppercase;
+}
+.jss26 {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+}
+.jss27 {
+  text-align: left;
+}
+.jss28 {
+  text-align: center;
+}
+.jss29 {
+  text-align: right;
+}
+.jss30 {
+  text-align: justify;
+}
+.jss31 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.jss32 {
+  margin-bottom: 0.35em;
+}
+.jss33 {
+  margin-bottom: 16px;
+}
+.jss34 {
+  color: inherit;
+}
+.jss35 {
+  color: #3f51b5;
+}
+.jss36 {
+  color: #f50057;
+}
+.jss37 {
+  color: rgba(0, 0, 0, 0.87);
+}
+.jss38 {
+  color: rgba(0, 0, 0, 0.54);
+}
+.jss39 {
+  color: #f44336;
+}
+.jss40 {
+  display: inline;
+}
+.jss59 {
+  color: inherit;
+  cursor: pointer;
+  margin: 0;
+  border: 0;
+  display: inline-flex;
+  padding: 0;
+  outline: none;
+  position: relative;
+  user-select: none;
+  align-items: center;
+  border-radius: 0;
+  vertical-align: middle;
+  justify-content: center;
+  -moz-appearance: none;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.jss59::-moz-focus-inner {
+  border-style: none;
+}
+.jss59.jss60 {
+  cursor: default;
+  pointer-events: none;
+}
+.jss45 {
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.jss45.jss54 {
+  cursor: no-drop;
+}
+.jss45.jss58 {
+  height: 100%;
+}
+.jss46 {
+  position: relative;
+}
+.jss46.jss58 {
+  height: 100%;
+}
+.jss47 {
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  transform: translate(0, -50%);
+  transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,height 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  background-color: #3f51b5;
+}
+.jss47.jss57 {
+  transition: none;
+}
+.jss47.jss54 {
+  box-shadow: none;
+  background-color: #bdbdbd;
+}
+.jss47.jss58 {
+  top: initial;
+  left: 50%;
+  width: 2px;
+  bottom: 0;
+  height: 100%;
+  transform: translate(-50%, 0);
+}
+.jss48 {
+  left: 0;
+  z-index: 1;
+  transform-origin: left bottom;
+}
+.jss49 {
+  right: 0;
+  opacity: 0.24;
+  transform-origin: right top;
+}
+.jss49.jss58 {
+  top: 0;
+}
+.jss50 {
+  z-index: 2;
+  position: relative;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,box-shadow 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+}
+.jss50.jss57 {
+  transition: none;
+}
+.jss50.jss58 {
+  bottom: 0;
+  height: 100%;
+}
+.jss51 {
+  flip: false;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,box-shadow 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  border-radius: 50%;
+  background-color: #3f51b5;
+}
+.jss51.jss56, .jss51:hover {
+  box-shadow: 0px 0px 0px 9px rgba(63, 81, 181, 0.16);
+}
+.jss51.jss57 {
+  box-shadow: 0px 0px 0px 18px rgba(63, 81, 181, 0.16);
+}
+.jss51.jss54 {
+  width: 9px;
+  cursor: no-drop;
+  height: 9px;
+  background-color: #bdbdbd;
+}
+.jss51.jss55 {
+  box-shadow: 0px 0px 0px 18px rgba(63, 81, 181, 0.16);
+}
+.jss52 {
+  background-color: transparent;
+}
+.jss53 {
+  width: inherit;
+  height: inherit;
+}
+.jss62 {
+  color: rgba(0, 0, 0, 0.87);
+  padding: 6px 16px;
+  min-width: 64px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.75;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.jss62:hover {
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.jss62.jss82 {
+  color: rgba(0, 0, 0, 0.26);
+}
+@media (hover: none) {
+  .jss62:hover {
+    background-color: transparent;
+  }
+}
+.jss62:hover.jss82 {
+  background-color: transparent;
+}
+.jss63 {
+  width: 100%;
+  display: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+}
+.jss64 {
+  padding: 6px 8px;
+}
+.jss65 {
+  color: #3f51b5;
+}
+.jss65:hover {
+  background-color: rgba(63, 81, 181, 0.08);
+}
+@media (hover: none) {
+  .jss65:hover {
+    background-color: transparent;
+  }
+}
+.jss66 {
+  color: #f50057;
+}
+.jss66:hover {
+  background-color: rgba(245, 0, 87, 0.08);
+}
+@media (hover: none) {
+  .jss66:hover {
+    background-color: transparent;
+  }
+}
+.jss70 {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  padding: 5px 16px;
+}
+.jss70.jss82 {
+  border: 1px solid rgba(0, 0, 0, 0.26);
+}
+.jss71 {
+  color: #3f51b5;
+  border: 1px solid rgba(63, 81, 181, 0.5);
+}
+.jss71:hover {
+  border: 1px solid #3f51b5;
+  background-color: rgba(63, 81, 181, 0.08);
+}
+@media (hover: none) {
+  .jss71:hover {
+    background-color: transparent;
+  }
+}
+.jss72 {
+  color: #f50057;
+  border: 1px solid rgba(245, 0, 87, 0.5);
+}
+.jss72:hover {
+  border: 1px solid #f50057;
+  background-color: rgba(245, 0, 87, 0.08);
+}
+.jss72.jss82 {
+  border: 1px solid rgba(0, 0, 0, 0.26);
+}
+@media (hover: none) {
+  .jss72:hover {
+    background-color: transparent;
+  }
+}
+.jss73 {
+  color: rgba(0, 0, 0, 0.87);
+  box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 3px 1px -2px rgba(0,0,0,0.12);
+  background-color: #e0e0e0;
+}
+.jss73.jss81 {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.jss73:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+.jss73.jss82 {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.jss73:hover {
+  background-color: #d5d5d5;
+}
+@media (hover: none) {
+  .jss73:hover {
+    background-color: #e0e0e0;
+  }
+}
+.jss73:hover.jss82 {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.jss74 {
+  color: #fff;
+  background-color: #3f51b5;
+}
+.jss74:hover {
+  background-color: #303f9f;
+}
+@media (hover: none) {
+  .jss74:hover {
+    background-color: #3f51b5;
+  }
+}
+.jss75 {
+  color: #fff;
+  background-color: #f50057;
+}
+.jss75:hover {
+  background-color: #c51162;
+}
+@media (hover: none) {
+  .jss75:hover {
+    background-color: #f50057;
+  }
+}
+.jss79 {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  min-width: 0;
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+  border-radius: 50%;
+}
+.jss79:active {
+  box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
+}
+.jss80 {
+  width: auto;
+  height: 48px;
+  padding: 0 16px;
+  min-width: 48px;
+  border-radius: 24px;
+}
+.jss83 {
+  color: inherit;
+  border-color: currentColor;
+}
+.jss84 {
+  width: 40px;
+  height: 40px;
+}
+.jss85 {
+  padding: 4px 8px;
+  min-width: 64px;
+  font-size: 0.8125rem;
+}
+.jss86 {
+  padding: 8px 24px;
+  font-size: 0.9375rem;
+}
+.jss87 {
+  width: 100%;
+}
+.jss41 {
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+@media (min-width:600px) {
+  .jss41 {
+    height: 400px;
+  }
+}
+.jss42 {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.jss43 {
+  height: 80px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+}
+.jss44 {
+  padding: 22px 0px;
+}
+.jss1 {
+  position: relative;
+  background: #3f51b5;
+  margin-bottom: 1.45rem;
+}
+.jss2 {
+  margin: 0 auto;
+  padding: 1.45rem 1.0875rem;
+  max-width: 960px;
+  text-align: center;
+}
+.jss3 {
+  color: white;
+  text-decoration: none;
+}
+.jss4 {
+  top: 0;
+  right: 0;
+  width: 96px;
+  border: 0;
+  position: absolute;
+}</style><link as="script" rel="preload" href="/4-574ef3a35005e0829afe.js"/><link as="script" rel="preload" href="/component---src-pages-index-js-18a07e0a78ba83a57d35.js"/><link as="script" rel="preload" href="/app-58feed0588a724f569cb.js"/><link as="script" rel="preload" href="/webpack-runtime-9592c5f4d7216ca71df2.js"/><link as="fetch" rel="preload" href="/static/d/140/path---index-6a9-0SUcWyAf8ecbYDsMhQkEfPzV8.json" crossorigin="use-credentials"/></head><body><noscript id="gatsby-noscript">This app works best with JavaScript enabled.</noscript><div id="___gatsby"><div style="outline:none" tabindex="-1" role="group"><header class="jss1"><div class="jss2"><a aria-current="page" class="jss3" href="/"><h1 class="jss5 jss9 jss34">react-easy-crop</h1></a><a href="https://github.com/ricardo-ch/react-easy-crop"><img class="jss4" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"/></a></div></header><div style="margin:0 auto;max-width:960px;padding:0px 1.0875rem 1.45rem;padding-top:0"><main><div class="jss5 jss14"><h6 class="jss5 jss23">A React component to crop images with easy interactions</h6><h4 class="jss5 jss20">Demo</h4><div><div class="jss41"><style data-emotion-css="1dkwqii">.css-1dkwqii{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;touch-action:none;cursor:move;}</style><div data-testid="container" class="css-1dkwqii"><style data-emotion-css="ebdd77">.css-ebdd77{max-width:100%;max-height:100%;margin:auto;position:absolute;top:0;bottom:0;left:0;right:0;will-change:transform;}</style><img src="/static/dog-26b9422dccf83dc4e809f679c0f2b78e.jpeg" alt="" style="transform:translate(0px, 0px) scale(1)" class="css-ebdd77"/></div></div><div class="jss43"><div role="slider" class="jss45" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" aria-orientation="horizontal" aria-labelledby="Zoom"><div class="jss46 jss44"><div class="jss47 jss48" style="transform:translateY(-50%) scaleX(0)"></div><div class="jss50" style="transform:translateX(0%)"><button class="jss59 jss51" tabindex="0" type="button"></button></div><div class="jss47 jss49" style="transform:translateY(-50%) scaleX(1)"></div></div></div><button class="jss59 jss62 jss42 jss73 jss74 jss76 jss77" tabindex="0" type="button"><span class="jss63">Show Result</span></button></div></div><h4 class="jss5 jss20">Features</h4><ul><li>Supports drag and zoom interactions</li><li>Provides crop dimensions as pixels and percentages</li><li>Supports any images format (JPEG, PNG, even GIF) as url or base 64 string</li><li>Mobile friendly</li></ul><h4 class="jss5 jss20 jss32">Codesandboxes</h4><h5 class="jss5 jss21">Basic example with hooks</h5><iframe title="Codesandbox example v69ly910ql" src="https://codesandbox.io/embed/v69ly910ql?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Basic example with class</h5><iframe title="Codesandbox example q80jom5ql6" src="https://codesandbox.io/embed/q80jom5ql6?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with output of the cropped image</h5><iframe title="Codesandbox example q8q1mnr01w" src="https://codesandbox.io/embed/q8q1mnr01w?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with image selected by the user</h5><iframe title="Codesandbox example y09komm059" src="https://codesandbox.io/embed/y09komm059?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe><h5 class="jss5 jss21">Example with round crop area and no grid</h5><iframe title="Codesandbox example 53w20p2o3n" src="https://codesandbox.io/embed/53w20p2o3n?autoresize=1&amp;fontsize=14&amp;hidenavigation=1" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;margin-bottom:24px" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe></div></main></div></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.page={"componentChunkName":"component---src-pages-index-js","jsonName":"index","path":"/"};window.dataPath="140/path---index-6a9-0SUcWyAf8ecbYDsMhQkEfPzV8";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"app":["/app-58feed0588a724f569cb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-18a07e0a78ba83a57d35.js"],"pages-manifest":["/pages-manifest-679bc87a42c41cb49aad.js"]};/*]]>*/</script><script src="/webpack-runtime-9592c5f4d7216ca71df2.js" async=""></script><script src="/app-58feed0588a724f569cb.js" async=""></script><script src="/component---src-pages-index-js-18a07e0a78ba83a57d35.js" async=""></script><script src="/4-574ef3a35005e0829afe.js" async=""></script></body></html>
