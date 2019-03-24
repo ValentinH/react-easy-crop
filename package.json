@@ -17,6 +17,8 @@
     "build": "rm -rf dist/* && yarn build:dist && yarn build:standalone",
     "build:dist": "babel src -d dist --ignore 'src/*.test.js'",
     "build:standalone": "webpack -p --config webpack.standalone.config.js",
+    "docs:start": "cd docs && yarn develop",
+    "docs:deploy": "cd docs && yarn deploy",
     "test": "jest && yarn e2e",
     "unit": "jest",
     "unit:watch": "jest --watchAll",
@@ -28,6 +30,7 @@
     "cy:ci": "cypress run --record",
     "prepublishOnly": "yarn build",
     "precommit": "lint-staged",
+    "format": "prettier --write src/**/*.js docs/src/**/*.{js,css}",
     "npm:publish": "np"
   },
   "peerDependencies": {
