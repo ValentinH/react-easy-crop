@@ -27,12 +27,14 @@ class Cropper extends React.Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.computeSizes)
+    this.container.addEventListener('wheel', this.onWheel, { passive: false })
     this.container.addEventListener('gesturestart', this.preventZoomSafari)
     this.container.addEventListener('gesturechange', this.preventZoomSafari)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.computeSizes)
+    this.container.removeEventListener('wheel', this.onWheel)
     this.container.removeEventListener('gesturestart', this.preventZoomSafari)
     this.container.removeEventListener('gesturechange', this.preventZoomSafari)
     this.cleanEvents()
@@ -259,7 +261,6 @@ class Cropper extends React.Component {
       <Container
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
-        onWheel={this.onWheel}
         ref={el => (this.container = el)}
         data-testid="container"
         containerStyle={containerStyle}
