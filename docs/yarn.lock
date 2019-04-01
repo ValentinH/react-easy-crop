@@ -9120,10 +9120,10 @@ react-dom@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.13.5"
 
-react-easy-crop@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-1.9.1.tgz#bef167f63ca34ae56bbded7e358f78fb96981c48"
-  integrity sha512-SsqeNX5Z6KmiYd1vBmwu5WJnBDMzZIxtz+7x3I9ZVPqLLv2VOEZDDfo0uD0q9dpsGiz8VN8VfIwedDIlQ7avSg==
+react-easy-crop@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.npmjs.org/react-easy-crop/-/react-easy-crop-1.9.2.tgz#641fade249d21086601f22d4a1cb991768094bac"
+  integrity sha512-EZ338bW2RGgG3i6w2S3C0A8XnJi2LuhJZ/Xubv3bLW2yUs165I82Dfu7CjzOKapeCf3/5pq7zjgF71VdVGG42g==
   dependencies:
     "@emotion/core" "^10.0.7"
     "@emotion/styled" "^10.0.7"
