@@ -68,6 +68,14 @@ class Cropper extends React.Component {
     this.emitCropData()
   }
 
+  getAspect() {
+    const { cropSize, aspect } = this.props
+    if (cropSize) {
+      return cropSize.width / cropSize.height
+    }
+    return aspect
+  }
+
   computeSizes = () => {
     if (this.image) {
       this.imageSize = {
@@ -76,7 +84,9 @@ class Cropper extends React.Component {
         naturalWidth: this.image.naturalWidth,
         naturalHeight: this.image.naturalHeight,
       }
-      const cropSize = getCropSize(this.image.width, this.image.height, this.props.aspect)
+      const cropSize = this.props.cropSize
+        ? this.props.cropSize
+        : getCropSize(this.image.width, this.image.height, this.props.aspect)
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
     if (this.container) {
@@ -233,7 +243,7 @@ class Cropper extends React.Component {
       restrictedPosition,
       this.imageSize,
       this.state.cropSize,
-      this.props.aspect,
+      this.getAspect(),
       this.props.zoom
     )
     this.props.onCropComplete &&
