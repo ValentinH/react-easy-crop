@@ -30,6 +30,11 @@ class Cropper extends React.Component {
     this.container.addEventListener('wheel', this.onWheel, { passive: false })
     this.container.addEventListener('gesturestart', this.preventZoomSafari)
     this.container.addEventListener('gesturechange', this.preventZoomSafari)
+
+    // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
+    if (this.image && this.image.complete) {
+      this.onImgLoad()
+    }
   }
 
   componentWillUnmount() {
