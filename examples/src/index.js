@@ -16,6 +16,7 @@ class App extends React.Component {
     cropShape: 'rect',
     showGrid: true,
     zoomSpeed: 1,
+    restrictPosition: true,
   }
 
   onCropChange = crop => {
@@ -42,6 +43,7 @@ class App extends React.Component {
             cropShape={this.state.cropShape}
             showGrid={this.state.showGrid}
             zoomSpeed={this.state.zoomSpeed}
+            restrictPosition={this.state.restrictPosition}
             onCropChange={this.onCropChange}
             onCropComplete={this.onCropComplete}
             onZoomChange={this.onZoomChange}
