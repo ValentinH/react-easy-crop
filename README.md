@@ -15,6 +15,7 @@ Check out the examples:
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
 - [Example with image selected by the user](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
+- [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
 
 ## Features
 
@@ -100,7 +101,7 @@ class App extends React.Component {
 | `onImgError`                            | Function                                                                            |          | Called when error occurs while loading an external image                                                                                                                                                                                                                                                                                  |
 | `style`                                 | `{ containerStyle: object, imageStyle: object, cropAreaStyle: object }`             |          | Custom styles to be used with the Cropper. Styles passed via the style prop are merged with the defaults.                                                                                                                                                                                                                                 |
 | `classes`                               | `{ containerClassName: string, imageClassName: string, cropAreaClassName: string }` |          | Custom class names to be used with the Cropper. Classes passed via the classes prop are merged with the defaults.                                                                                                                                                                                                                         |
-| `restrictPosition`                      | boolean                                                                             |          | Whether the position of the image should be restricted to the boundaries of the cropper. Useful setting in case of `zoom < 1` or if the cropper should preserve all image content while forcing a specific aspect ratio for image throughout the application.                                                                             |
+| `restrictPosition`                      | boolean                                                                             |          | Whether the position of the image should be restricted to the boundaries of the cropper. Useful setting in case of `zoom < 1` or if the cropper should preserve all image content while forcing a specific aspect ratio for image throughout the application. Example: https://codesandbox.io/s/1rmqky233q.                                                                            |
 
 <a name="onCropCompleteProp"></a>
 
