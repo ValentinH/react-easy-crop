@@ -119,6 +119,17 @@ describe('Helpers', () => {
       expect(areas.croppedAreaPercentages).toEqual({ height: 25, width: 25, x: 37.5, y: 37.5 })
       expect(areas.croppedAreaPixels).toEqual({ height: 300, width: 500, x: 750, y: 450 })
     })
+
+    test('should not limit the position within image bounds when restrictPosition is false', () => {
+      const crop = { x: 1000, y: 600 }
+      const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
+      const cropSize = { width: 500, height: 300 }
+      const aspect = 4 / 3
+      const zoom = 1
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, false)
+      expect(areas.croppedAreaPercentages).toEqual({ height: 50, width: 50, x: -75, y: -75 })
+      expect(areas.croppedAreaPixels).toEqual({ height: 600, width: 800, x: -1500, y: -900 })
+    })
   })
 
   describe('getCenter', () => {

@@ -49,28 +49,30 @@ export function getDistanceBetweenPoints(pointA, pointB) {
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} aspect aspect value
  * @param {number} zoom zoom value
+ * @param {boolean} restrictPosition whether we should limit or not the cropped area
  */
-export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom) {
+export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, restrictPosition = true) {
+  const limitAreaFn = restrictPosition ? limitArea : noOp
   const croppedAreaPercentages = {
-    x: limitArea(
+    x: limitAreaFn(
       100,
       (((imgSize.width - cropSize.width / zoom) / 2 - crop.x / zoom) / imgSize.width) * 100
     ),
-    y: limitArea(
+    y: limitAreaFn(
       100,
       (((imgSize.height - cropSize.height / zoom) / 2 - crop.y / zoom) / imgSize.height) * 100
     ),
-    width: limitArea(100, ((cropSize.width / imgSize.width) * 100) / zoom),
-    height: limitArea(100, ((cropSize.height / imgSize.height) * 100) / zoom),
+    width: limitAreaFn(100, ((cropSize.width / imgSize.width) * 100) / zoom),
+    height: limitAreaFn(100, ((cropSize.height / imgSize.height) * 100) / zoom),
   }
 
   // we compute the pixels size naively
-  const widthInPixels = limitArea(
+  const widthInPixels = limitAreaFn(
     imgSize.naturalWidth,
     (croppedAreaPercentages.width * imgSize.naturalWidth) / 100,
     true
   )
-  const heightInPixels = limitArea(
+  const heightInPixels = limitAreaFn(
     imgSize.naturalHeight,
     (croppedAreaPercentages.height * imgSize.naturalHeight) / 100,
     true
@@ -92,12 +94,12 @@ export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom) {
       }
   const croppedAreaPixels = {
     ...sizePixels,
-    x: limitArea(
+    x: limitAreaFn(
       imgSize.naturalWidth - sizePixels.width,
       (croppedAreaPercentages.x * imgSize.naturalWidth) / 100,
       true
     ),
-    y: limitArea(
+    y: limitAreaFn(
       imgSize.naturalHeight - sizePixels.height,
       (croppedAreaPercentages.y * imgSize.naturalHeight) / 100,
       true
@@ -115,6 +117,10 @@ export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom) {
 function limitArea(max, value, shouldRound = false) {
   const v = shouldRound ? Math.round(value) : value
   return Math.min(max, Math.max(0, v))
+}
+
+function noOp(max, value) {
+  return value
 }
 
 /**
