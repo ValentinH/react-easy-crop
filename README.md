@@ -148,5 +148,5 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 [license]: https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[build-badge]: https://travis-ci.org/ricardo-ch/react-easy-crop.svg?branch=master
-[build-page]: https://travis-ci.org/ricardo-ch/react-easy-crop
+[build-badge]: https://circleci.com/gh/ricardo-ch/react-easy-crop/tree/master.svg?style=svg
+[build-page]: https://circleci.com/gh/ricardo-ch/react-easy-crop/tree/master
