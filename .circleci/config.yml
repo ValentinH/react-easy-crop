@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run unit tests
+          command: |
+            yarn unit
+      - run: # run coveralls
+          name: Run e2e tests
+          command: |
+            yarn e2e:ci
