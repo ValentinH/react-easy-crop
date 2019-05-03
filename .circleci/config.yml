@@ -2,7 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10
+      - image: cypress/base:10
+        environment:
+          ## this enables colors in the output
+          TERM: xterm
     steps:
       - checkout
       - restore_cache: # special step to restore the dependency cache
@@ -13,7 +16,7 @@ jobs:
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+            - ~/.cache ## cache both yarn and Cypress
       - run:
           name: Run unit tests
           command: |
