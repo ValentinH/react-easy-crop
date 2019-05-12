@@ -1359,7 +1359,7 @@ ajv@^6.1.0, ajv@^6.5.5:
 
 all-contributors-cli@^6.4.0:
   version "6.4.0"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/all-contributors-cli/-/all-contributors-cli-6.4.0.tgz#3fea26c5f91a555f3c8612696bc0d67f6160b04d"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.4.0.tgz#3fea26c5f91a555f3c8612696bc0d67f6160b04d"
   integrity sha1-P+omxfkaVV88hhJpa8DWf2FgsE0=
   dependencies:
     "@babel/runtime" "^7.2.0"
@@ -2904,7 +2904,7 @@ detect-node@^2.0.4:
 
 didyoumean@^1.2.1:
   version "1.2.1"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/didyoumean/-/didyoumean-1.2.1.tgz#e92edfdada6537d484d73c0172fd1eba0c4976ff"
+  resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.1.tgz#e92edfdada6537d484d73c0172fd1eba0c4976ff"
   integrity sha1-6S7f2tplN9SE1zwBcv0eugxJdv8=
 
 diff-sequences@^24.3.0:
@@ -3068,7 +3068,7 @@ elliptic@^6.0.0:
 
 emoji-regex@^7.0.1:
   version "7.0.3"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/emoji-regex/-/emoji-regex-7.0.3.tgz#933a04052860c85e83c122479c4748a8e4c72156"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-7.0.3.tgz#933a04052860c85e83c122479c4748a8e4c72156"
   integrity sha1-kzoEBShgyF6DwSJHnEdIqOTHIVY=
 
 emojis-list@^2.0.0:
@@ -3743,7 +3743,7 @@ get-caller-file@^1.0.1:
 
 get-caller-file@^2.0.1:
   version "2.0.5"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
+  resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha1-T5RBKoLbMvNuOwuXQfipf+sDH34=
 
 get-own-enumerable-property-symbols@^3.0.0:
@@ -7341,7 +7341,7 @@ require-main-filename@^1.0.1:
 
 require-main-filename@^2.0.0:
   version "2.0.0"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/require-main-filename/-/require-main-filename-2.0.0.tgz#d0b329ecc7cc0f61649f62215be69af54aa8989b"
+  resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-2.0.0.tgz#d0b329ecc7cc0f61649f62215be69af54aa8989b"
   integrity sha1-0LMp7MfMD2Fkn2IhW+aa9UqomJs=
 
 requires-port@^1.0.0:
@@ -8061,7 +8061,7 @@ string-width@^1.0.1:
 
 string-width@^3.0.0:
   version "3.1.0"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/string-width/-/string-width-3.1.0.tgz#22767be21b62af1081574306f69ac51b62203961"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-3.1.0.tgz#22767be21b62af1081574306f69ac51b62203961"
   integrity sha1-InZ74htirxCBV0MG9prFG2IgOWE=
   dependencies:
     emoji-regex "^7.0.1"
@@ -8114,7 +8114,7 @@ strip-ansi@^5.0.0:
 
 strip-ansi@^5.1.0:
   version "5.2.0"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/strip-ansi/-/strip-ansi-5.2.0.tgz#8c9a536feb6afc962bdfa5b104a5091c1ad9c0ae"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-5.2.0.tgz#8c9a536feb6afc962bdfa5b104a5091c1ad9c0ae"
   integrity sha1-jJpTb+tq/JYr36WxBKUJHBrZwK4=
   dependencies:
     ansi-regex "^4.1.0"
@@ -9024,7 +9024,7 @@ yargs-parser@^11.1.1:
 
 yargs-parser@^13.0.0:
   version "13.1.0"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/yargs-parser/-/yargs-parser-13.1.0.tgz#7016b6dd03e28e1418a510e258be4bff5a31138f"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-13.1.0.tgz#7016b6dd03e28e1418a510e258be4bff5a31138f"
   integrity sha1-cBa23QPijhQYpRDiWL5L/1oxE48=
   dependencies:
     camelcase "^5.0.0"
@@ -9050,7 +9050,7 @@ yargs@12.0.5, yargs@^12.0.2, yargs@^12.0.5:
 
 yargs@^13.1.0:
   version "13.2.2"
-  resolved "https://ric.jfrog.io/ric/api/npm/npm/yargs/-/yargs-13.2.2.tgz#0c101f580ae95cea7f39d927e7770e3fdc97f993"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-13.2.2.tgz#0c101f580ae95cea7f39d927e7770e3fdc97f993"
   integrity sha1-DBAfWArpXOp/Odkn53cOP9yX+ZM=
   dependencies:
     cliui "^4.0.0"
