@@ -1,0 +1,113 @@
+{
+  "projectName": "react-easy-crop",
+  "projectOwner": "ricardo-ch",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "ValentinH",
+      "name": "Valentin Hervieu",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/2678610?v=4",
+      "profile": "https://valentin-hervieu.fr",
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "doc",
+        "example",
+        "infra",
+        "review",
+        "test",
+        "tool"
+      ]
+    },
+    {
+      "login": "bexoss",
+      "name": "Juntae Kim",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12633102?v=4",
+      "profile": "https://github.com/bexoss",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tafelito",
+      "name": "tafelito",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5973652?v=4",
+      "profile": "https://github.com/tafelito",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "nicklasfrahm",
+      "name": "Nicklas",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/20382326?v=4",
+      "profile": "https://github.com/nicklasfrahm",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yokelpole",
+      "name": "Kyle Poole",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4165376?v=4",
+      "profile": "http://kylepoole.me",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "nbibler",
+      "name": "Nathaniel Bibler",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3775?v=4",
+      "profile": "https://twitter.com/nbibler",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "TheRealSlapshot",
+      "name": "TheRealSlapshot",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/878149?v=4",
+      "profile": "https://github.com/TheRealSlapshot",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "claudiuandrei",
+      "name": "Claudiu Andrei",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/882064?v=4",
+      "profile": "http://claudiuandrei.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "MattyBalaam",
+      "name": "MattyBalaam",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1246923?v=4",
+      "profile": "https://github.com/MattyBalaam",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "christiankehr",
+      "name": "Christian Kehr",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/24647736?v=4",
+      "profile": "https://github.com/christiankehr",
+      "contributions": [
+        "doc"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
