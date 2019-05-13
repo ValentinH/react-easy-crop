@@ -124,6 +124,29 @@ function noOp(max, value) {
 }
 
 /**
+ * Compute the crop and zoom from the croppedAreaPixels
+ * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
+ * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ */
+export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, imageSize) {
+  const aspect = croppedAreaPixels.width / croppedAreaPixels.height
+  const imageZoom = imageSize.width / imageSize.naturalWidth
+  const isHeightMaxSize = imageSize.naturalWidth >= imageSize.naturalHeight * aspect
+
+  const zoom = isHeightMaxSize
+    ? imageSize.naturalHeight / croppedAreaPixels.height
+    : imageSize.naturalWidth / croppedAreaPixels.width
+
+  const cropZoom = imageZoom * zoom
+
+  const crop = {
+    x: ((imageSize.naturalWidth - croppedAreaPixels.width) / 2 - croppedAreaPixels.x) * cropZoom,
+    y: ((imageSize.naturalHeight - croppedAreaPixels.height) / 2 - croppedAreaPixels.y) * cropZoom,
+  }
+  return { crop, zoom }
+}
+
+/**
  * Return the point that is the center of point a and b
  * @param {{x: number, y: number}} a
  * @param {{x: number, y: number}} b
