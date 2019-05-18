@@ -5,6 +5,7 @@ import {
   getDistanceBetweenPoints,
   computeCroppedArea,
   getCenter,
+  getInitialCropFromCroppedAreaPixels,
 } from './helpers'
 import { Container, Img, CropArea } from './styles'
 
@@ -66,6 +67,24 @@ class Cropper extends React.Component {
   onImgLoad = () => {
     this.computeSizes()
     this.emitCropData()
+    this.setInitialCrop()
+  }
+
+  setInitialCrop = () => {
+    const { initialCroppedAreaPixels } = this.props
+
+    if (!initialCroppedAreaPixels) {
+      return
+    }
+
+    const { x, y, width, height } = initialCroppedAreaPixels
+
+    const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
+      initialCroppedAreaPixels,
+      this.imageSize
+    )
+    this.props.onCropChange(crop)
+    this.props.onZoomChange && this.props.onZoomChange(zoom)
   }
 
   getAspect() {

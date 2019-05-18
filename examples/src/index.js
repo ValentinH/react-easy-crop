@@ -47,6 +47,9 @@ class App extends React.Component {
             onCropChange={this.onCropChange}
             onCropComplete={this.onCropComplete}
             onZoomChange={this.onZoomChange}
+            initialCroppedAreaPixels={
+              urlArgs.setInitialCrop && { width: 699, height: 524, x: 875, y: 157 } // used to set the initial crop in e2e test
+            }
           />
         </div>
       </div>
