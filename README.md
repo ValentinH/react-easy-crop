@@ -16,6 +16,7 @@ Check out the examples:
 - [Example with image selected by the user](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
+- [Example with crop saved/loaded to/from local storage](https://codesandbox.io/s/pmj19vp2yx)
 
 ## Features
 
@@ -102,15 +103,17 @@ class App extends React.Component {
 | `style`                                 | `{ containerStyle: object, imageStyle: object, cropAreaStyle: object }`             |          | Custom styles to be used with the Cropper. Styles passed via the style prop are merged with the defaults.                                                                                                                                                                                                                                 |
 | `classes`                               | `{ containerClassName: string, imageClassName: string, cropAreaClassName: string }` |          | Custom class names to be used with the Cropper. Classes passed via the classes prop are merged with the defaults.                                                                                                                                                                                                                         |
 | `restrictPosition`                      | boolean                                                                             |          | Whether the position of the image should be restricted to the boundaries of the cropper. Useful setting in case of `zoom < 1` or if the cropper should preserve all image content while forcing a specific aspect ratio for image throughout the application. Example: https://codesandbox.io/s/1rmqky233q.                               |
+|                                         |
+| `initialCroppedAreaPixels`              | `{ width: number, height: number, x: number, y: number}`                            |          | Use this to set the initial crop position/zoom of the cropper (for example, when editing a previously cropped image). The value should be the same as the `croppedAreaPixels` passed to [`onCropComplete`](#onCropCompleteProp) Example: https://codesandbox.io/s/pmj19vp2yx.                                                             |
 
 <a name="onCropCompleteProp"></a>
 
-#### onCropComplete(croppedArea, cropperAreaPixels)
+#### onCropComplete(croppedArea, croppedAreaPixels)
 
 This callback is the one you should use to save the cropped area of the image. It's passed 2 arguments:
 
 1. `croppedArea`: coordinates and dimensions of the cropped area in percentage of the image dimension
-1. `cropperAreaPixels`: coordinates and dimensions of the cropped area in pixels.
+1. `croppedAreaPixels`: coordinates and dimensions of the cropped area in pixels.
 
 Both arguments have the following shape:
 

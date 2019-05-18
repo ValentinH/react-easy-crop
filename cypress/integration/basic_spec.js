@@ -26,4 +26,9 @@ describe('Basic assertions', function() {
     cy.get('[data-testid=cropper]').should('have.css', 'width', '419px') // 4/3 the height of the image
     cy.get('[data-testid=cropper]').should('have.css', 'height', '314px') // height of the image
   })
+
+  it('should be able to set the crop position/zoom on load', function() {
+    cy.visit('/?setInitialCrop=true')
+    cy.get('img').should('have.css', 'transform', 'matrix(1.9084, 0, 0, 1.9084, -269.274, 80.932)')
+  })
 })
