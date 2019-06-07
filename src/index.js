@@ -171,6 +171,7 @@ class Cropper extends React.Component {
         ? restrictPosition(requestedPosition, this.imageSize, this.state.cropSize, this.props.zoom)
         : requestedPosition
       this.props.onCropChange(newPosition)
+      this.props.onInteractionBegan()
     })
   }
 
@@ -206,6 +207,7 @@ class Cropper extends React.Component {
     const point = Cropper.getMousePoint(e)
     const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
     this.setNewZoom(newZoom, point)
+    this.props.onInteractionBegan()
   }
 
   getPointOnContainer = ({ x, y }, zoom) => {
@@ -332,6 +334,7 @@ Cropper.defaultProps = {
   zoomSpeed: 1,
   crossOrigin: undefined,
   restrictPosition: true,
+  onInteractionBegan: () => {},
 }
 
 export default Cropper
