@@ -24,6 +24,7 @@ class Cropper extends React.Component {
   rafZoomTimeout = null
   state = {
     cropSize: null,
+    onWheelStart: false,
   }
 
   componentDidMount() {
@@ -153,6 +154,7 @@ class Cropper extends React.Component {
   onDragStart = ({ x, y }) => {
     this.dragStartPosition = { x, y }
     this.dragStartCrop = { x: this.props.crop.x, y: this.props.crop.y }
+    this.props.onInteractionStart()
   }
 
   onDrag = ({ x, y }) => {
@@ -171,13 +173,13 @@ class Cropper extends React.Component {
         ? restrictPosition(requestedPosition, this.imageSize, this.state.cropSize, this.props.zoom)
         : requestedPosition
       this.props.onCropChange(newPosition)
-      this.props.onInteractionBegan()
     })
   }
 
   onDragStopped = () => {
     this.cleanEvents()
     this.emitCropData()
+    this.props.onInteractionEnd()
   }
 
   onPinchStart(e) {
@@ -207,7 +209,15 @@ class Cropper extends React.Component {
     const point = Cropper.getMousePoint(e)
     const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
     this.setNewZoom(newZoom, point)
-    this.props.onInteractionBegan()
+
+    !this.state.onWheelStart &&
+      this.setState({ onWheelStart: true }, () => this.props.onInteractionStart())
+
+    clearTimeout(this.wheelTimer)
+    this.wheelTimer = setTimeout(
+      () => this.setState({ onWheelStart: false }, () => this.props.onInteractionEnd()),
+      250
+    )
   }
 
   getPointOnContainer = ({ x, y }, zoom) => {
@@ -334,7 +344,8 @@ Cropper.defaultProps = {
   zoomSpeed: 1,
   crossOrigin: undefined,
   restrictPosition: true,
-  onInteractionBegan: () => {},
+  onInteractionStart: () => {},
+  onInteractionEnd: () => {},
 }
 
 export default Cropper

@@ -31,8 +31,12 @@ class App extends React.Component {
     this.setState({ zoom })
   }
 
-  onInteractionBegan = () => {
-    console.log('user interaction began')
+  onInteractionStart = () => {
+    console.log('user interaction started')
+  }
+
+  onInteractionEnd = () => {
+    console.log('user interaction ended')
   }
 
   render() {
@@ -51,7 +55,8 @@ class App extends React.Component {
             onCropChange={this.onCropChange}
             onCropComplete={this.onCropComplete}
             onZoomChange={this.onZoomChange}
-            onInteractionBegan={this.onInteractionBegan}
+            onInteractionStart={this.onInteractionStart}
+            onInteractionEnd={this.onInteractionEnd}
             initialCroppedAreaPixels={
               urlArgs.setInitialCrop && { width: 699, height: 524, x: 875, y: 157 } // used to set the initial crop in e2e test
             }
