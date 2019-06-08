@@ -24,7 +24,7 @@ class Cropper extends React.Component {
   rafZoomTimeout = null
   state = {
     cropSize: null,
-    onWheelStart: false,
+    hasWheelJustStarted: false,
   }
 
   componentDidMount() {
@@ -45,6 +45,7 @@ class Cropper extends React.Component {
     this.container.removeEventListener('gesturestart', this.preventZoomSafari)
     this.container.removeEventListener('gesturechange', this.preventZoomSafari)
     this.cleanEvents()
+    clearTimeout(this.wheelTimer)
   }
 
   componentDidUpdate(prevProps) {
@@ -210,12 +211,13 @@ class Cropper extends React.Component {
     const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
     this.setNewZoom(newZoom, point)
 
-    !this.state.onWheelStart &&
-      this.setState({ onWheelStart: true }, () => this.props.onInteractionStart())
+    if (!this.state.hasWheelJustStarted) {
+      this.setState({ hasWheelJustStarted: true }, () => this.props.onInteractionStart())
+    }
 
     clearTimeout(this.wheelTimer)
     this.wheelTimer = setTimeout(
-      () => this.setState({ onWheelStart: false }, () => this.props.onInteractionEnd()),
+      () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd()),
       250
     )
   }
