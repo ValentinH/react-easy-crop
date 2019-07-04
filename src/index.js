@@ -241,6 +241,8 @@ class Cropper extends React.Component {
   }
 
   setNewZoom = (zoom, point) => {
+    if (!this.state.cropSize) return
+
     const zoomPoint = this.getPointOnContainer(point)
     const zoomTarget = this.getPointOnImage(zoomPoint)
     const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))

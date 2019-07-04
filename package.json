@@ -30,7 +30,6 @@
     "cy:run": "cypress run",
     "cy:ci": "cypress run --record",
     "prepublishOnly": "yarn build",
-    "precommit": "lint-staged",
     "format": "prettier --write src/**/*.js docs/src/**/*.{js,css}",
     "npm:publish": "np"
   },
@@ -77,5 +76,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
