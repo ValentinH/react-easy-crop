@@ -11,6 +11,7 @@ class App extends React.Component {
   state = {
     imageSrc,
     crop: { x: 0, y: 0 },
+    rotation: 0,
     zoom: 1,
     aspect: 4 / 3,
     cropShape: 'rect',
@@ -46,6 +47,7 @@ class App extends React.Component {
           <Cropper
             image={this.state.imageSrc}
             crop={this.state.crop}
+            rotation={this.state.rotation}
             zoom={this.state.zoom}
             aspect={this.state.aspect}
             cropShape={this.state.cropShape}

@@ -290,6 +290,7 @@ class Cropper extends React.Component {
   render() {
     const {
       crop: { x, y },
+      rotation,
       zoom,
       cropShape,
       showGrid,
@@ -314,7 +315,7 @@ class Cropper extends React.Component {
           onError={this.props.onImgError}
           alt=""
           style={{
-            transform: `translate(${x}px, ${y}px) scale(${zoom})`,
+            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
           }}
           imageStyle={imageStyle}
           className={imageClassName}
@@ -340,6 +341,7 @@ class Cropper extends React.Component {
 
 Cropper.defaultProps = {
   zoom: 1,
+  rotation: 0,
   aspect: 4 / 3,
   maxZoom: MAX_ZOOM,
   minZoom: MIN_ZOOM,
