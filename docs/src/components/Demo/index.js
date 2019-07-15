@@ -102,7 +102,7 @@ const Demo = ({ classes }) => {
             onChange={(e, zoom) => setZoom(zoom)}
           />
         </div>
-        <div className={classes.sliderContainer}>
+        {/*<div className={classes.sliderContainer}>
           <Typography variant="overline" classes={{ root: classes.sliderLabel }}>
             Rotation
           </Typography>
@@ -115,7 +115,7 @@ const Demo = ({ classes }) => {
             classes={{ container: classes.slider }}
             onChange={(e, rotation) => setRotation(rotation)}
           />
-        </div>
+  </div>*/}
         <Button
           onClick={showCroppedImage}
           variant="contained"
