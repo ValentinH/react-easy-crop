@@ -65,9 +65,9 @@ const Demo = ({ classes }) => {
   }, [])
 
   const showCroppedImage = useCallback(async () => {
-    const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels)
+    const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation)
     setCroppedImage(croppedImage)
-  }, [croppedAreaPixels])
+  }, [croppedAreaPixels, rotation])
 
   const onClose = useCallback(() => {
     setCroppedImage(null)
@@ -102,7 +102,7 @@ const Demo = ({ classes }) => {
             onChange={(e, zoom) => setZoom(zoom)}
           />
         </div>
-        {/*<div className={classes.sliderContainer}>
+        <div className={classes.sliderContainer}>
           <Typography variant="overline" classes={{ root: classes.sliderLabel }}>
             Rotation
           </Typography>
@@ -115,7 +115,7 @@ const Demo = ({ classes }) => {
             classes={{ container: classes.slider }}
             onChange={(e, rotation) => setRotation(rotation)}
           />
-  </div>*/}
+        </div>
         <Button
           onClick={showCroppedImage}
           variant="contained"
