@@ -25,10 +25,12 @@ export function getCropSize(imgWidth, imgHeight, aspect) {
  * @param {number} zoom zoom value
  * @returns {{x: number, y number}}
  */
-export function restrictPosition(position, imageSize, cropSize, zoom) {
+export function restrictPosition(position, imageSize, cropSize, zoom, rotation) {
+  const { width, height } = translateSize(imageSize.width, imageSize.height, rotation)
+
   return {
-    x: restrictPositionCoord(position.x, imageSize.width, cropSize.width, zoom),
-    y: restrictPositionCoord(position.y, imageSize.height, cropSize.height, zoom),
+    x: restrictPositionCoord(position.x, width, cropSize.width, zoom),
+    y: restrictPositionCoord(position.y, height, cropSize.height, zoom),
   }
 }
 
@@ -156,4 +158,40 @@ export function getCenter(a, b) {
     x: (b.x + a.x) / 2,
     y: (b.y + a.y) / 2,
   }
+}
+
+function rotate(x, y, xm, ym, a) {
+  var cos = Math.cos,
+    sin = Math.sin,
+    a = (a * Math.PI) / 180, // Convert to radians
+    // Subtract midpoints, so that midpoint is translated to origin
+    // and add it in the end again
+    xr = (x - xm) * cos(a) - (y - ym) * sin(a) + xm,
+    yr = (x - xm) * sin(a) + (y - ym) * cos(a) + ym
+
+  return [xr, yr]
+}
+
+function translateSize(width, height, rotation) {
+  const centerX = width / 2
+  const centerY = height / 2
+
+  const outerBounds = [
+    rotate(0, 0, centerX, centerY, rotation),
+    rotate(width, 0, centerX, centerY, rotation),
+    rotate(width, height, centerX, centerY, rotation),
+    rotate(0, height, centerX, centerY, rotation),
+  ]
+
+  const { minX, maxX, minY, maxY } = outerBounds.reduce(
+    (res, [x, y]) => ({
+      minX: typeof res.minX === 'number' ? Math.min(x, res.minX) : x,
+      maxX: typeof res.maxX === 'number' ? Math.max(x, res.maxX) : x,
+      minY: typeof res.minY === 'number' ? Math.min(y, res.minY) : y,
+      maxY: typeof res.maxY === 'number' ? Math.max(y, res.maxY) : y,
+    }),
+    {}
+  )
+
+  return { width: maxX - minX, height: maxY - minY }
 }
