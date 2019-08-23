@@ -15,8 +15,8 @@ export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
   }
 
   return {
-    width: imgWidth,
-    height: imgWidth / aspect,
+    width: width,
+    height: width / aspect,
   }
 }
 
