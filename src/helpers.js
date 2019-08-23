@@ -4,13 +4,16 @@
  * @param {number} imgHeight height of the src image in pixels
  * @param {number} aspect aspect ratio of the crop
  */
-export function getCropSize(imgWidth, imgHeight, aspect) {
-  if (imgWidth >= imgHeight * aspect) {
+export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
+  const { width } = translateSize(imgWidth, imgHeight, rotation)
+
+  if (imgWidth >= imgHeight * aspect && width > imgHeight * aspect) {
     return {
       width: imgHeight * aspect,
       height: imgHeight,
     }
   }
+
   return {
     width: imgWidth,
     height: imgWidth / aspect,
