@@ -5,12 +5,26 @@
  * @param {number} aspect aspect ratio of the crop
  */
 export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
-  const { width } = translateSize(imgWidth, imgHeight, rotation)
+  const { width, height } = translateSize(imgWidth, imgHeight, rotation)
 
   if (imgWidth >= imgHeight * aspect && width > imgHeight * aspect) {
     return {
       width: imgHeight * aspect,
       height: imgHeight,
+    }
+  }
+
+  if (width > imgHeight * aspect) {
+    return {
+      width: imgWidth,
+      height: imgWidth / aspect,
+    }
+  }
+
+  if (width > height * aspect) {
+    return {
+      width: height * aspect,
+      height: height,
     }
   }
 
