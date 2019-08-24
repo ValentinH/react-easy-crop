@@ -40,9 +40,10 @@ export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
  * @param {{width: number, height: number}} imageSize width/height of the src image
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} zoom zoom value
+ * @param {rotation} rotation rotation in degrees
  * @returns {{x: number, y number}}
  */
-export function restrictPosition(position, imageSize, cropSize, zoom, rotation) {
+export function restrictPosition(position, imageSize, cropSize, zoom, rotation = 0) {
   const { width, height } = translateSize(imageSize.width, imageSize.height, rotation)
 
   return {
@@ -177,35 +178,50 @@ export function getCenter(a, b) {
   }
 }
 
-function rotate(x, y, xm, ym, a) {
-  var cos = Math.cos,
-    sin = Math.sin,
-    a = (a * Math.PI) / 180, // Convert to radians
-    // Subtract midpoints, so that midpoint is translated to origin
-    // and add it in the end again
-    xr = (x - xm) * cos(a) - (y - ym) * sin(a) + xm,
-    yr = (x - xm) * sin(a) + (y - ym) * cos(a) + ym
+/**
+ *
+ * @param {*} x
+ * @param {*} y
+ * @param {*} xMid
+ * @param {*} yMid
+ * @param {*} degrees
+ */
+function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
+  const cos = Math.cos
+  const sin = Math.sin
+  const radian = (degrees * Math.PI) / 180 // Convert to radians
+  // Subtract midpoints, so that midpoint is translated to origin
+  // and add it in the end again
+  const xr = (x - xMid) * cos(radian) - (y - yMid) * sin(radian) + xMid
+  const yr = (x - xMid) * sin(radian) + (y - yMid) * cos(radian) + yMid
 
   return [xr, yr]
 }
 
+/**
+ *
+ * @param {*} width
+ * @param {*} height
+ * @param {*} rotation
+ * returns the new bounding area of a rotated rectangle.
+ */
 function translateSize(width, height, rotation) {
   const centerX = width / 2
   const centerY = height / 2
 
   const outerBounds = [
-    rotate(0, 0, centerX, centerY, rotation),
-    rotate(width, 0, centerX, centerY, rotation),
-    rotate(width, height, centerX, centerY, rotation),
-    rotate(0, height, centerX, centerY, rotation),
+    rotateAroundMidPoint(0, 0, centerX, centerY, rotation),
+    rotateAroundMidPoint(width, 0, centerX, centerY, rotation),
+    rotateAroundMidPoint(width, height, centerX, centerY, rotation),
+    rotateAroundMidPoint(0, height, centerX, centerY, rotation),
   ]
 
   const { minX, maxX, minY, maxY } = outerBounds.reduce(
     (res, [x, y]) => ({
-      minX: typeof res.minX === 'number' ? Math.min(x, res.minX) : x,
-      maxX: typeof res.maxX === 'number' ? Math.max(x, res.maxX) : x,
-      minY: typeof res.minY === 'number' ? Math.min(y, res.minY) : y,
-      maxY: typeof res.maxY === 'number' ? Math.max(y, res.maxY) : y,
+      minX: Math.min(x, 'minX' in res ? res.minX : x),
+      maxX: Math.max(x, 'maxX' in res ? res.maxX : x),
+      minY: Math.min(y, 'minY' in res ? res.minY : y),
+      maxY: Math.max(y, 'maxY' in res ? res.maxY : y),
     }),
     {}
   )
