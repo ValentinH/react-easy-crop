@@ -3,6 +3,7 @@ import {
   getCropSize,
   restrictPosition,
   getDistanceBetweenPoints,
+  getRotationBetweenPoints,
   computeCroppedArea,
   getCenter,
   getInitialCropFromCroppedAreaPixels,
@@ -20,8 +21,9 @@ class Cropper extends React.Component {
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
   lastPinchDistance = 0
+  lastPinchRotation = 0
   rafDragTimeout = null
-  rafZoomTimeout = null
+  rafPinchTimeout = null
   state = {
     cropSize: null,
     hasWheelJustStarted: false,
@@ -189,6 +191,7 @@ class Cropper extends React.Component {
     const pointA = Cropper.getTouchPoint(e.touches[0])
     const pointB = Cropper.getTouchPoint(e.touches[1])
     this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
+    this.lastPinchRotation = getRotationBetweenPoints(pointA, pointB)
     this.onDragStart(getCenter(pointA, pointB))
   }
 
@@ -198,12 +201,17 @@ class Cropper extends React.Component {
     const center = getCenter(pointA, pointB)
     this.onDrag(center)
 
-    if (this.rafZoomTimeout) window.cancelAnimationFrame(this.rafZoomTimeout)
-    this.rafZoomTimeout = window.requestAnimationFrame(() => {
+    if (this.rafPinchTimeout) window.cancelAnimationFrame(this.rafPinchTimeout)
+    this.rafPinchTimeout = window.requestAnimationFrame(() => {
       const distance = getDistanceBetweenPoints(pointA, pointB)
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom, center)
       this.lastPinchDistance = distance
+
+      const rotation = getRotationBetweenPoints(pointA, pointB)
+      const newRotation = this.props.rotation + (rotation - this.lastPinchRotation)
+      this.props.onRotationChange && this.props.onRotationChange(newRotation)
+      this.lastPinchRotation = rotation
     })
   }
 

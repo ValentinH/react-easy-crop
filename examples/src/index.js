@@ -32,6 +32,10 @@ class App extends React.Component {
     this.setState({ zoom })
   }
 
+  onRotationChange = rotation => {
+    this.setState({ rotation })
+  }
+
   onInteractionStart = () => {
     console.log('user interaction started')
   }
@@ -55,6 +59,7 @@ class App extends React.Component {
             zoomSpeed={this.state.zoomSpeed}
             restrictPosition={this.state.restrictPosition}
             onCropChange={this.onCropChange}
+            onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}
             onZoomChange={this.onZoomChange}
             onInteractionStart={this.onInteractionStart}
