@@ -20,3 +20,17 @@ Cypress.Commands.add('pinch', { prevSubject: 'element' }, (subject, options) => 
     .trigger('touchmove', { touches: moveTouches })
     .trigger('touchend')
 })
+
+Cypress.Commands.add('rotate', { prevSubject: 'element' }, (subject, options) => {
+  const rotationInRadians = (options.rotation * Math.PI) / 180
+
+  const startTouches = [{ clientX: 0, clientY: 0 }, { clientX: 0, clientY: 10 }]
+  const moveTouches = [
+    { clientX: 0, clientY: 0 },
+    { clientX: -10 * Math.sin(rotationInRadians), clientY: 10 * Math.cos(rotationInRadians) },
+  ]
+  cy.wrap(subject)
+    .trigger('touchstart', { touches: startTouches })
+    .trigger('touchmove', { touches: moveTouches })
+    .trigger('touchend')
+})

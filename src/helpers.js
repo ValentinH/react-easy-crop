@@ -41,6 +41,10 @@ export function getDistanceBetweenPoints(pointA, pointB) {
   return Math.sqrt(Math.pow(pointA.y - pointB.y, 2) + Math.pow(pointA.x - pointB.x, 2))
 }
 
+export function getRotationBetweenPoints(pointA, pointB) {
+  return (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI
+}
+
 /**
  * Compute the output cropped area of the image in percentages and pixels.
  * x/y are the top-left coordinates on the src image

@@ -86,6 +86,29 @@ describe('Helpers', () => {
     })
   })
 
+  describe('getRotationBetweenPoints', () => {
+    test('should handle positive rotation', () => {
+      const a = { x: 0, y: 0 }
+      const b = { x: 10, y: 10 }
+      const rotation = helpers.getRotationBetweenPoints(a, b)
+      expect(rotation).toEqual(45)
+    })
+
+    test('should handle negative rotation', () => {
+      const a = { x: 20, y: 20 }
+      const b = { x: 10, y: 10 }
+      const rotation = helpers.getRotationBetweenPoints(a, b)
+      expect(rotation).toEqual(-135)
+    })
+
+    test('should handle zero rotation', () => {
+      const a = { x: 10, y: 10 }
+      const b = { x: 10, y: 10 }
+      const rotation = helpers.getRotationBetweenPoints(a, b)
+      expect(rotation).toEqual(0)
+    })
+  })
+
   describe('computeCroppedArea', () => {
     test('should compute the correct areas when the image was not moved and not zoomed', () => {
       const crop = { x: 0, y: 0 }
