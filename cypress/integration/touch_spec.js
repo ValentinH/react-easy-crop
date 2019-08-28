@@ -66,7 +66,7 @@ describe('Touch assertions', function() {
     cy.get('img').should(
       'have.css',
       'transform',
-      'matrix(0.965926, -0.258819, 0.258819, 0.965926, 1.03553, 0)'
+      'matrix(0.965926, -0.258819, 0.258819, 0.965926, 1.03553, -1.46447)'
     )
   })
 })
