@@ -1,8 +1,10 @@
 /**
- * Compute the dimension of the crop area based on image size and aspect ratio
+ * Compute the dimension of the crop area based on image size,
+ * aspect ratio and optionally rotatation
  * @param {number} imgWidth width of the src image in pixels
  * @param {number} imgHeight height of the src image in pixels
  * @param {number} aspect aspect ratio of the crop
+ * @param {rotation} rotation rotation in degrees
  */
 export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
   const { width, height } = translateSize(imgWidth, imgHeight, rotation)
@@ -180,13 +182,14 @@ export function getCenter(a, b) {
 
 /**
  *
- * @param {*} x
- * @param {*} y
- * @param {*} xMid
- * @param {*} yMid
- * @param {*} degrees
+ * Returns an x,y point once rotated around xMid,yMid
+ * @param {number} x
+ * @param {number} y
+ * @param {number} xMid
+ * @param {number} yMid
+ * @param {number} degrees
  */
-function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
+export function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
   const cos = Math.cos
   const sin = Math.sin
   const radian = (degrees * Math.PI) / 180 // Convert to radians
@@ -200,12 +203,12 @@ function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
 
 /**
  *
- * @param {*} width
- * @param {*} height
- * @param {*} rotation
- * returns the new bounding area of a rotated rectangle.
+ * Returns the new bounding area of a rotated rectangle.
+ * @param {number} width
+ * @param {number} height
+ * @param {number} rotation
  */
-function translateSize(width, height, rotation) {
+export function translateSize(width, height, rotation) {
   const centerX = width / 2
   const centerY = height / 2
 
