@@ -65,8 +65,12 @@ const Demo = ({ classes }) => {
   }, [])
 
   const showCroppedImage = useCallback(async () => {
-    const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation)
-    setCroppedImage(croppedImage)
+    try {
+      const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation)
+      setCroppedImage(croppedImage)
+    } catch (e) {
+      console.error(e)
+    }
   }, [croppedAreaPixels, rotation])
 
   const onClose = useCallback(() => {
@@ -83,6 +87,7 @@ const Demo = ({ classes }) => {
           zoom={zoom}
           aspect={4 / 3}
           onCropChange={setCrop}
+          onRotationChange={setRotation}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
         />
