@@ -1,19 +1,38 @@
 /**
- * Compute the dimension of the crop area based on image size and aspect ratio
+ * Compute the dimension of the crop area based on image size,
+ * aspect ratio and optionally rotatation
  * @param {number} imgWidth width of the src image in pixels
  * @param {number} imgHeight height of the src image in pixels
  * @param {number} aspect aspect ratio of the crop
+ * @param {rotation} rotation rotation in degrees
  */
-export function getCropSize(imgWidth, imgHeight, aspect) {
-  if (imgWidth >= imgHeight * aspect) {
+export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
+  const { width, height } = translateSize(imgWidth, imgHeight, rotation)
+
+  if (imgWidth >= imgHeight * aspect && width > imgHeight * aspect) {
     return {
       width: imgHeight * aspect,
       height: imgHeight,
     }
   }
+
+  if (width > imgHeight * aspect) {
+    return {
+      width: imgWidth,
+      height: imgWidth / aspect,
+    }
+  }
+
+  if (width > height * aspect) {
+    return {
+      width: height * aspect,
+      height: height,
+    }
+  }
+
   return {
-    width: imgWidth,
-    height: imgWidth / aspect,
+    width: width,
+    height: width / aspect,
   }
 }
 
@@ -23,12 +42,15 @@ export function getCropSize(imgWidth, imgHeight, aspect) {
  * @param {{width: number, height: number}} imageSize width/height of the src image
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} zoom zoom value
+ * @param {rotation} rotation rotation in degrees
  * @returns {{x: number, y number}}
  */
-export function restrictPosition(position, imageSize, cropSize, zoom) {
+export function restrictPosition(position, imageSize, cropSize, zoom, rotation = 0) {
+  const { width, height } = translateSize(imageSize.width, imageSize.height, rotation)
+
   return {
-    x: restrictPositionCoord(position.x, imageSize.width, cropSize.width, zoom),
-    y: restrictPositionCoord(position.y, imageSize.height, cropSize.height, zoom),
+    x: restrictPositionCoord(position.x, width, cropSize.width, zoom),
+    y: restrictPositionCoord(position.y, height, cropSize.height, zoom),
   }
 }
 
@@ -160,4 +182,56 @@ export function getCenter(a, b) {
     x: (b.x + a.x) / 2,
     y: (b.y + a.y) / 2,
   }
+}
+
+/**
+ *
+ * Returns an x,y point once rotated around xMid,yMid
+ * @param {number} x
+ * @param {number} y
+ * @param {number} xMid
+ * @param {number} yMid
+ * @param {number} degrees
+ */
+export function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
+  const cos = Math.cos
+  const sin = Math.sin
+  const radian = (degrees * Math.PI) / 180 // Convert to radians
+  // Subtract midpoints, so that midpoint is translated to origin
+  // and add it in the end again
+  const xr = (x - xMid) * cos(radian) - (y - yMid) * sin(radian) + xMid
+  const yr = (x - xMid) * sin(radian) + (y - yMid) * cos(radian) + yMid
+
+  return [xr, yr]
+}
+
+/**
+ *
+ * Returns the new bounding area of a rotated rectangle.
+ * @param {number} width
+ * @param {number} height
+ * @param {number} rotation
+ */
+export function translateSize(width, height, rotation) {
+  const centerX = width / 2
+  const centerY = height / 2
+
+  const outerBounds = [
+    rotateAroundMidPoint(0, 0, centerX, centerY, rotation),
+    rotateAroundMidPoint(width, 0, centerX, centerY, rotation),
+    rotateAroundMidPoint(width, height, centerX, centerY, rotation),
+    rotateAroundMidPoint(0, height, centerX, centerY, rotation),
+  ]
+
+  const { minX, maxX, minY, maxY } = outerBounds.reduce(
+    (res, [x, y]) => ({
+      minX: Math.min(x, 'minX' in res ? res.minX : x),
+      maxX: Math.max(x, 'maxX' in res ? res.maxX : x),
+      minY: Math.min(y, 'minY' in res ? res.minY : y),
+      maxY: Math.max(y, 'maxY' in res ? res.maxY : y),
+    }),
+    {}
+  )
+
+  return { width: maxX - minX, height: maxY - minY }
 }

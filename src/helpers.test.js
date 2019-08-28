@@ -14,6 +14,14 @@ describe('Helpers', () => {
       const cropSize = helpers.getCropSize(800, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 600, width: 800 })
     })
+    test('when rotated 66 degrees', () => {
+      const cropSize = helpers.getCropSize(1800, 600, 16 / 9, 66)
+      expect(cropSize).toEqual({ height: 600, width: 1066.6666666666665 })
+    })
+    test('when rotated 90 degrees', () => {
+      const cropSize = helpers.getCropSize(1800, 600, 16 / 9, 90)
+      expect(cropSize).toEqual({ height: 337.5, width: 600 })
+    })
   })
 
   describe('restrictPosition', () => {
@@ -212,6 +220,46 @@ describe('Helpers', () => {
     ])('.getCenter(%o, %o)', (a, b, expected) => {
       const center = helpers.getCenter(a, b)
       expect(center).toEqual(expected)
+    })
+  })
+  describe('rotateAroundMidPoint', () => {
+    test('sould rotate correctly around supplied values', () => {
+      expect(helpers.rotateAroundMidPoint(0, 0, 66, 77, 90)).toEqual([143, 11])
+    })
+    test.each([
+      [[0, 0, 66, 77, 9], [12.858023328818689, -9.37667691848084]],
+      [[40, 0, 66, 77, 99], [146.1192983168716, 63.36555695262421]],
+      [[0, 40, 660, 77, 88], [673.9437927760558, -583.8892272105957]],
+      [[70, 40, 9, 737, 240], [-625.1197064377536, 1032.6724503691496]],
+      [[40, 40, 636, 77, 45], [240.72730931671987, -370.5985924910845]],
+    ])('.rotateAroundMidPoint(%s)', (params, expected) => {
+      expect(helpers.rotateAroundMidPoint(...params)).toEqual(expected)
+    })
+  })
+  describe('translateSize', () => {
+    test('should return correct bounding area once rotated', () => {
+      expect(helpers.translateSize(50, 50, 66)).toEqual({
+        height: 66.01410503592005,
+        width: 66.01410503592005,
+      })
+    })
+    test.each([
+      [
+        [780, 2000, 45],
+        {
+          height: 1965.756851698602,
+          width: 1965.756851698602,
+        },
+      ],
+      [
+        [1780, 60, 95],
+        {
+          height: 1778.4559071681665,
+          width: 214.90890397633643,
+        },
+      ],
+    ])('.translateSize(%s)', (params, expected) => {
+      expect(helpers.translateSize(...params)).toEqual(expected)
     })
   })
 })

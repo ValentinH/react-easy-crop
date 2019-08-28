@@ -47,6 +47,13 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <input
+          type="range"
+          min={0}
+          max={360}
+          onChange={({ target: { value: rotation } }) => this.setState({ rotation })}
+          style={{ position: 'fixed', zIndex: 9999999 }}
+        />
         <div className="crop-container">
           <Cropper
             image={this.state.imageSrc}
