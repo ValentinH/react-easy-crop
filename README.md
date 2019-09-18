@@ -109,6 +109,7 @@ class App extends React.Component {
 | `initialCroppedAreaPixels`              | `{ width: number, height: number, x: number, y: number}`                            |          | Use this to set the initial crop position/zoom of the cropper (for example, when editing a previously cropped image). The value should be the same as the `croppedAreaPixels` passed to [`onCropComplete`](#onCropCompleteProp) Example: https://codesandbox.io/s/pmj19vp2yx.                                                             |
 | `onInteractionStart`                    | `Function`                                                                          |          | Called everytime a user starts a wheel, touch or mousedown event.                                                                                                                                                                                                                                                                         |
 | `onInteractionEnd`                      | `Function`                                                                          |          | Called everytime a user ends a wheel, touch or mousedown event.                                                                                                                                                                                                                                                                           |
+| `onImageLoaded`                         | `Function`                                                                          |          | Called when image gets loaded. Gets passed an `imageSize` object like `{ width, height, naturalWidth, naturalHeight }`                                                                                                                                                                                                                    |
 
 <a name="onCropCompleteProp"></a>
 
@@ -127,6 +128,35 @@ const area = {
   y: number,
   width: number, // width of the cropped area
   height: number, // height of the cropped area
+}
+```
+
+#### onImageLoaded(imageSize)
+
+Called when image gets successfully loaded. This is useful if you want to have a custom zoom/crop
+strategy based on image size.
+
+**Example:**
+
+```jsx
+const CONTAINER_HEIGHT = 300
+
+const CroppedImage = ({ image }) => {
+  const [crop, onCropChange] = React.useState({ x: 0, y: 0 })
+  const [zoom, onZoomChange] = React.useState(1)
+  return (
+    <Cropper
+      image={image}
+      crop={crop}
+      zoom={zoom}
+      onCropChange={onCropChange}
+      onZoomChange={onZoomChange}
+      onImageLoaded={imageSize => {
+        // Adapt zoom based on image size to fit max height
+        setZoom(CONTAINER_HEIGHT / imageSize.naturalHeight)
+      }}
+    />
+  )
 }
 ```
 

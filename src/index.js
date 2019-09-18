@@ -75,6 +75,9 @@ class Cropper extends React.Component {
     this.computeSizes()
     this.emitCropData()
     this.setInitialCrop()
+    if (this.props.onImageLoaded) {
+      this.props.onImageLoaded(this.imageSize)
+    }
   }
 
   setInitialCrop = () => {
