@@ -303,6 +303,7 @@ class Cropper extends React.Component {
       this.state.cropSize,
       this.getAspect(),
       this.props.zoom,
+      this.props.rotation,
       this.props.restrictPosition
     )
     this.props.onCropComplete &&
