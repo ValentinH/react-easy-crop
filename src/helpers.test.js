@@ -157,9 +157,33 @@ describe('Helpers', () => {
       const cropSize = { width: 1000, height: 600 }
       const aspect = 5 / 3
       const zoom = 1
-      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, false)
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, 0, false)
       expect(areas.croppedAreaPercentages).toEqual({ height: 100, width: 100, x: -100, y: -100 })
       expect(areas.croppedAreaPixels).toEqual({ height: 1200, width: 2000, x: -2000, y: -1200 })
+    })
+
+    test('should compute the correct areas when there is a rotation', () => {
+      const crop = { x: 0, y: 0 }
+      const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
+      const cropSize = { width: 1000, height: 600 }
+      const aspect = 5 / 3
+      const zoom = 1
+      const rotation = 45
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, rotation)
+      expect(areas.croppedAreaPercentages).toEqual({ height: 100, width: 100, x: 0, y: 0 })
+      expect(areas.croppedAreaPixels).toEqual({ height: 1200, width: 2000, x: 0, y: 0 })
+    })
+
+    test('should compute the correct areas when there is a rotation and the image was moved', () => {
+      const crop = { x: 50, y: 0 }
+      const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
+      const cropSize = { width: 1000, height: 600 }
+      const aspect = 5 / 3
+      const zoom = 1
+      const rotation = 45
+      const areas = helpers.computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, rotation)
+      expect(areas.croppedAreaPercentages).toEqual({ height: 100, width: 100, x: -5, y: 0 })
+      expect(areas.croppedAreaPixels).toEqual({ height: 1200, width: 2000, x: -100, y: 0 })
     })
   })
 

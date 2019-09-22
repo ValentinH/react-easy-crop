@@ -75,10 +75,21 @@ export function getRotationBetweenPoints(pointA, pointB) {
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} aspect aspect value
  * @param {number} zoom zoom value
+ * @param {number} rotation rotation value (in deg)
  * @param {boolean} restrictPosition whether we should limit or not the cropped area
  */
-export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, restrictPosition = true) {
-  const limitAreaFn = restrictPosition ? limitArea : noOp
+export function computeCroppedArea(
+  crop,
+  imgSize,
+  cropSize,
+  aspect,
+  zoom,
+  rotation = 0,
+  restrictPosition = true
+) {
+  // if the image is rotated by the user, we cannot limit the position anymore
+  // as it might need to be negative.
+  const limitAreaFn = restrictPosition && rotation === 0 ? limitArea : noOp
   const croppedAreaPercentages = {
     x: limitAreaFn(
       100,
@@ -93,15 +104,14 @@ export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, restri
   }
 
   // we compute the pixels size naively
-  const widthInPixels = limitAreaFn(
-    imgSize.naturalWidth,
-    (croppedAreaPercentages.width * imgSize.naturalWidth) / 100,
-    true
+  const widthInPixels = Math.round(
+    limitAreaFn(imgSize.naturalWidth, (croppedAreaPercentages.width * imgSize.naturalWidth) / 100)
   )
-  const heightInPixels = limitAreaFn(
-    imgSize.naturalHeight,
-    (croppedAreaPercentages.height * imgSize.naturalHeight) / 100,
-    true
+  const heightInPixels = Math.round(
+    limitAreaFn(
+      imgSize.naturalHeight,
+      (croppedAreaPercentages.height * imgSize.naturalHeight) / 100
+    )
   )
   const isImgWiderThanHigh = imgSize.naturalWidth >= imgSize.naturalHeight * aspect
 
@@ -120,15 +130,17 @@ export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, restri
       }
   const croppedAreaPixels = {
     ...sizePixels,
-    x: limitAreaFn(
-      imgSize.naturalWidth - sizePixels.width,
-      (croppedAreaPercentages.x * imgSize.naturalWidth) / 100,
-      true
+    x: Math.round(
+      limitAreaFn(
+        imgSize.naturalWidth - sizePixels.width,
+        (croppedAreaPercentages.x * imgSize.naturalWidth) / 100
+      )
     ),
-    y: limitAreaFn(
-      imgSize.naturalHeight - sizePixels.height,
-      (croppedAreaPercentages.y * imgSize.naturalHeight) / 100,
-      true
+    y: Math.round(
+      limitAreaFn(
+        imgSize.naturalHeight - sizePixels.height,
+        (croppedAreaPercentages.y * imgSize.naturalHeight) / 100
+      )
     ),
   }
   return { croppedAreaPercentages, croppedAreaPixels }
@@ -138,11 +150,9 @@ export function computeCroppedArea(crop, imgSize, cropSize, aspect, zoom, restri
  * Ensure the returned value is between 0 and max
  * @param {number} max
  * @param {number} value
- * @param {boolean} shouldRound
  */
-function limitArea(max, value, shouldRound = false) {
-  const v = shouldRound ? Math.round(value) : value
-  return Math.min(max, Math.max(0, v))
+function limitArea(max, value) {
+  return Math.min(max, Math.max(0, value))
 }
 
 function noOp(max, value) {
