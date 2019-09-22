@@ -116,6 +116,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Betree",
+      "name": "Benjamin Piouffle",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1556356?v=4",
+      "profile": "https://benjamin.piouffle.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
