@@ -2,7 +2,7 @@
 
 A React component to crop images with easy interactions
 
-[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
 
 ![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
@@ -195,6 +195,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/christiankehr"><img src="https://avatars3.githubusercontent.com/u/24647736?v=4" width="100px;" alt="Christian Kehr"/><br /><sub><b>Christian Kehr</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=christiankehr" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/Alba-C"><img src="https://avatars1.githubusercontent.com/u/24299944?v=4" width="100px;" alt="Christopher Albanese"/><br /><sub><b>Christopher Albanese</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=Alba-C" title="Code">💻</a></td>
     <td align="center"><a href="https://benjamin.piouffle.com"><img src="https://avatars1.githubusercontent.com/u/1556356?v=4" width="100px;" alt="Benjamin Piouffle"/><br /><sub><b>Benjamin Piouffle</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=Betree" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mbalaam"><img src="https://avatars3.githubusercontent.com/u/44968243?v=4" width="100px;" alt="mbalaam"/><br /><sub><b>mbalaam</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=mbalaam" title="Documentation">📖</a></td>
   </tr>
 </table>
 
