@@ -30,7 +30,7 @@ export const Img = styled('img')(
   ({ imageStyle }) => ({ ...imageStyle })
 )
 
-const lineBorder = '1px solid rgba(255, 255, 255, 0.5)'
+const lineBorder = '1px solid rgba(255, 0, 0, 0.5)'
 const cropperLines = {
   content: '" "',
   boxSizing: 'border-box',
