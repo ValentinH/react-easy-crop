@@ -163,15 +163,34 @@ function noOp(max, value) {
  * Compute the crop and zoom from the croppedAreaPixels
  * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
  * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
  */
-export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, imageSize) {
-  const aspect = croppedAreaPixels.width / croppedAreaPixels.height
+function getZoomFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize) {
   const imageZoom = imageSize.width / imageSize.naturalWidth
-  const isHeightMaxSize = imageSize.naturalWidth >= imageSize.naturalHeight * aspect
 
-  const zoom = isHeightMaxSize
+  if (cropSize) {
+    const isHeightMaxSize = cropSize.height > cropSize.width
+    return isHeightMaxSize
+      ? cropSize.height / imageZoom / croppedAreaPixels.height
+      : cropSize.width / imageZoom / croppedAreaPixels.width
+  }
+
+  const aspect = croppedAreaPixels.width / croppedAreaPixels.height
+  const isHeightMaxSize = imageSize.naturalWidth >= imageSize.naturalHeight * aspect
+  return isHeightMaxSize
     ? imageSize.naturalHeight / croppedAreaPixels.height
     : imageSize.naturalWidth / croppedAreaPixels.width
+}
+/**
+ * Compute the crop and zoom from the croppedAreaPixels
+ * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
+ * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
+ */
+export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize) {
+  const imageZoom = imageSize.width / imageSize.naturalWidth
+
+  const zoom = getZoomFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize)
 
   const cropZoom = imageZoom * zoom
 
