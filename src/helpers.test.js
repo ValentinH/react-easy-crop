@@ -208,6 +208,22 @@ describe('Helpers', () => {
       expect(zoom).toEqual(1)
     })
 
+    test('should compute the correct crop and zoom even when cropSize is used', () => {
+      const croppedAreaPixels = { width: 873, height: 873, x: 0, y: 0 }
+      const imgSize = { width: 875, height: 458, naturalWidth: 1910, naturalHeight: 1000 }
+      const cropSize = { width: 400, height: 400 }
+
+      const { crop, zoom } = helpers.getInitialCropFromCroppedAreaPixels(
+        croppedAreaPixels,
+        imgSize,
+        cropSize
+      )
+
+      expect(crop.x).toBeCloseTo(237.6, 1)
+      expect(crop.y).toBeCloseTo(29.1, 1)
+      expect(zoom).toBeCloseTo(1, 3)
+    })
+
     test('should compute the correct crop and zoom when there is a zoom', () => {
       const croppedAreaPixels = { height: 600, width: 1000, x: 500, y: 300 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }

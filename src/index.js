@@ -81,7 +81,7 @@ class Cropper extends React.Component {
   }
 
   setInitialCrop = () => {
-    const { initialCroppedAreaPixels } = this.props
+    const { initialCroppedAreaPixels, cropSize } = this.props
 
     if (!initialCroppedAreaPixels) {
       return
@@ -89,7 +89,8 @@ class Cropper extends React.Component {
 
     const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
       initialCroppedAreaPixels,
-      this.imageSize
+      this.imageSize,
+      cropSize
     )
     this.props.onCropChange(crop)
     this.props.onZoomChange && this.props.onZoomChange(zoom)
