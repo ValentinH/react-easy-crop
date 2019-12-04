@@ -8,16 +8,17 @@ import {
   getCenter,
   getInitialCropFromCroppedAreaPixels,
 } from './helpers'
-import { Container, Img, CropArea } from './styles'
+import { Container, Img, CropArea, Video } from './styles'
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
 class Cropper extends React.Component {
   image = null
+  video = null
   container = null
   containerRect = {}
-  imageSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
+  mediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition = { x: 0, y: 0 }
   dragStartCrop = { x: 0, y: 0 }
   lastPinchDistance = 0
@@ -36,8 +37,8 @@ class Cropper extends React.Component {
     this.container.addEventListener('gesturechange', this.preventZoomSafari)
 
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
-    if (this.image && this.image.complete) {
-      this.onImgLoad()
+    if (this.media && this.media.complete) {
+      this.onMediaLoad()
     }
   }
 
@@ -71,12 +72,18 @@ class Cropper extends React.Component {
     document.removeEventListener('touchend', this.onDragStopped)
   }
 
-  onImgLoad = () => {
+  onMediaLoad = () => {
     this.computeSizes()
     this.emitCropData()
     this.setInitialCrop()
+
+    if (this.props.onMediaLoaded) {
+      this.props.onMediaLoaded(this.mediaSize)
+    }
+
+    /* Deprecated */
     if (this.props.onImageLoaded) {
-      this.props.onImageLoaded(this.imageSize)
+      this.props.onImageLoaded(this.mediaSize)
     }
   }
 
@@ -89,7 +96,7 @@ class Cropper extends React.Component {
 
     const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
       initialCroppedAreaPixels,
-      this.imageSize,
+      this.mediaSize,
       cropSize
     )
     this.props.onCropChange(crop)
@@ -105,16 +112,21 @@ class Cropper extends React.Component {
   }
 
   computeSizes = () => {
-    if (this.image) {
-      this.imageSize = {
-        width: this.image.width,
-        height: this.image.height,
-        naturalWidth: this.image.naturalWidth,
-        naturalHeight: this.image.naturalHeight,
+    if (this.media) {
+      this.mediaSize = {
+        width: this.media.offsetWidth,
+        height: this.media.offsetHeight,
+        naturalWidth: this.media.naturalWidth || this.media.videoWidth,
+        naturalHeight: this.media.naturalHeight || this.media.videoHeight,
       }
       const cropSize = this.props.cropSize
         ? this.props.cropSize
-        : getCropSize(this.image.width, this.image.height, this.props.aspect, this.props.rotation)
+        : getCropSize(
+          this.media.offsetWidth,
+          this.media.offsetHeight,
+          this.props.aspect,
+          this.props.rotation
+        )
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
     if (this.container) {
@@ -181,12 +193,12 @@ class Cropper extends React.Component {
 
       const newPosition = this.props.restrictPosition
         ? restrictPosition(
-            requestedPosition,
-            this.imageSize,
-            this.state.cropSize,
-            this.props.zoom,
-            this.props.rotation
-          )
+          requestedPosition,
+          this.mediaSize,
+          this.state.cropSize,
+          this.props.zoom,
+          this.props.rotation
+        )
         : requestedPosition
       this.props.onCropChange(newPosition)
     })
@@ -273,12 +285,12 @@ class Cropper extends React.Component {
     }
     const newPosition = this.props.restrictPosition
       ? restrictPosition(
-          requestedPosition,
-          this.imageSize,
-          this.state.cropSize,
-          newZoom,
-          this.props.rotation
-        )
+        requestedPosition,
+        this.mediaSize,
+        this.state.cropSize,
+        newZoom,
+        this.props.rotation
+      )
       : requestedPosition
 
     this.props.onCropChange(newPosition)
@@ -291,16 +303,16 @@ class Cropper extends React.Component {
     // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
       ? restrictPosition(
-          this.props.crop,
-          this.imageSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
-        )
+        this.props.crop,
+        this.mediaSize,
+        this.state.cropSize,
+        this.props.zoom,
+        this.props.rotation
+      )
       : this.props.crop
     const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
       restrictedPosition,
-      this.imageSize,
+      this.mediaSize,
       this.state.cropSize,
       this.getAspect(),
       this.props.zoom,
@@ -308,18 +320,18 @@ class Cropper extends React.Component {
       this.props.restrictPosition
     )
     this.props.onCropComplete &&
-      this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
+    this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
   }
 
   recomputeCropPosition = () => {
     const newPosition = this.props.restrictPosition
       ? restrictPosition(
-          this.props.crop,
-          this.imageSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
-        )
+        this.props.crop,
+        this.mediaSize,
+        this.state.cropSize,
+        this.props.zoom,
+        this.props.rotation
+      )
       : this.props.crop
     this.props.onCropChange(newPosition)
     this.emitCropData()
@@ -327,6 +339,8 @@ class Cropper extends React.Component {
 
   render() {
     const {
+      image,
+      video,
       crop: { x, y },
       rotation,
       zoom,
@@ -346,19 +360,39 @@ class Cropper extends React.Component {
         containerStyle={containerStyle}
         className={containerClassName}
       >
-        <Img
-          src={this.props.image}
-          ref={el => (this.image = el)}
-          onLoad={this.onImgLoad}
-          onError={this.props.onImgError}
-          alt=""
-          style={{
-            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
-          }}
-          imageStyle={imageStyle}
-          className={imageClassName}
-          crossOrigin={crossOrigin}
-        />
+        {image ? (
+          <Img
+            src={image}
+            ref={el => (this.media = el)}
+            onLoad={this.onMediaLoad}
+            onError={this.props.onMediaError || this.props.onImgError}
+            alt=""
+            style={{
+              transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+            }}
+            imageStyle={imageStyle}
+            className={imageClassName}
+            crossOrigin={crossOrigin}
+          />
+        ) : (
+          video && (
+            <Video
+              autoPlay
+              loop
+              src={video}
+              ref={el => (this.media = el)}
+              onLoadedMetadata={this.onMediaLoad}
+              onError={this.props.onMediaError}
+              alt=""
+              style={{
+                transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+              }}
+              imageStyle={imageStyle}
+              className={imageClassName}
+              crossOrigin={crossOrigin}
+            />
+          )
+        )}
         {this.state.cropSize && (
           <CropArea
             cropShape={cropShape}
