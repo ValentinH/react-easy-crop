@@ -15,20 +15,21 @@ export const Container = styled('div')(
   ({ containerStyle }) => ({ ...containerStyle })
 )
 
-export const Img = styled('img')(
-  {
-    maxWidth: '100%',
-    maxHeight: '100%',
-    margin: 'auto',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
-  },
-  ({ imageStyle }) => ({ ...imageStyle })
-)
+const mediaStyles = {
+  maxWidth: '100%',
+  maxHeight: '100%',
+  margin: 'auto',
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
+}
+
+export const Img = styled('img')(mediaStyles, ({ mediaStyle }) => ({ ...mediaStyle }))
+
+export const Video = styled('video')(mediaStyles, ({ mediaStyle }) => ({ ...mediaStyle }))
 
 const lineBorder = '1px solid rgba(255, 255, 255, 0.5)'
 const cropperLines = {
