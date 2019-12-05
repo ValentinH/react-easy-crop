@@ -122,11 +122,11 @@ class Cropper extends React.Component {
       const cropSize = this.props.cropSize
         ? this.props.cropSize
         : getCropSize(
-          this.media.offsetWidth,
-          this.media.offsetHeight,
-          this.props.aspect,
-          this.props.rotation
-        )
+            this.media.offsetWidth,
+            this.media.offsetHeight,
+            this.props.aspect,
+            this.props.rotation
+          )
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
     if (this.container) {
@@ -193,12 +193,12 @@ class Cropper extends React.Component {
 
       const newPosition = this.props.restrictPosition
         ? restrictPosition(
-          requestedPosition,
-          this.mediaSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
-        )
+            requestedPosition,
+            this.mediaSize,
+            this.state.cropSize,
+            this.props.zoom,
+            this.props.rotation
+          )
         : requestedPosition
       this.props.onCropChange(newPosition)
     })
@@ -285,12 +285,12 @@ class Cropper extends React.Component {
     }
     const newPosition = this.props.restrictPosition
       ? restrictPosition(
-        requestedPosition,
-        this.mediaSize,
-        this.state.cropSize,
-        newZoom,
-        this.props.rotation
-      )
+          requestedPosition,
+          this.mediaSize,
+          this.state.cropSize,
+          newZoom,
+          this.props.rotation
+        )
       : requestedPosition
 
     this.props.onCropChange(newPosition)
@@ -303,12 +303,12 @@ class Cropper extends React.Component {
     // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
       ? restrictPosition(
-        this.props.crop,
-        this.mediaSize,
-        this.state.cropSize,
-        this.props.zoom,
-        this.props.rotation
-      )
+          this.props.crop,
+          this.mediaSize,
+          this.state.cropSize,
+          this.props.zoom,
+          this.props.rotation
+        )
       : this.props.crop
     const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
       restrictedPosition,
@@ -320,18 +320,18 @@ class Cropper extends React.Component {
       this.props.restrictPosition
     )
     this.props.onCropComplete &&
-    this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
+      this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
   }
 
   recomputeCropPosition = () => {
     const newPosition = this.props.restrictPosition
       ? restrictPosition(
-        this.props.crop,
-        this.mediaSize,
-        this.state.cropSize,
-        this.props.zoom,
-        this.props.rotation
-      )
+          this.props.crop,
+          this.mediaSize,
+          this.state.cropSize,
+          this.props.zoom,
+          this.props.rotation
+        )
       : this.props.crop
     this.props.onCropChange(newPosition)
     this.emitCropData()
@@ -341,6 +341,7 @@ class Cropper extends React.Component {
     const {
       image,
       video,
+      mediaProps,
       crop: { x, y },
       rotation,
       zoom,
@@ -373,12 +374,14 @@ class Cropper extends React.Component {
             imageStyle={imageStyle}
             className={imageClassName}
             crossOrigin={crossOrigin}
+            {...mediaProps}
           />
         ) : (
           video && (
             <Video
               autoPlay
               loop
+              muted={true}
               src={video}
               ref={el => (this.media = el)}
               onLoadedMetadata={this.onMediaLoad}
@@ -390,6 +393,8 @@ class Cropper extends React.Component {
               imageStyle={imageStyle}
               className={imageClassName}
               crossOrigin={crossOrigin}
+              {...mediaProps}
+              controls={false}
             />
           )
         )}
@@ -421,6 +426,7 @@ Cropper.defaultProps = {
   showGrid: true,
   style: {},
   classes: {},
+  mediaProps: {},
   zoomSpeed: 1,
   crossOrigin: undefined,
   restrictPosition: true,
