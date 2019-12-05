@@ -14,8 +14,7 @@ const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
 class Cropper extends React.Component {
-  image = null
-  video = null
+  media = null
   container = null
   containerRect = {}
   mediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
@@ -36,7 +35,7 @@ class Cropper extends React.Component {
     this.container.addEventListener('gesturestart', this.preventZoomSafari)
     this.container.addEventListener('gesturechange', this.preventZoomSafari)
 
-    // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
+    // when rendered via SSR, the media can already be loaded and its onLoad callback will never be called
     if (this.media && this.media.complete) {
       this.onMediaLoad()
     }
@@ -265,7 +264,7 @@ class Cropper extends React.Component {
     }
   }
 
-  getPointOnImage = ({ x, y }) => {
+  getPointOnMedia = ({ x, y }) => {
     const { crop, zoom } = this.props
     return {
       x: (x + crop.x) / zoom,
@@ -277,7 +276,7 @@ class Cropper extends React.Component {
     if (!this.state.cropSize) return
 
     const zoomPoint = this.getPointOnContainer(point)
-    const zoomTarget = this.getPointOnImage(zoomPoint)
+    const zoomTarget = this.getPointOnMedia(zoomPoint)
     const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))
     const requestedPosition = {
       x: zoomTarget.x * newZoom - zoomPoint.x,
@@ -347,10 +346,12 @@ class Cropper extends React.Component {
       zoom,
       cropShape,
       showGrid,
-      style: { containerStyle, cropAreaStyle, imageStyle },
-      classes: { containerClassName, cropAreaClassName, imageClassName },
+      style: { containerStyle, cropAreaStyle, mediaStyle, imageStyle },
+      classes: { containerClassName, cropAreaClassName, mediaClassName, imageClassName },
       crossOrigin,
     } = this.props
+
+    // imageStyle and imageClassName are deprecated
 
     return (
       <Container
@@ -371,8 +372,8 @@ class Cropper extends React.Component {
             style={{
               transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
             }}
-            imageStyle={imageStyle}
-            className={imageClassName}
+            mediaStyle={mediaStyle || imageStyle}
+            className={mediaClassName || imageClassName}
             crossOrigin={crossOrigin}
             {...mediaProps}
           />
@@ -390,8 +391,8 @@ class Cropper extends React.Component {
               style={{
                 transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
               }}
-              imageStyle={imageStyle}
-              className={imageClassName}
+              mediaStyle={mediaStyle || imageStyle}
+              className={mediaClassName || imageClassName}
               crossOrigin={crossOrigin}
               {...mediaProps}
               controls={false}

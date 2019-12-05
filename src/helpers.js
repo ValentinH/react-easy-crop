@@ -1,25 +1,25 @@
 /**
- * Compute the dimension of the crop area based on image size,
+ * Compute the dimension of the crop area based on media size,
  * aspect ratio and optionally rotatation
- * @param {number} imgWidth width of the src image in pixels
- * @param {number} imgHeight height of the src image in pixels
+ * @param {number} mediaWidth width of the src media in pixels
+ * @param {number} mediaHeight height of the src media in pixels
  * @param {number} aspect aspect ratio of the crop
  * @param {rotation} rotation rotation in degrees
  */
-export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
-  const { width, height } = translateSize(imgWidth, imgHeight, rotation)
+export function getCropSize(mediaWidth, mediaHeight, aspect, rotation = 0) {
+  const { width, height } = translateSize(mediaWidth, mediaHeight, rotation)
 
-  if (imgWidth >= imgHeight * aspect && width > imgHeight * aspect) {
+  if (mediaWidth >= mediaHeight * aspect && width > mediaHeight * aspect) {
     return {
-      width: imgHeight * aspect,
-      height: imgHeight,
+      width: mediaHeight * aspect,
+      height: mediaHeight,
     }
   }
 
-  if (width > imgHeight * aspect) {
+  if (width > mediaHeight * aspect) {
     return {
-      width: imgWidth,
-      height: imgWidth / aspect,
+      width: mediaWidth,
+      height: mediaWidth / aspect,
     }
   }
 
@@ -37,16 +37,16 @@ export function getCropSize(imgWidth, imgHeight, aspect, rotation = 0) {
 }
 
 /**
- * Ensure a new image position stays in the crop area.
- * @param {{x: number, y number}} position new x/y position requested for the image
- * @param {{width: number, height: number}} imageSize width/height of the src image
+ * Ensure a new media position stays in the crop area.
+ * @param {{x: number, y number}} position new x/y position requested for the media
+ * @param {{width: number, height: number}} mediaSize width/height of the src media
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} zoom zoom value
  * @param {rotation} rotation rotation in degrees
  * @returns {{x: number, y number}}
  */
-export function restrictPosition(position, imageSize, cropSize, zoom, rotation = 0) {
-  const { width, height } = translateSize(imageSize.width, imageSize.height, rotation)
+export function restrictPosition(position, mediaSize, cropSize, zoom, rotation = 0) {
+  const { width, height } = translateSize(mediaSize.width, mediaSize.height, rotation)
 
   return {
     x: restrictPositionCoord(position.x, width, cropSize.width, zoom),
@@ -54,8 +54,8 @@ export function restrictPosition(position, imageSize, cropSize, zoom, rotation =
   }
 }
 
-function restrictPositionCoord(position, imageSize, cropSize, zoom) {
-  const maxPosition = (imageSize * zoom) / 2 - cropSize / 2
+function restrictPositionCoord(position, mediaSize, cropSize, zoom) {
+  const maxPosition = (mediaSize * zoom) / 2 - cropSize / 2
   return Math.min(maxPosition, Math.max(position, -maxPosition))
 }
 
@@ -68,10 +68,10 @@ export function getRotationBetweenPoints(pointA, pointB) {
 }
 
 /**
- * Compute the output cropped area of the image in percentages and pixels.
- * x/y are the top-left coordinates on the src image
- * @param {{x: number, y number}} crop x/y position of the current center of the image
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ * Compute the output cropped area of the media in percentages and pixels.
+ * x/y are the top-left coordinates on the src media
+ * @param {{x: number, y number}} crop x/y position of the current center of the media
+ * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
  * @param {{width: number, height: number}} cropSize width/height of the crop area
  * @param {number} aspect aspect value
  * @param {number} zoom zoom value
@@ -80,43 +80,46 @@ export function getRotationBetweenPoints(pointA, pointB) {
  */
 export function computeCroppedArea(
   crop,
-  imgSize,
+  mediaSize,
   cropSize,
   aspect,
   zoom,
   rotation = 0,
   restrictPosition = true
 ) {
-  // if the image is rotated by the user, we cannot limit the position anymore
+  // if the media is rotated by the user, we cannot limit the position anymore
   // as it might need to be negative.
   const limitAreaFn = restrictPosition && rotation === 0 ? limitArea : noOp
   const croppedAreaPercentages = {
     x: limitAreaFn(
       100,
-      (((imgSize.width - cropSize.width / zoom) / 2 - crop.x / zoom) / imgSize.width) * 100
+      (((mediaSize.width - cropSize.width / zoom) / 2 - crop.x / zoom) / mediaSize.width) * 100
     ),
     y: limitAreaFn(
       100,
-      (((imgSize.height - cropSize.height / zoom) / 2 - crop.y / zoom) / imgSize.height) * 100
+      (((mediaSize.height - cropSize.height / zoom) / 2 - crop.y / zoom) / mediaSize.height) * 100
     ),
-    width: limitAreaFn(100, ((cropSize.width / imgSize.width) * 100) / zoom),
-    height: limitAreaFn(100, ((cropSize.height / imgSize.height) * 100) / zoom),
+    width: limitAreaFn(100, ((cropSize.width / mediaSize.width) * 100) / zoom),
+    height: limitAreaFn(100, ((cropSize.height / mediaSize.height) * 100) / zoom),
   }
 
   // we compute the pixels size naively
   const widthInPixels = Math.round(
-    limitAreaFn(imgSize.naturalWidth, (croppedAreaPercentages.width * imgSize.naturalWidth) / 100)
+    limitAreaFn(
+      mediaSize.naturalWidth,
+      (croppedAreaPercentages.width * mediaSize.naturalWidth) / 100
+    )
   )
   const heightInPixels = Math.round(
     limitAreaFn(
-      imgSize.naturalHeight,
-      (croppedAreaPercentages.height * imgSize.naturalHeight) / 100
+      mediaSize.naturalHeight,
+      (croppedAreaPercentages.height * mediaSize.naturalHeight) / 100
     )
   )
-  const isImgWiderThanHigh = imgSize.naturalWidth >= imgSize.naturalHeight * aspect
+  const isImgWiderThanHigh = mediaSize.naturalWidth >= mediaSize.naturalHeight * aspect
 
   // then we ensure the width and height exactly match the aspect (to avoid rounding approximations)
-  // if the image is wider than high, when zoom is 0, the crop height will be equals to iamge height
+  // if the media is wider than high, when zoom is 0, the crop height will be equals to iamge height
   // thus we want to compute the width from the height and aspect for accuracy.
   // Otherwise, we compute the height from width and aspect.
   const sizePixels = isImgWiderThanHigh
@@ -132,14 +135,14 @@ export function computeCroppedArea(
     ...sizePixels,
     x: Math.round(
       limitAreaFn(
-        imgSize.naturalWidth - sizePixels.width,
-        (croppedAreaPercentages.x * imgSize.naturalWidth) / 100
+        mediaSize.naturalWidth - sizePixels.width,
+        (croppedAreaPercentages.x * mediaSize.naturalWidth) / 100
       )
     ),
     y: Math.round(
       limitAreaFn(
-        imgSize.naturalHeight - sizePixels.height,
-        (croppedAreaPercentages.y * imgSize.naturalHeight) / 100
+        mediaSize.naturalHeight - sizePixels.height,
+        (croppedAreaPercentages.y * mediaSize.naturalHeight) / 100
       )
     ),
   }
@@ -162,41 +165,41 @@ function noOp(max, value) {
 /**
  * Compute the crop and zoom from the croppedAreaPixels
  * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
  * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
  */
-function getZoomFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize) {
-  const imageZoom = imageSize.width / imageSize.naturalWidth
+function getZoomFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize) {
+  const mediaZoom = mediaSize.width / mediaSize.naturalWidth
 
   if (cropSize) {
     const isHeightMaxSize = cropSize.height > cropSize.width
     return isHeightMaxSize
-      ? cropSize.height / imageZoom / croppedAreaPixels.height
-      : cropSize.width / imageZoom / croppedAreaPixels.width
+      ? cropSize.height / mediaZoom / croppedAreaPixels.height
+      : cropSize.width / mediaZoom / croppedAreaPixels.width
   }
 
   const aspect = croppedAreaPixels.width / croppedAreaPixels.height
-  const isHeightMaxSize = imageSize.naturalWidth >= imageSize.naturalHeight * aspect
+  const isHeightMaxSize = mediaSize.naturalWidth >= mediaSize.naturalHeight * aspect
   return isHeightMaxSize
-    ? imageSize.naturalHeight / croppedAreaPixels.height
-    : imageSize.naturalWidth / croppedAreaPixels.width
+    ? mediaSize.naturalHeight / croppedAreaPixels.height
+    : mediaSize.naturalWidth / croppedAreaPixels.width
 }
 /**
  * Compute the crop and zoom from the croppedAreaPixels
  * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} imageSize width/height of the src image (default is size on the screen, natural is the original size)
+ * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
  * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
  */
-export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize) {
-  const imageZoom = imageSize.width / imageSize.naturalWidth
+export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize) {
+  const mediaZoom = mediaSize.width / mediaSize.naturalWidth
 
-  const zoom = getZoomFromCroppedAreaPixels(croppedAreaPixels, imageSize, cropSize)
+  const zoom = getZoomFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize)
 
-  const cropZoom = imageZoom * zoom
+  const cropZoom = mediaZoom * zoom
 
   const crop = {
-    x: ((imageSize.naturalWidth - croppedAreaPixels.width) / 2 - croppedAreaPixels.x) * cropZoom,
-    y: ((imageSize.naturalHeight - croppedAreaPixels.height) / 2 - croppedAreaPixels.y) * cropZoom,
+    x: ((mediaSize.naturalWidth - croppedAreaPixels.width) / 2 - croppedAreaPixels.x) * cropZoom,
+    y: ((mediaSize.naturalHeight - croppedAreaPixels.height) / 2 - croppedAreaPixels.y) * cropZoom,
   }
   return { crop, zoom }
 }

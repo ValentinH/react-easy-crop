@@ -2,15 +2,15 @@ import * as helpers from './helpers'
 
 describe('Helpers', () => {
   describe('getCropSize', () => {
-    test('when image width is higher than the height based on the aspect', () => {
+    test('when media width is higher than the height based on the aspect', () => {
       const cropSize = helpers.getCropSize(1200, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 600, width: 800 })
     })
-    test('when image width is smaller than the height based on the aspect', () => {
+    test('when media width is smaller than the height based on the aspect', () => {
       const cropSize = helpers.getCropSize(600, 1200, 4 / 3)
       expect(cropSize).toEqual({ height: 450, width: 600 })
     })
-    test('when image dimensions exactly match the aspect', () => {
+    test('when media dimensions exactly match the aspect', () => {
       const cropSize = helpers.getCropSize(800, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 600, width: 800 })
     })
@@ -52,7 +52,7 @@ describe('Helpers', () => {
       expect(result).toEqual({ x: -250, y: -150 })
     })
 
-    test('when zoomed, we should be able to drag the image further', () => {
+    test('when zoomed, we should be able to drag the media further', () => {
       const position = { x: 500, y: 300 }
       const imgSize = { width: 1000, height: 500 }
       const cropSize = { width: 500, height: 200 }
@@ -118,7 +118,7 @@ describe('Helpers', () => {
   })
 
   describe('computeCroppedArea', () => {
-    test('should compute the correct areas when the image was not moved and not zoomed', () => {
+    test('should compute the correct areas when the media was not moved and not zoomed', () => {
       const crop = { x: 0, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 1000, height: 600 }
@@ -129,7 +129,7 @@ describe('Helpers', () => {
       expect(areas.croppedAreaPixels).toEqual({ height: 1200, width: 2000, x: 0, y: 0 })
     })
 
-    test('should compute the correct areas when the image was moved but not zoomed', () => {
+    test('should compute the correct areas when the media was moved but not zoomed', () => {
       const crop = { x: 50, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 800, height: 600 }
@@ -151,7 +151,7 @@ describe('Helpers', () => {
       expect(areas.croppedAreaPixels).toEqual({ height: 600, width: 1000, x: 500, y: 300 })
     })
 
-    test('should not limit the position within image bounds when restrictPosition is false', () => {
+    test('should not limit the position within media bounds when restrictPosition is false', () => {
       const crop = { x: 1000, y: 600 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 1000, height: 600 }
@@ -174,7 +174,7 @@ describe('Helpers', () => {
       expect(areas.croppedAreaPixels).toEqual({ height: 1200, width: 2000, x: 0, y: 0 })
     })
 
-    test('should compute the correct areas when there is a rotation and the image was moved', () => {
+    test('should compute the correct areas when there is a rotation and the media was moved', () => {
       const crop = { x: 50, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
       const cropSize = { width: 1000, height: 600 }
@@ -188,7 +188,7 @@ describe('Helpers', () => {
   })
 
   describe('getInitialCropFromCroppedAreaPixels', () => {
-    test('should compute the correct crop and zoom when the image was not moved and not zoomed', () => {
+    test('should compute the correct crop and zoom when the media was not moved and not zoomed', () => {
       const croppedAreaPixels = { height: 1200, width: 2000, x: 0, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
 
@@ -198,7 +198,7 @@ describe('Helpers', () => {
       expect(zoom).toEqual(1)
     })
 
-    test('should compute the correct crop and zoom when the image was moved but not zoomed', () => {
+    test('should compute the correct crop and zoom when the media was moved but not zoomed', () => {
       const croppedAreaPixels = { height: 1200, width: 1600, x: 100, y: 0 }
       const imgSize = { width: 1000, height: 600, naturalWidth: 2000, naturalHeight: 1200 }
 
