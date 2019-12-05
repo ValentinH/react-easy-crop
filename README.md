@@ -183,10 +183,11 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://valentin-hervieu.fr"><img src="https://avatars2.githubusercontent.com/u/2678610?v=4" width="100px;" alt="Valentin Hervieu"/><br /><sub><b>Valentin Hervieu</b></sub></a><br /><a href="#question-ValentinH" title="Answering Questions">💬</a> <a href="https://github.com/ricardo-ch/react-easy-crop/issues?q=author%3AValentinH" title="Bug reports">🐛</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Code">💻</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Documentation">📖</a> <a href="#example-ValentinH" title="Examples">💡</a> <a href="#infra-ValentinH" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#review-ValentinH" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Tests">⚠️</a> <a href="#tool-ValentinH" title="Tools">🔧</a></td>
+    <td align="center"><a href="https://valentin-hervieu.fr"><img src="https://avatars2.githubusercontent.com/u/2678610?v=4" width="100px;" alt="Valentin Hervieu"/><br /><sub><b>Valentin Hervieu</b></sub></a><br /><a href="#question-ValentinH" title="Answering Questions">💬</a> <a href="https://github.com/ricardo-ch/react-easy-crop/issues?q=author%3AValentinH" title="Bug reports">🐛</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Code">💻</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Documentation">📖</a> <a href="#example-ValentinH" title="Examples">💡</a> <a href="#infra-ValentinH" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/ricardo-ch/react-easy-crop/pulls?q=is%3Apr+reviewed-by%3AValentinH" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=ValentinH" title="Tests">⚠️</a> <a href="#tool-ValentinH" title="Tools">🔧</a></td>
     <td align="center"><a href="https://github.com/bexoss"><img src="https://avatars3.githubusercontent.com/u/12633102?v=4" width="100px;" alt="Juntae Kim"/><br /><sub><b>Juntae Kim</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=bexoss" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/tafelito"><img src="https://avatars0.githubusercontent.com/u/5973652?v=4" width="100px;" alt="tafelito"/><br /><sub><b>tafelito</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=tafelito" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/nicklasfrahm"><img src="https://avatars3.githubusercontent.com/u/20382326?v=4" width="100px;" alt="Nicklas"/><br /><sub><b>Nicklas</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=nicklasfrahm" title="Code">💻</a></td>
@@ -201,9 +202,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/Alba-C"><img src="https://avatars1.githubusercontent.com/u/24299944?v=4" width="100px;" alt="Christopher Albanese"/><br /><sub><b>Christopher Albanese</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=Alba-C" title="Code">💻</a></td>
     <td align="center"><a href="https://benjamin.piouffle.com"><img src="https://avatars1.githubusercontent.com/u/1556356?v=4" width="100px;" alt="Benjamin Piouffle"/><br /><sub><b>Benjamin Piouffle</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=Betree" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mbalaam"><img src="https://avatars3.githubusercontent.com/u/44968243?v=4" width="100px;" alt="mbalaam"/><br /><sub><b>mbalaam</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=mbalaam" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/edoudou"><img src="https://avatars0.githubusercontent.com/u/4236706?v=4" width="100px;" alt="Edouard Short"/><br /><sub><b>Edouard Short</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=edoudou" title="Code">💻</a> <a href="#ideas-edoudou" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
