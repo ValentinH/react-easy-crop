@@ -134,7 +134,18 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "edoudou",
+      "name": "Edouard Short",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4236706?v=4",
+      "profile": "https://github.com/edoudou",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
