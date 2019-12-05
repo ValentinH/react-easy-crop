@@ -204,6 +204,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/mbalaam"><img src="https://avatars3.githubusercontent.com/u/44968243?v=4" width="100px;" alt="mbalaam"/><br /><sub><b>mbalaam</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=mbalaam" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/edoudou"><img src="https://avatars0.githubusercontent.com/u/4236706?v=4" width="100px;" alt="Edouard Short"/><br /><sub><b>Edouard Short</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=edoudou" title="Code">💻</a> <a href="#ideas-edoudou" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://allcontributors.org"><img src="https://avatars1.githubusercontent.com/u/46410174?v=4" width="100px;" alt="All Contributors"/><br /><sub><b>All Contributors</b></sub></a><br /><a href="#tool-all-contributors" title="Tools">🔧</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
