@@ -1,12 +1,15 @@
 ---
 name: Issue template
 about: Describe this issue template's purpose here.
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
 ## Are you reporting a bug?
 
-- Please create a CodeSandbox that demonstrates your issue. You can fork the [Basic example](https://codesandbox.io/s/q80jom5ql6).
+- Please create a CodeSandbox that demonstrates your issue. You can fork the [Basic example](https://codesandbox.io/s/react-easy-crop-v69ly910ql).
 
 - Provide the steps to reproduce the issue, e.g.:
 
