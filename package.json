@@ -1,8 +1,18 @@
 {
   "name": "react-easy-crop",
-  "version": "1.17.0",
+  "version": "2.0.0-alpha.1",
   "description": "A React component to crop images/videos with easy interactions",
   "main": "dist/index.js",
+  "umd:main": "dist/umd/react-easy-crop.js",
+  "unpkg": "dist/umd/react-easy-crop.js",
+  "jsdelivr": "dist/umd/react-easy-crop.js",
+  "module": "dist/index.module.js",
+  "jsnext:main": "dist/index.module.js",
+  "react-native": "dist/index.module.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
   "repository": {
     "type": "git",
@@ -15,12 +25,10 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "rm -rf dist/* && yarn build:dist && yarn build:standalone",
-    "build:dist": "babel src -d dist --ignore 'src/*.test.js'",
-    "build:standalone": "webpack -p --config webpack.standalone.config.js",
-    "docs:start": "cd docs && yarn develop",
-    "docs:deploy": "cd docs && yarn deploy",
-    "test": "yarn unit && yarn e2e",
+    "build": "rimraf dist/ && yarn-or-npm bili",
+    "docs:start": "cd docs && yarn-or-npm develop",
+    "docs:deploy": "cd docs && yarn-or-npm deploy",
+    "test": "yarn-or-npm unit && yarn-or-npm e2e",
     "unit": "jest src",
     "unit:watch": "jest --watchAll src",
     "start:ci": "webpack-dev-server --mode production",
@@ -29,21 +37,21 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:ci": "cypress run --record",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "yarn-or-npm build",
     "precommit": "lint-staged",
-    "format": "prettier --write src/**/*.js docs/src/**/*.{js,css}",
+    "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}",
     "npm:publish": "np"
   },
   "peerDependencies": {
-    "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react": ">=16.4.0",
+    "react-dom": ">=16.4.0"
   },
   "dependencies": {
     "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27"
+    "@emotion/styled": "^10.0.27",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
@@ -67,6 +75,8 @@
     "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "rimraf": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.25.3",
     "start-server-and-test": "^1.4.1",
     "style-loader": "^0.23.1",
     "ts-jest": "^24.2.0",
@@ -74,13 +84,11 @@
     "typescript": "^3.7.4",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1"
+    "webpack-dev-server": "^3.10.1",
+    "yarn-or-npm": "^3.0.1"
   },
-  "files": [
-    "dist"
-  ],
   "lint-staged": {
-    "*.+(js|css)": [
+    "*.+(ts|tsx|js|css)": [
       "prettier --write",
       "git add"
     ]

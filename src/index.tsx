@@ -1,16 +1,6 @@
 import React from 'react'
-import {
-  Container,
-  CropArea,
-  Img,
-  Video
-  } from './styles'
-import {
-  Area,
-  MediaSize,
-  Point,
-  Size
-  } from './types'
+import { Container, CropArea, Img, Video } from './styles'
+import { Area, MediaSize, Point, Size } from './types'
 import {
   getCropSize,
   restrictPosition,
