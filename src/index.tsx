@@ -58,385 +58,377 @@ type State = {
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
-class Cropper extends React.Component<Props, State> {
-  static defaultProps = {
-    zoom: 1,
-    rotation: 0,
-    aspect: 4 / 3,
-    maxZoom: MAX_ZOOM,
-    minZoom: MIN_ZOOM,
-    cropShape: 'rect',
-    showGrid: true,
-    style: {},
-    classes: {},
-    mediaProps: {},
-    zoomSpeed: 1,
-    restrictPosition: true,
+// this is to prevent Safari on iOS >= 10 to zoom the page
+const preventZoomSafari = (e: Event) => e.preventDefault()
+
+const getMousePoint = (e: MouseEvent | React.MouseEvent) => ({
+  x: Number(e.clientX),
+  y: Number(e.clientY),
+})
+
+const getTouchPoint = (touch: Touch | React.Touch) => ({
+  x: Number(touch.clientX),
+  y: Number(touch.clientY),
+})
+
+const getPointOnContainer = ({ x, y }: Point, containerRect: DOMRect | null) => {
+  if (!containerRect) {
+    throw new Error('The Cropper is not mounted')
   }
-
-  imageRef: HTMLImageElement | null = null
-  videoRef: HTMLVideoElement | null = null
-  containerRef: HTMLDivElement | null = null
-  containerRect: DOMRect | null = null
-  mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
-  dragStartPosition: Point = { x: 0, y: 0 }
-  dragStartCrop: Point = { x: 0, y: 0 }
-  lastPinchDistance: number = 0
-  lastPinchRotation: number = 0
-  rafDragTimeout: number | null = null
-  rafPinchTimeout: number | null = null
-  wheelTimer: number | null = null
-
-  state: State = {
-    cropSize: null,
-    hasWheelJustStarted: false,
+  return {
+    x: containerRect.width / 2 - (x - containerRect.left),
+    y: containerRect.height / 2 - (y - containerRect.top),
   }
+}
 
-  componentDidMount() {
-    window.addEventListener('resize', this.computeSizes)
-    if (this.containerRef) {
-      this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-      this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
-    }
-
-    // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
-    if (this.imageRef && this.imageRef.complete) {
-      this.onMediaLoad()
-    }
+const getPointOnMedia = ({ x, y }: Point, crop: Point, zoom: number) => {
+  return {
+    x: (x + crop.x) / zoom,
+    y: (y + crop.y) / zoom,
   }
+}
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.computeSizes)
-    if (this.containerRef) {
-      this.containerRef.removeEventListener('wheel', this.onWheel)
-      this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
-    }
-    this.cleanEvents()
-    if (this.wheelTimer) {
-      clearTimeout(this.wheelTimer)
-    }
-  }
+const Cropper = (props: Props) => {
+  const [mediaSize, setMediaSize] = React.useState<MediaSize>({
+    width: 0,
+    height: 0,
+    naturalWidth: 0,
+    naturalHeight: 0,
+  })
+  const [cropSize, setCropSize] = React.useState<Size | null>(null)
+  const [containerRect, setContainerRect] = React.useState<DOMRect | null>(null)
+  const [dragStartPosition, setDragStartPosition] = React.useState<Point>({ x: 0, y: 0 })
+  const [dragStartCrop, setDragCrop] = React.useState<Point>({ x: 0, y: 0 })
+  const [lastPinchDistance, setLastPinchDistance] = React.useState(0)
+  const [lastPinchRotation, setLastPinchRotation] = React.useState(0)
+  const [hasWheelJustStarted, setHasWheelJustStarted] = React.useState(false)
+  const [wheelTimer, setWheelTimer] = React.useState<number | null>(null)
+  const [rafDragTimeout, setRafDragTimeout] = React.useState<number | null>(null)
+  const [rafPinchTimeout, setRafPinchTimeout] = React.useState<number | null>(null)
+  const containerRef = React.useRef<HTMLDivElement | null>(null)
+  const imageRef = React.useRef<HTMLImageElement | null>(null)
+  const videoRef = React.useRef<HTMLVideoElement | null>(null)
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.rotation !== this.props.rotation) {
-      this.computeSizes()
-      this.recomputeCropPosition()
-    } else if (prevProps.aspect !== this.props.aspect) {
-      this.computeSizes()
-    } else if (prevProps.zoom !== this.props.zoom) {
-      this.recomputeCropPosition()
-    }
-  }
-
-  // this is to prevent Safari on iOS >= 10 to zoom the page
-  preventZoomSafari = (e: Event) => e.preventDefault()
-
-  cleanEvents = () => {
-    document.removeEventListener('mousemove', this.onMouseMove)
-    document.removeEventListener('mouseup', this.onDragStopped)
-    document.removeEventListener('touchmove', this.onTouchMove)
-    document.removeEventListener('touchend', this.onDragStopped)
-  }
-
-  onMediaLoad = () => {
-    this.computeSizes()
-    this.emitCropData()
-    this.setInitialCrop()
-
-    if (this.props.onMediaLoaded) {
-      this.props.onMediaLoaded(this.mediaSize)
-    }
-  }
-
-  setInitialCrop = () => {
-    const { initialCroppedAreaPixels, cropSize } = this.props
-
-    if (!initialCroppedAreaPixels) {
+  const setInitialCrop = React.useCallback(() => {
+    if (!props.initialCroppedAreaPixels) {
       return
     }
 
     const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
-      initialCroppedAreaPixels,
-      this.mediaSize,
-      cropSize
+      props.initialCroppedAreaPixels,
+      mediaSize,
+      props.cropSize
     )
-    this.props.onCropChange(crop)
-    this.props.onZoomChange && this.props.onZoomChange(zoom)
-  }
+    props.onCropChange(crop)
+    props.onZoomChange?.(zoom)
+  }, [mediaSize, props])
 
-  getAspect() {
-    const { cropSize, aspect } = this.props
-    if (cropSize) {
-      return cropSize.width / cropSize.height
+  const getAspect = React.useCallback(() => {
+    if (props.cropSize) {
+      return props.cropSize.width / props.cropSize.height
     }
-    return aspect
-  }
+    return props.aspect
+  }, [props.aspect, props.cropSize])
 
-  computeSizes = () => {
-    const mediaRef = this.imageRef || this.videoRef
-    if (mediaRef) {
-      this.mediaSize = {
-        width: mediaRef.offsetWidth,
-        height: mediaRef.offsetHeight,
-        naturalWidth: this.imageRef?.naturalWidth || this.videoRef?.videoWidth || 0,
-        naturalHeight: this.imageRef?.naturalHeight || this.videoRef?.videoHeight || 0,
-      }
-      const cropSize = this.props.cropSize
-        ? this.props.cropSize
-        : getCropSize(
-            mediaRef.offsetWidth,
-            mediaRef.offsetHeight,
-            this.props.aspect,
-            this.props.rotation
-          )
-      this.setState({ cropSize }, this.recomputeCropPosition)
+  const computeSizes = React.useCallback(() => {
+    const media = imageRef.current || videoRef.current
+    if (media) {
+      setMediaSize({
+        width: media.offsetWidth,
+        height: media.offsetHeight,
+        naturalWidth: imageRef.current?.naturalWidth || videoRef.current?.videoWidth || 0,
+        naturalHeight: imageRef.current?.naturalHeight || videoRef.current?.videoHeight || 0,
+      })
+      const cropSize = props.cropSize
+        ? props.cropSize
+        : getCropSize(media.offsetWidth, media.offsetHeight, props.aspect, props.rotation)
+      setCropSize(cropSize)
     }
-    if (this.containerRef) {
-      this.containerRect = this.containerRef.getBoundingClientRect()
+    if (containerRef.current) {
+      setContainerRect(containerRef.current.getBoundingClientRect())
     }
-  }
+  }, [props.cropSize, props.aspect, props.rotation])
 
-  static getMousePoint = (e: MouseEvent | React.MouseEvent) => ({
-    x: Number(e.clientX),
-    y: Number(e.clientY),
-  })
+  const emitCropData = React.useCallback(() => {
+    if (!cropSize) return
+    // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
+    const restrictedPosition = props.restrictPosition
+      ? restrictPosition(props.crop, mediaSize, cropSize, props.zoom, props.rotation)
+      : props.crop
+    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
+      restrictedPosition,
+      mediaSize,
+      cropSize,
+      getAspect(),
+      props.zoom,
+      props.rotation,
+      props.restrictPosition
+    )
+    props.onCropComplete?.(croppedAreaPercentages, croppedAreaPixels)
+  }, [
+    cropSize,
+    getAspect,
+    mediaSize,
+    props.crop,
+    props.onCropComplete,
+    props.restrictPosition,
+    props.rotation,
+    props.zoom,
+  ])
 
-  static getTouchPoint = (touch: Touch | React.Touch) => ({
-    x: Number(touch.clientX),
-    y: Number(touch.clientY),
-  })
+  const onMediaLoad = React.useCallback(() => {
+    computeSizes()
+    emitCropData()
+    setInitialCrop()
 
-  onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (props.onMediaLoaded) {
+      props.onMediaLoaded(mediaSize)
+    }
+  }, [computeSizes, emitCropData, mediaSize, props, setInitialCrop])
+
+  const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault()
-    document.addEventListener('mousemove', this.onMouseMove)
-    document.addEventListener('mouseup', this.onDragStopped)
-    this.onDragStart(Cropper.getMousePoint(e))
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onDragStopped)
+    onDragStart(getMousePoint(e))
   }
 
-  onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
+  const onMouseMove = (e: MouseEvent) => onDrag(getMousePoint(e))
 
-  onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault()
-    document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
-    document.addEventListener('touchend', this.onDragStopped)
+    document.addEventListener('touchmove', onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
+    document.addEventListener('touchend', onDragStopped)
     if (e.touches.length === 2) {
-      this.onPinchStart(e)
+      onPinchStart(e)
     } else if (e.touches.length === 1) {
-      this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
+      onDragStart(getTouchPoint(e.touches[0]))
     }
   }
 
-  onTouchMove = (e: TouchEvent) => {
+  const onTouchMove = (e: TouchEvent) => {
     // Prevent whole page from scrolling on iOS.
     e.preventDefault()
     if (e.touches.length === 2) {
-      this.onPinchMove(e)
+      onPinchMove(e)
     } else if (e.touches.length === 1) {
-      this.onDrag(Cropper.getTouchPoint(e.touches[0]))
+      onDrag(getTouchPoint(e.touches[0]))
     }
   }
 
-  onDragStart = ({ x, y }: Point) => {
-    this.dragStartPosition = { x, y }
-    this.dragStartCrop = { ...this.props.crop }
-    this.props.onInteractionStart?.()
+  const onDragStart = ({ x, y }: Point) => {
+    setDragStartPosition({ x, y })
+    setDragCrop({ ...props.crop })
+    props.onInteractionStart?.()
   }
 
-  onDrag = ({ x, y }: Point) => {
-    if (this.rafDragTimeout) window.cancelAnimationFrame(this.rafDragTimeout)
+  const onDrag = ({ x, y }: Point) => {
+    if (rafDragTimeout) window.cancelAnimationFrame(rafDragTimeout)
 
-    this.rafDragTimeout = window.requestAnimationFrame(() => {
-      if (!this.state.cropSize) return
+    const timeout = window.requestAnimationFrame(() => {
+      if (!cropSize) return
       if (x === undefined || y === undefined) return
-      const offsetX = x - this.dragStartPosition.x
-      const offsetY = y - this.dragStartPosition.y
+      const offsetX = x - dragStartPosition.x
+      const offsetY = y - dragStartPosition.y
       const requestedPosition = {
-        x: this.dragStartCrop.x + offsetX,
-        y: this.dragStartCrop.y + offsetY,
+        x: dragStartCrop.x + offsetX,
+        y: dragStartCrop.y + offsetY,
       }
 
-      const newPosition = this.props.restrictPosition
-        ? restrictPosition(
-            requestedPosition,
-            this.mediaSize,
-            this.state.cropSize,
-            this.props.zoom,
-            this.props.rotation
-          )
+      const newPosition = props.restrictPosition
+        ? restrictPosition(requestedPosition, mediaSize, cropSize, props.zoom, props.rotation)
         : requestedPosition
-      this.props.onCropChange(newPosition)
+      props.onCropChange(newPosition)
     })
+    setRafDragTimeout(timeout)
   }
 
-  onDragStopped = () => {
-    this.cleanEvents()
-    this.emitCropData()
-    this.props.onInteractionEnd?.()
+  const cleanEvents = React.useCallback(() => {
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onDragStopped)
+    document.removeEventListener('touchmove', onTouchMove)
+    document.removeEventListener('touchend', onDragStopped)
+  }, [onDragStopped, onMouseMove, onTouchMove])
+
+  const onDragStopped = React.useCallback(() => {
+    cleanEvents()
+    emitCropData()
+    props.onInteractionEnd?.()
+  }, [cleanEvents, emitCropData, props.onInteractionEnd])
+
+  const onPinchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const pointA = getTouchPoint(e.touches[0])
+    const pointB = getTouchPoint(e.touches[1])
+    setLastPinchDistance(getDistanceBetweenPoints(pointA, pointB))
+    setLastPinchRotation(getRotationBetweenPoints(pointA, pointB))
+    onDragStart(getCenter(pointA, pointB))
   }
 
-  onPinchStart(e: React.TouchEvent<HTMLDivElement>) {
-    const pointA = Cropper.getTouchPoint(e.touches[0])
-    const pointB = Cropper.getTouchPoint(e.touches[1])
-    this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
-    this.lastPinchRotation = getRotationBetweenPoints(pointA, pointB)
-    this.onDragStart(getCenter(pointA, pointB))
-  }
-
-  onPinchMove(e: TouchEvent) {
-    const pointA = Cropper.getTouchPoint(e.touches[0])
-    const pointB = Cropper.getTouchPoint(e.touches[1])
+  const onPinchMove = (e: TouchEvent) => {
+    const pointA = getTouchPoint(e.touches[0])
+    const pointB = getTouchPoint(e.touches[1])
     const center = getCenter(pointA, pointB)
-    this.onDrag(center)
+    onDrag(center)
 
-    if (this.rafPinchTimeout) window.cancelAnimationFrame(this.rafPinchTimeout)
-    this.rafPinchTimeout = window.requestAnimationFrame(() => {
+    if (rafPinchTimeout) window.cancelAnimationFrame(rafPinchTimeout)
+    const timeout = window.requestAnimationFrame(() => {
       const distance = getDistanceBetweenPoints(pointA, pointB)
-      const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
-      this.setNewZoom(newZoom, center)
-      this.lastPinchDistance = distance
+      const newZoom = props.zoom * (distance / lastPinchDistance)
+      setNewZoom(newZoom, center)
+      setLastPinchDistance(distance)
 
       const rotation = getRotationBetweenPoints(pointA, pointB)
-      const newRotation = this.props.rotation + (rotation - this.lastPinchRotation)
-      this.props.onRotationChange && this.props.onRotationChange(newRotation)
-      this.lastPinchRotation = rotation
+      const newRotation = props.rotation + (rotation - lastPinchRotation)
+      props.onRotationChange && props.onRotationChange(newRotation)
+      setLastPinchRotation(rotation)
     })
+    setRafPinchTimeout(timeout)
   }
 
-  onWheel = (e: WheelEvent) => {
-    e.preventDefault()
-    const point = Cropper.getMousePoint(e)
-    const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
-    this.setNewZoom(newZoom, point)
+  const setNewZoom = React.useCallback(
+    (zoom: number, point: Point) => {
+      if (!cropSize) return
 
-    if (!this.state.hasWheelJustStarted) {
-      this.setState({ hasWheelJustStarted: true }, () => this.props.onInteractionStart?.())
+      const zoomPoint = getPointOnContainer(point, containerRect)
+      const zoomTarget = getPointOnMedia(zoomPoint, props.crop, props.zoom)
+      const newZoom = Math.min(props.maxZoom, Math.max(zoom, props.minZoom))
+      const requestedPosition = {
+        x: zoomTarget.x * newZoom - zoomPoint.x,
+        y: zoomTarget.y * newZoom - zoomPoint.y,
+      }
+      const newPosition = props.restrictPosition
+        ? restrictPosition(requestedPosition, mediaSize, cropSize, newZoom, props.rotation)
+        : requestedPosition
+
+      props.onCropChange(newPosition)
+      props.onZoomChange?.(newZoom)
+    },
+    [containerRect, cropSize, mediaSize, props]
+  )
+
+  const onWheel = React.useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault()
+      const point = getMousePoint(e)
+      const newZoom = props.zoom - (e.deltaY * props.zoomSpeed) / 200
+      setNewZoom(newZoom, point)
+
+      if (!hasWheelJustStarted) {
+        setHasWheelJustStarted(true)
+        props.onInteractionStart?.()
+      }
+
+      if (wheelTimer) {
+        clearTimeout(wheelTimer)
+      }
+      const timer = window.setTimeout(() => {
+        setHasWheelJustStarted(false)
+        props.onInteractionEnd?.()
+      }, 250)
+      setWheelTimer(timer)
+    },
+    [
+      props.zoom,
+      props.zoomSpeed,
+      props.onInteractionStart,
+      props.onInteractionEnd,
+      setNewZoom,
+      hasWheelJustStarted,
+      wheelTimer,
+    ]
+  )
+
+  const recomputeCropPosition = React.useCallback(() => {
+    if (!cropSize) return
+
+    const newPosition = props.restrictPosition
+      ? restrictPosition(props.crop, mediaSize, cropSize, props.zoom, props.rotation)
+      : props.crop
+    props.onCropChange(newPosition)
+    emitCropData()
+  }, [cropSize, emitCropData, mediaSize, props])
+
+  // mount effect
+  React.useEffect(() => {
+    const containerElement = containerRef.current
+    window.addEventListener('resize', computeSizes)
+    if (containerElement) {
+      containerElement.addEventListener('wheel', onWheel, { passive: false })
+      containerElement.addEventListener('gesturestart', preventZoomSafari)
+      containerElement.addEventListener('gesturechange', preventZoomSafari)
     }
 
-    if (this.wheelTimer) {
-      clearTimeout(this.wheelTimer)
+    // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
+    if (imageRef.current && imageRef.current.complete) {
+      onMediaLoad()
     }
-    this.wheelTimer = window.setTimeout(
-      () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd?.()),
-      250
-    )
-  }
 
-  getPointOnContainer = ({ x, y }: Point) => {
-    if (!this.containerRect) {
-      throw new Error('The Cropper is not mounted')
+    return () => {
+      window.removeEventListener('resize', computeSizes)
+      if (containerElement) {
+        containerElement.removeEventListener('wheel', onWheel)
+        containerElement.removeEventListener('gesturestart', preventZoomSafari)
+        containerElement.removeEventListener('gesturechange', preventZoomSafari)
+      }
+      cleanEvents()
+      if (wheelTimer) {
+        clearTimeout(wheelTimer)
+      }
     }
-    return {
-      x: this.containerRect.width / 2 - (x - this.containerRect.left),
-      y: this.containerRect.height / 2 - (y - this.containerRect.top),
-    }
-  }
+  }, [cleanEvents, computeSizes, onMediaLoad, onWheel, wheelTimer])
 
-  getPointOnMedia = ({ x, y }: Point) => {
-    const { crop, zoom } = this.props
-    return {
-      x: (x + crop.x) / zoom,
-      y: (y + crop.y) / zoom,
-    }
-  }
+  React.useEffect(() => {
+    recomputeCropPosition()
+  }, [cropSize, recomputeCropPosition])
 
-  setNewZoom = (zoom: number, point: Point) => {
-    if (!this.state.cropSize) return
+  const {
+    image,
+    video,
+    mediaProps,
+    crop: { x, y },
+    rotation,
+    zoom,
+    cropShape,
+    showGrid,
+    style: { containerStyle, cropAreaStyle, mediaStyle },
+    classes: { containerClassName, cropAreaClassName, mediaClassName },
+    crossOrigin,
+  } = props
 
-    const zoomPoint = this.getPointOnContainer(point)
-    const zoomTarget = this.getPointOnMedia(zoomPoint)
-    const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))
-    const requestedPosition = {
-      x: zoomTarget.x * newZoom - zoomPoint.x,
-      y: zoomTarget.y * newZoom - zoomPoint.y,
-    }
-    const newPosition = this.props.restrictPosition
-      ? restrictPosition(
-          requestedPosition,
-          this.mediaSize,
-          this.state.cropSize,
-          newZoom,
-          this.props.rotation
-        )
-      : requestedPosition
-
-    this.props.onCropChange(newPosition)
-
-    this.props.onZoomChange && this.props.onZoomChange(newZoom)
-  }
-
-  emitCropData = () => {
-    if (!this.state.cropSize) return
-    // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
-    const restrictedPosition = this.props.restrictPosition
-      ? restrictPosition(
-          this.props.crop,
-          this.mediaSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
-        )
-      : this.props.crop
-    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
-      restrictedPosition,
-      this.mediaSize,
-      this.state.cropSize,
-      this.getAspect(),
-      this.props.zoom,
-      this.props.rotation,
-      this.props.restrictPosition
-    )
-    this.props.onCropComplete &&
-      this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
-  }
-
-  recomputeCropPosition = () => {
-    if (!this.state.cropSize) return
-
-    const newPosition = this.props.restrictPosition
-      ? restrictPosition(
-          this.props.crop,
-          this.mediaSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
-        )
-      : this.props.crop
-    this.props.onCropChange(newPosition)
-    this.emitCropData()
-  }
-
-  render() {
-    const {
-      image,
-      video,
-      mediaProps,
-      crop: { x, y },
-      rotation,
-      zoom,
-      cropShape,
-      showGrid,
-      style: { containerStyle, cropAreaStyle, mediaStyle },
-      classes: { containerClassName, cropAreaClassName, mediaClassName },
-      crossOrigin,
-    } = this.props
-
-    return (
-      <Container
-        onMouseDown={this.onMouseDown}
-        onTouchStart={this.onTouchStart}
-        ref={el => (this.containerRef = el)}
-        data-testid="container"
-        style={containerStyle}
-        className={containerClassName}
-      >
-        {image ? (
-          <Img
-            src={image}
-            ref={(el: HTMLImageElement) => (this.imageRef = el)}
-            onLoad={this.onMediaLoad}
-            onError={this.props.onMediaError}
+  return (
+    <Container
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      ref={containerRef}
+      data-testid="container"
+      style={containerStyle}
+      className={containerClassName}
+    >
+      {image ? (
+        <Img
+          src={image}
+          ref={imageRef}
+          onLoad={onMediaLoad}
+          onError={props.onMediaError}
+          alt=""
+          style={{
+            ...mediaStyle,
+            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+          }}
+          className={mediaClassName}
+          crossOrigin={crossOrigin}
+          {...mediaProps}
+        />
+      ) : (
+        video && (
+          <Video
+            autoPlay
+            loop
+            muted={true}
+            src={video}
+            ref={videoRef}
+            onLoadedMetadata={onMediaLoad}
+            onError={props.onMediaError}
             alt=""
             style={{
               ...mediaStyle,
@@ -445,45 +437,40 @@ class Cropper extends React.Component<Props, State> {
             className={mediaClassName}
             crossOrigin={crossOrigin}
             {...mediaProps}
+            controls={false}
           />
-        ) : (
-          video && (
-            <Video
-              autoPlay
-              loop
-              muted={true}
-              src={video}
-              ref={(el: HTMLVideoElement) => (this.videoRef = el)}
-              onLoadedMetadata={this.onMediaLoad}
-              onError={this.props.onMediaError}
-              alt=""
-              style={{
-                ...mediaStyle,
-                transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
-              }}
-              className={mediaClassName}
-              crossOrigin={crossOrigin}
-              {...mediaProps}
-              controls={false}
-            />
-          )
-        )}
-        {this.state.cropSize && (
-          <CropArea
-            cropShape={cropShape}
-            showGrid={showGrid}
-            style={{
-              ...cropAreaStyle,
-              width: this.state.cropSize.width,
-              height: this.state.cropSize.height,
-            }}
-            data-testid="cropper"
-            className={cropAreaClassName}
-          />
-        )}
-      </Container>
-    )
-  }
+        )
+      )}
+      {cropSize && (
+        <CropArea
+          cropShape={cropShape}
+          showGrid={showGrid}
+          style={{
+            ...cropAreaStyle,
+            width: cropSize.width,
+            height: cropSize.height,
+          }}
+          data-testid="cropper"
+          className={cropAreaClassName}
+        />
+      )}
+    </Container>
+  )
+}
+
+Cropper.defaultProps = {
+  zoom: 1,
+  rotation: 0,
+  aspect: 4 / 3,
+  maxZoom: MAX_ZOOM,
+  minZoom: MIN_ZOOM,
+  cropShape: 'rect',
+  showGrid: true,
+  style: {},
+  classes: {},
+  mediaProps: {},
+  zoomSpeed: 1,
+  restrictPosition: true,
 }
 
 export default Cropper
