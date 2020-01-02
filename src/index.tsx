@@ -342,7 +342,7 @@ class Cropper extends React.Component<Props, State> {
   }
 
   setNewZoom = (zoom: number, point: Point) => {
-    if (!this.state.cropSize) return
+    if (!this.state.cropSize || !this.props.onZoomChange) return
 
     const zoomPoint = this.getPointOnContainer(point)
     const zoomTarget = this.getPointOnMedia(zoomPoint)
@@ -362,8 +362,7 @@ class Cropper extends React.Component<Props, State> {
       : requestedPosition
 
     this.props.onCropChange(newPosition)
-
-    this.props.onZoomChange && this.props.onZoomChange(newZoom)
+    this.props.onZoomChange(newZoom)
   }
 
   emitCropData = () => {

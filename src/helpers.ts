@@ -1,9 +1,4 @@
-import {
-  Area,
-  MediaSize,
-  Point,
-  Size
-  } from './types'
+import { Area, MediaSize, Point, Size } from './types'
 
 /**
  * Compute the dimension of the crop area based on media size,

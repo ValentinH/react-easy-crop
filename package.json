@@ -1,6 +1,6 @@
 {
   "name": "react-easy-crop",
-  "version": "2.0.0-alpha.1",
+  "version": "1.17.1",
   "description": "A React component to crop images/videos with easy interactions",
   "main": "dist/index.js",
   "umd:main": "dist/umd/react-easy-crop.js",
