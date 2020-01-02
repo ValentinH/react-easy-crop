@@ -47,7 +47,7 @@ type Props = {
   }
   restrictPosition: boolean
   initialCroppedAreaPixels?: Area
-  mediaProps: Record<string, any>
+  mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
 }
 
 type State = {
@@ -81,8 +81,8 @@ class Cropper extends React.Component<Props, State> {
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
   dragStartCrop: Point = { x: 0, y: 0 }
-  lastPinchDistance: number = 0
-  lastPinchRotation: number = 0
+  lastPinchDistance = 0
+  lastPinchRotation = 0
   rafDragTimeout: number | null = null
   rafPinchTimeout: number | null = null
   wheelTimer: number | null = null
