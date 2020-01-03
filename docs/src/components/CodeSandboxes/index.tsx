@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import FilledInput from '@material-ui/core/FilledInput'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
-import FilledInput from '@material-ui/core/FilledInput'
 import Select from '@material-ui/core/Select'
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import React, { useState } from 'react'
 
 const sandboxes = [
   { id: 'v69ly910ql', title: 'Basic with hooks' },
@@ -14,14 +14,17 @@ const sandboxes = [
   { id: '53w20p2o3n', title: 'With round crop area and no grid' },
 ]
 
-const styles = theme => ({
-  formControl: {
-    marginBottom: theme.spacing.unit,
-    minWidth: 280,
-  },
-})
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      marginBottom: theme.spacing(1),
+      minWidth: 280,
+    },
+  })
+)
 
-const CodeSandboxes = ({ classes }) => {
+const CodeSandboxes: React.FC = props => {
+  const classes = useStyles(props)
   const [sandbox, setSandbox] = useState('v69ly910ql')
   return (
     <div>
@@ -29,7 +32,7 @@ const CodeSandboxes = ({ classes }) => {
         <InputLabel htmlFor="sandbox-example">Example</InputLabel>
         <Select
           value={sandbox}
-          onChange={e => setSandbox(e.target.value)}
+          onChange={e => setSandbox(String(e.target.value))}
           input={<FilledInput name="example" id="sandbox-example" />}
         >
           {sandboxes.map(s => (
@@ -57,4 +60,4 @@ const CodeSandboxes = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(CodeSandboxes)
+export default CodeSandboxes

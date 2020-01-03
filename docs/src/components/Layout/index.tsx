@@ -12,7 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 
 import Header from '../Header'
 
-const Layout = ({ children }) => (
+const Layout: React.FC = ({ children }) => (
   <StaticQuery
     query={graphql`
       query SiteTitleQuery {
