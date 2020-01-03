@@ -8,7 +8,7 @@ export function getCropSize(
   mediaWidth: number,
   mediaHeight: number,
   aspect: number,
-  rotation: number = 0
+  rotation = 0
 ): Size {
   const { width, height } = translateSize(mediaWidth, mediaHeight, rotation)
 
@@ -47,7 +47,7 @@ export function restrictPosition(
   mediaSize: Size,
   cropSize: Size,
   zoom: number,
-  rotation: number = 0
+  rotation = 0
 ): Point {
   const { width, height } = translateSize(mediaSize.width, mediaSize.height, rotation)
 
@@ -85,8 +85,8 @@ export function computeCroppedArea(
   cropSize: Size,
   aspect: number,
   zoom: number,
-  rotation: number = 0,
-  restrictPosition: boolean = true
+  rotation = 0,
+  restrictPosition = true
 ): { croppedAreaPercentages: Area; croppedAreaPixels: Area } {
   // if the media is rotated by the user, we cannot limit the position anymore
   // as it might need to be negative.

@@ -24,16 +24,12 @@ type Props = {
   cropSize?: Size
   showGrid?: boolean
   zoomSpeed: number
-  crossOrigin?: string
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
   onCropComplete?: (croppedArea: Area, croppedAreaPixels: Area) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
-  onMediaError?:
-    | ((event: React.SyntheticEvent<HTMLImageElement, Event>) => void)
-    | ((event: React.SyntheticEvent<HTMLVideoElement, Event>) => void)
   onMediaLoaded?: (mediaSize: MediaSize) => void
   style: {
     containerStyle?: React.CSSProperties
@@ -418,7 +414,6 @@ class Cropper extends React.Component<Props, State> {
       showGrid,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
-      crossOrigin,
     } = this.props
 
     return (
@@ -432,18 +427,16 @@ class Cropper extends React.Component<Props, State> {
       >
         {image ? (
           <Img
+            alt=""
+            className={mediaClassName}
+            {...mediaProps}
             src={image}
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
-            onLoad={this.onMediaLoad}
-            onError={this.props.onMediaError}
-            alt=""
             style={{
               ...mediaStyle,
               transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
             }}
-            className={mediaClassName}
-            crossOrigin={crossOrigin}
-            {...mediaProps}
+            onLoad={this.onMediaLoad}
           />
         ) : (
           video && (
@@ -451,18 +444,16 @@ class Cropper extends React.Component<Props, State> {
               autoPlay
               loop
               muted={true}
+              alt=""
+              className={mediaClassName}
+              {...mediaProps}
               src={video}
               ref={(el: HTMLVideoElement) => (this.videoRef = el)}
               onLoadedMetadata={this.onMediaLoad}
-              onError={this.props.onMediaError}
-              alt=""
               style={{
                 ...mediaStyle,
                 transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
               }}
-              className={mediaClassName}
-              crossOrigin={crossOrigin}
-              {...mediaProps}
               controls={false}
             />
           )

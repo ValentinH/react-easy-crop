@@ -28,7 +28,7 @@
     "build": "rimraf dist/ && yarn-or-npm bili",
     "docs:start": "cd docs && yarn-or-npm develop",
     "docs:deploy": "cd docs && yarn-or-npm deploy",
-    "test": "yarn-or-npm unit && yarn-or-npm e2e",
+    "test": "yarn-or-npm unit && yarn-or-npm e2e && yarn-or-npm lint",
     "unit": "jest src",
     "unit:watch": "jest --watchAll src",
     "start:ci": "webpack-dev-server --mode production",
