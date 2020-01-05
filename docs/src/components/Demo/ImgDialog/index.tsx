@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Slide from '@material-ui/core/Slide'
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
+import { TransitionProps } from '@material-ui/core/transitions/transition'
 import Typography from '@material-ui/core/Typography'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import CloseIcon from '@material-ui/icons/Close'
@@ -31,9 +32,9 @@ type Props = {
   onClose: () => void
 }
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />
-}
+const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
+  return <Slide direction="up" {...props} ref={ref} />
+})
 
 const ImgDialog = ({ img, onClose, ...rest }: Props) => {
   const classes = useStyles(rest)
@@ -56,7 +57,7 @@ const ImgDialog = ({ img, onClose, ...rest }: Props) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <img src={img} alt="Cropped" className={classes.img} />
+      <img src={img || ''} alt="Cropped" className={classes.img} />
     </Dialog>
   )
 }
