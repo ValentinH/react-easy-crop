@@ -1,18 +1,7 @@
 {
   "name": "react-easy-crop",
-  "version": "1.17.1",
+  "version": "2.0.0-beta.1",
   "description": "A React component to crop images/videos with easy interactions",
-  "main": "dist/index.js",
-  "umd:main": "dist/umd/react-easy-crop.js",
-  "unpkg": "dist/umd/react-easy-crop.js",
-  "jsdelivr": "dist/umd/react-easy-crop.js",
-  "module": "dist/index.module.js",
-  "jsnext:main": "dist/index.module.js",
-  "react-native": "dist/index.module.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
   "repository": {
     "type": "git",
@@ -23,9 +12,10 @@
   },
   "author": "Ricardo.ch",
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "rimraf dist/ && yarn-or-npm bili",
+    "build": "yarn-or-npm bili && yarn-or-npm build:copy-files",
     "docs:start": "cd docs && yarn-or-npm develop",
     "docs:deploy": "cd docs && yarn-or-npm deploy",
     "test": "yarn-or-npm unit && yarn-or-npm e2e && yarn-or-npm lint",
@@ -38,10 +28,12 @@
     "cy:run": "cypress run",
     "cy:ci": "cypress run --record",
     "lint": "eslint --ext .ts,.tsx ./examples ./src",
+    "prebuild": "rimraf dist",
+    "build:copy-files": "babel-node ./scripts/copy-build-files.js",
     "prepublishOnly": "yarn-or-npm build",
     "precommit": "lint-staged",
     "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}",
-    "npm:publish": "np"
+    "npm:publish": "np --contents=dist"
   },
   "peerDependencies": {
     "react": ">=16.4.0",
@@ -54,6 +46,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/node": "^7.7.7",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
