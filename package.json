@@ -1,6 +1,6 @@
 {
   "name": "react-easy-crop",
-  "version": "2.0.0",
+  "version": "1.7.1",
   "description": "A React component to crop images/videos with easy interactions",
   "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
   "repository": {
