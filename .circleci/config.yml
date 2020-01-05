@@ -18,6 +18,10 @@ jobs:
           paths:
             - ~/.cache ## cache both yarn and Cypress
       - run:
+          name: Run linting
+          command: |
+            yarn lint
+      - run:
           name: Run unit tests
           command: |
             yarn unit

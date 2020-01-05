@@ -8,7 +8,7 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
 })
 
 module.exports = {
-  entry: path.join(__dirname, 'examples/src/index.js'),
+  entry: path.join(__dirname, 'examples/src/index.tsx'),
   module: {
     rules: [
       {
@@ -16,6 +16,7 @@ module.exports = {
         use: 'babel-loader',
         exclude: /node_modules/,
       },
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
@@ -27,12 +28,9 @@ module.exports = {
     new CopyWebpackPlugin([{ from: 'examples/src/images', to: 'images' }]),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   devServer: {
     port: 3001,
-  },
-  output: {
-    //publicPath: '/images/',
   },
 }

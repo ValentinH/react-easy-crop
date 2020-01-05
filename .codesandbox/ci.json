@@ -1,3 +1,6 @@
 {
-  "sandboxes": ["v69ly910ql"]
+  "sandboxes": ["v69ly910ql"],
+  "publishDirectory": {
+    "react-easy-crop": "dist"
+  }
 }

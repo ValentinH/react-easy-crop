@@ -1,12 +1,15 @@
+import { Area, MediaSize, Point, Size } from './types'
+
 /**
  * Compute the dimension of the crop area based on media size,
  * aspect ratio and optionally rotatation
- * @param {number} mediaWidth width of the src media in pixels
- * @param {number} mediaHeight height of the src media in pixels
- * @param {number} aspect aspect ratio of the crop
- * @param {rotation} rotation rotation in degrees
  */
-export function getCropSize(mediaWidth, mediaHeight, aspect, rotation = 0) {
+export function getCropSize(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number,
+  rotation = 0
+): Size {
   const { width, height } = translateSize(mediaWidth, mediaHeight, rotation)
 
   if (mediaWidth >= mediaHeight * aspect && width > mediaHeight * aspect) {
@@ -38,14 +41,14 @@ export function getCropSize(mediaWidth, mediaHeight, aspect, rotation = 0) {
 
 /**
  * Ensure a new media position stays in the crop area.
- * @param {{x: number, y number}} position new x/y position requested for the media
- * @param {{width: number, height: number}} mediaSize width/height of the src media
- * @param {{width: number, height: number}} cropSize width/height of the crop area
- * @param {number} zoom zoom value
- * @param {rotation} rotation rotation in degrees
- * @returns {{x: number, y number}}
  */
-export function restrictPosition(position, mediaSize, cropSize, zoom, rotation = 0) {
+export function restrictPosition(
+  position: Point,
+  mediaSize: Size,
+  cropSize: Size,
+  zoom: number,
+  rotation = 0
+): Point {
   const { width, height } = translateSize(mediaSize.width, mediaSize.height, rotation)
 
   return {
@@ -54,39 +57,37 @@ export function restrictPosition(position, mediaSize, cropSize, zoom, rotation =
   }
 }
 
-function restrictPositionCoord(position, mediaSize, cropSize, zoom) {
+function restrictPositionCoord(
+  position: number,
+  mediaSize: number,
+  cropSize: number,
+  zoom: number
+): number {
   const maxPosition = (mediaSize * zoom) / 2 - cropSize / 2
   return Math.min(maxPosition, Math.max(position, -maxPosition))
 }
 
-export function getDistanceBetweenPoints(pointA, pointB) {
+export function getDistanceBetweenPoints(pointA: Point, pointB: Point) {
   return Math.sqrt(Math.pow(pointA.y - pointB.y, 2) + Math.pow(pointA.x - pointB.x, 2))
 }
 
-export function getRotationBetweenPoints(pointA, pointB) {
+export function getRotationBetweenPoints(pointA: Point, pointB: Point) {
   return (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI
 }
 
 /**
  * Compute the output cropped area of the media in percentages and pixels.
  * x/y are the top-left coordinates on the src media
- * @param {{x: number, y number}} crop x/y position of the current center of the media
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
- * @param {{width: number, height: number}} cropSize width/height of the crop area
- * @param {number} aspect aspect value
- * @param {number} zoom zoom value
- * @param {number} rotation rotation value (in deg)
- * @param {boolean} restrictPosition whether we should limit or not the cropped area
  */
 export function computeCroppedArea(
-  crop,
-  mediaSize,
-  cropSize,
-  aspect,
-  zoom,
+  crop: Point,
+  mediaSize: MediaSize,
+  cropSize: Size,
+  aspect: number,
+  zoom: number,
   rotation = 0,
   restrictPosition = true
-) {
+): { croppedAreaPercentages: Area; croppedAreaPixels: Area } {
   // if the media is rotated by the user, we cannot limit the position anymore
   // as it might need to be negative.
   const limitAreaFn = restrictPosition && rotation === 0 ? limitArea : noOp
@@ -151,24 +152,23 @@ export function computeCroppedArea(
 
 /**
  * Ensure the returned value is between 0 and max
- * @param {number} max
- * @param {number} value
  */
-function limitArea(max, value) {
+function limitArea(max: number, value: number): number {
   return Math.min(max, Math.max(0, value))
 }
 
-function noOp(max, value) {
+function noOp(_max: number, value: number) {
   return value
 }
 
 /**
  * Compute the crop and zoom from the croppedAreaPixels
- * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
- * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
  */
-function getZoomFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize) {
+function getZoomFromCroppedAreaPixels(
+  croppedAreaPixels: Area,
+  mediaSize: MediaSize,
+  cropSize?: Size
+): number {
   const mediaZoom = mediaSize.width / mediaSize.naturalWidth
 
   if (cropSize) {
@@ -184,13 +184,15 @@ function getZoomFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize) {
     ? mediaSize.naturalHeight / croppedAreaPixels.height
     : mediaSize.naturalWidth / croppedAreaPixels.width
 }
+
 /**
  * Compute the crop and zoom from the croppedAreaPixels
- * @param {{x: number, y: number, width: number, height: number}} croppedAreaPixels
- * @param {{width: number, height: number, naturalWidth: number, naturelHeight: number}} mediaSize width/height of the src media (default is size on the screen, natural is the original size)
- * @param {{width: number, height: number} | voiu} cropSize if this option is used by the user
  */
-export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize) {
+export function getInitialCropFromCroppedAreaPixels(
+  croppedAreaPixels: Area,
+  mediaSize: MediaSize,
+  cropSize?: Size
+): { crop: Point; zoom: number } {
   const mediaZoom = mediaSize.width / mediaSize.naturalWidth
 
   const zoom = getZoomFromCroppedAreaPixels(croppedAreaPixels, mediaSize, cropSize)
@@ -206,10 +208,8 @@ export function getInitialCropFromCroppedAreaPixels(croppedAreaPixels, mediaSize
 
 /**
  * Return the point that is the center of point a and b
- * @param {{x: number, y: number}} a
- * @param {{x: number, y: number}} b
  */
-export function getCenter(a, b) {
+export function getCenter(a: Point, b: Point): Point {
   return {
     x: (b.x + a.x) / 2,
     y: (b.y + a.y) / 2,
@@ -219,13 +219,14 @@ export function getCenter(a, b) {
 /**
  *
  * Returns an x,y point once rotated around xMid,yMid
- * @param {number} x
- * @param {number} y
- * @param {number} xMid
- * @param {number} yMid
- * @param {number} degrees
  */
-export function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
+export function rotateAroundMidPoint(
+  x: number,
+  y: number,
+  xMid: number,
+  yMid: number,
+  degrees: number
+): [number, number] {
   const cos = Math.cos
   const sin = Math.sin
   const radian = (degrees * Math.PI) / 180 // Convert to radians
@@ -238,13 +239,9 @@ export function rotateAroundMidPoint(x, y, xMid, yMid, degrees) {
 }
 
 /**
- *
  * Returns the new bounding area of a rotated rectangle.
- * @param {number} width
- * @param {number} height
- * @param {number} rotation
  */
-export function translateSize(width, height, rotation) {
+export function translateSize(width: number, height: number, rotation: number): Size {
   const centerX = width / 2
   const centerY = height / 2
 
@@ -255,15 +252,10 @@ export function translateSize(width, height, rotation) {
     rotateAroundMidPoint(0, height, centerX, centerY, rotation),
   ]
 
-  const { minX, maxX, minY, maxY } = outerBounds.reduce(
-    (res, [x, y]) => ({
-      minX: Math.min(x, 'minX' in res ? res.minX : x),
-      maxX: Math.max(x, 'maxX' in res ? res.maxX : x),
-      minY: Math.min(y, 'minY' in res ? res.minY : y),
-      maxY: Math.max(y, 'maxY' in res ? res.maxY : y),
-    }),
-    {}
-  )
+  const minX = Math.min(...outerBounds.map(p => p[0]))
+  const maxX = Math.max(...outerBounds.map(p => p[0]))
+  const minY = Math.min(...outerBounds.map(p => p[1]))
+  const maxY = Math.max(...outerBounds.map(p => p[1]))
 
   return { width: maxX - minX, height: maxY - minY }
 }

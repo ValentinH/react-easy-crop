@@ -1,8 +1,10 @@
-function getRadianAngle(degreeValue) {
+import { Area } from 'react-easy-crop/dist/types'
+
+function getRadianAngle(degreeValue: number) {
   return (degreeValue * Math.PI) / 180
 }
 
-export const createImage = url =>
+export const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image()
     image.addEventListener('load', () => resolve(image))
@@ -13,11 +15,12 @@ export const createImage = url =>
 
 /**
  * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
- * @param {File} image - Image File url
- * @param {Object} pixelCrop - pixelCrop Object provided by react-easy-crop
- * @param {number} rotation - optional rotation parameter
  */
-export default async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
+export default async function getCroppedImg(
+  imageSrc: string,
+  pixelCrop: Area,
+  rotation = 0
+): Promise<string> {
   const image = await createImage(imageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')

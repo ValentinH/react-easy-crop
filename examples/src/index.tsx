@@ -1,14 +1,27 @@
+import queryString from 'query-string'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import queryString from 'query-string'
-import Cropper from '../../src'
+import Cropper from '../../src/index'
+import { Area, Point } from '../../src/types'
 import './styles.css'
 
 const urlArgs = queryString.parse(window.location.search)
-const imageSrc = urlArgs.img || '/images/dog.jpeg' // so we can change the image from our tests
+const imageSrc = typeof urlArgs.img === 'string' ? urlArgs.img : '/images/dog.jpeg' // so we can change the image from our tests
 
-class App extends React.Component {
-  state = {
+type State = {
+  imageSrc: string
+  crop: Point
+  rotation: number
+  zoom: number
+  aspect: number
+  cropShape: 'rect' | 'round'
+  showGrid: boolean
+  zoomSpeed: number
+  restrictPosition: boolean
+}
+
+class App extends React.Component<{}, State> {
+  state: State = {
     imageSrc,
     crop: { x: 0, y: 0 },
     rotation: 0,
@@ -20,19 +33,19 @@ class App extends React.Component {
     restrictPosition: true,
   }
 
-  onCropChange = crop => {
+  onCropChange = (crop: Point) => {
     this.setState({ crop })
   }
 
-  onCropComplete = (croppedArea, croppedAreaPixels) => {
+  onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     console.log(croppedArea, croppedAreaPixels)
   }
 
-  onZoomChange = zoom => {
+  onZoomChange = (zoom: number) => {
     this.setState({ zoom })
   }
 
-  onRotationChange = rotation => {
+  onRotationChange = (rotation: number) => {
     this.setState({ rotation })
   }
 
@@ -51,7 +64,9 @@ class App extends React.Component {
           type="range"
           min={0}
           max={360}
-          onChange={({ target: { value: rotation } }) => this.setState({ rotation })}
+          onChange={({ target: { value: rotation } }) =>
+            this.setState({ rotation: Number(rotation) })
+          }
           style={{ position: 'fixed', zIndex: 9999999 }}
         />
         <div className="crop-container">
@@ -72,7 +87,7 @@ class App extends React.Component {
             onInteractionStart={this.onInteractionStart}
             onInteractionEnd={this.onInteractionEnd}
             initialCroppedAreaPixels={
-              urlArgs.setInitialCrop && { width: 699, height: 524, x: 875, y: 157 } // used to set the initial crop in e2e test
+              !!urlArgs.setInitialCrop ? { width: 699, height: 524, x: 875, y: 157 } : undefined // used to set the initial crop in e2e test
             }
           />
         </div>

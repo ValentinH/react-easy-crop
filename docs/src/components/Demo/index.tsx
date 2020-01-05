@@ -1,64 +1,68 @@
-import React, { useState, useCallback } from 'react'
-import Cropper from 'react-easy-crop'
-import Slider from '@material-ui/lab/Slider'
 import Button from '@material-ui/core/Button'
+import Slider from '@material-ui/core/Slider'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { withStyles } from '@material-ui/core/styles'
-import ImgDialog from './ImgDialog'
+import React, { useCallback, useState } from 'react'
+import Cropper from 'react-easy-crop'
+import { Area } from 'react-easy-crop/types'
 import getCroppedImg from './cropImage'
 import dogImg from './dog.jpeg'
+import ImgDialog from './ImgDialog'
 
-const styles = theme => ({
-  cropContainer: {
-    position: 'relative',
-    width: '100%',
-    height: 200,
-    background: '#333',
-    [theme.breakpoints.up('sm')]: {
-      height: 400,
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    cropContainer: {
+      position: 'relative',
+      width: '100%',
+      height: 200,
+      background: '#333',
+      [theme.breakpoints.up('sm')]: {
+        height: 400,
+      },
     },
-  },
-  cropButton: {
-    flexShrink: 0,
-    marginLeft: 16,
-  },
-  controls: {
-    padding: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row',
+    cropButton: {
+      flexShrink: 0,
+      marginLeft: 16,
+    },
+    controls: {
+      padding: 16,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+    },
+    sliderContainer: {
+      display: 'flex',
+      flex: '1',
       alignItems: 'center',
     },
-  },
-  sliderContainer: {
-    display: 'flex',
-    flex: '1',
-    alignItems: 'center',
-  },
-  sliderLabel: {
-    [theme.breakpoints.down('xs')]: {
-      minWidth: 65,
+    sliderLabel: {
+      [theme.breakpoints.down('xs')]: {
+        minWidth: 65,
+      },
     },
-  },
-  slider: {
-    padding: '22px 0px',
-    marginLeft: 16,
-    [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      margin: '0 16px',
+    slider: {
+      padding: '22px 0px',
+      marginLeft: 16,
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: '0 16px',
+      },
     },
-  },
-})
+  })
+)
 
-const Demo = ({ classes }) => {
+const Demo: React.FC = props => {
+  const classes = useStyles(props)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
   const [zoom, setZoom] = useState(1)
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
-  const [croppedImage, setCroppedImage] = useState(null)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
+  const [croppedImage, setCroppedImage] = useState<string | null>(null)
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -103,8 +107,8 @@ const Demo = ({ classes }) => {
             max={3}
             step={0.1}
             aria-labelledby="Zoom"
-            classes={{ container: classes.slider }}
-            onChange={(e, zoom) => setZoom(zoom)}
+            classes={{ root: classes.slider }}
+            onChange={(e, zoom) => setZoom(zoom as number)}
           />
         </div>
         <div className={classes.sliderContainer}>
@@ -117,8 +121,8 @@ const Demo = ({ classes }) => {
             max={360}
             step={1}
             aria-labelledby="Rotation"
-            classes={{ container: classes.slider }}
-            onChange={(e, rotation) => setRotation(rotation)}
+            classes={{ root: classes.slider }}
+            onChange={(e, rotation) => setRotation(rotation as number)}
           />
         </div>
         <Button
@@ -135,4 +139,4 @@ const Demo = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(Demo)
+export default Demo

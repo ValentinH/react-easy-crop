@@ -1,19 +1,16 @@
 import styled from '@emotion/styled'
 
-export const Container = styled('div')(
-  {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: 'hidden',
-    userSelect: 'none',
-    touchAction: 'none',
-    cursor: 'move',
-  },
-  ({ containerStyle }) => ({ ...containerStyle })
-)
+export const Container = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: 'hidden',
+  userSelect: 'none',
+  touchAction: 'none',
+  cursor: 'move',
+})
 
 const mediaStyles = {
   maxWidth: '100%',
@@ -27,9 +24,10 @@ const mediaStyles = {
   willChange: 'transform', // this improves performances and prevent painting issues on iOS Chrome
 }
 
-export const Img = styled('img')(mediaStyles, ({ mediaStyle }) => ({ ...mediaStyle }))
-
-export const Video = styled('video')(mediaStyles, ({ mediaStyle }) => ({ ...mediaStyle }))
+// @ts-ignore I don't want to duplicate mediaStyles
+export const Img = styled('img')(mediaStyles)
+// @ts-ignore I don't want to duplicate mediaStyles
+export const Video = styled('video')(mediaStyles)
 
 const lineBorder = '1px solid rgba(255, 255, 255, 0.5)'
 const cropperLines = {
@@ -73,7 +71,13 @@ const roundShape = {
   borderRadius: '50%',
 }
 
-export const CropArea = styled('div')({}, ({ cropShape, showGrid, cropAreaStyle }) => ({
+type CropAreaProps = {
+  cropShape: 'round' | 'rect'
+  showGrid: boolean
+}
+
+// @ts-ignore styled definition does not accept an empty object as first param, while it actually works
+export const CropArea = styled('div')({}, ({ cropShape, showGrid }: CropAreaProps) => ({
   ...(() => {
     switch (cropShape) {
       case 'round':
@@ -84,5 +88,4 @@ export const CropArea = styled('div')({}, ({ cropShape, showGrid, cropAreaStyle 
     }
   })(),
   ...(showGrid ? gridLines : {}),
-  ...cropAreaStyle,
 }))

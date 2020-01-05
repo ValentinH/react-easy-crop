@@ -1,8 +1,7 @@
 {
   "name": "react-easy-crop",
-  "version": "1.17.1",
+  "version": "2.0.0",
   "description": "A React component to crop images/videos with easy interactions",
-  "main": "dist/index.js",
   "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
   "repository": {
     "type": "git",
@@ -13,14 +12,13 @@
   },
   "author": "Ricardo.ch",
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "rm -rf dist/* && yarn build:dist && yarn build:standalone",
-    "build:dist": "babel src -d dist --ignore 'src/*.test.js'",
-    "build:standalone": "webpack -p --config webpack.standalone.config.js",
-    "docs:start": "cd docs && yarn develop",
-    "docs:deploy": "cd docs && yarn deploy",
-    "test": "yarn unit && yarn e2e",
+    "build": "yarn-or-npm bili && yarn-or-npm build:copy-files",
+    "docs:start": "cd docs && yarn-or-npm develop",
+    "docs:deploy": "cd docs && yarn-or-npm deploy",
+    "test": "yarn-or-npm unit && yarn-or-npm e2e && yarn-or-npm lint",
     "unit": "jest src",
     "unit:watch": "jest --watchAll src",
     "start:ci": "webpack-dev-server --mode production",
@@ -29,53 +27,78 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:ci": "cypress run --record",
-    "prepublishOnly": "yarn build",
+    "lint": "eslint --ext .ts,.tsx ./examples ./src",
+    "prebuild": "rimraf dist",
+    "build:copy-files": "babel-node ./scripts/copy-build-files.js",
+    "prepublishOnly": "yarn-or-npm build",
     "precommit": "lint-staged",
-    "format": "prettier --write src/**/*.js docs/src/**/*.{js,css}",
-    "npm:publish": "np"
+    "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}",
+    "npm:publish": "np --contents=dist"
   },
   "peerDependencies": {
-    "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react": ">=16.4.0",
+    "react-dom": ">=16.4.0"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.7",
-    "@emotion/styled": "^10.0.7"
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
+    "@babel/node": "^7.7.7",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
+    "@types/jest": "^24.0.24",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@typescript-eslint/eslint-plugin": "2.x",
+    "@typescript-eslint/parser": "2.x",
     "all-contributors-cli": "^6.4.0",
+    "babel-eslint": "10.x",
     "babel-loader": "^8.0.5",
+    "bili": "^4.8.1",
     "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^2.1.1",
     "cypress": "^3.2.0",
+    "eslint": "6.x",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-config-react-app": "^5.1.0",
+    "eslint-plugin-flowtype": "3.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "1.x",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^1.3.1",
     "jest": "24.3.1",
     "lint-staged": "^8.1.5",
     "np": "^4.0.2",
-    "prettier": "^1.13.5",
+    "prettier": "^1.19.1",
     "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "rimraf": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.25.3",
     "start-server-and-test": "^1.4.1",
     "style-loader": "^0.23.1",
-    "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4"
+    "ts-jest": "^24.2.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "yarn-or-npm": "^3.0.1"
   },
-  "files": [
-    "dist"
-  ],
   "lint-staged": {
-    "*.+(js|css)": [
+    "*.+(ts|tsx|js|css)": [
       "prettier --write",
       "git add"
     ]
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }

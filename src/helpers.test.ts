@@ -252,11 +252,31 @@ describe('Helpers', () => {
     })
 
     test.each([
-      [{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 50, y: 0 }],
-      [{ x: 0, y: 0 }, { x: 0, y: 100 }, { x: 0, y: 50 }],
-      [{ x: 0, y: 0 }, { x: 100, y: 100 }, { x: 50, y: 50 }],
-      [{ x: 100, y: 1000 }, { x: 0, y: 400 }, { x: 50, y: 700 }],
-      [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }],
+      [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 50, y: 0 },
+      ],
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: 100 },
+        { x: 0, y: 50 },
+      ],
+      [
+        { x: 0, y: 0 },
+        { x: 100, y: 100 },
+        { x: 50, y: 50 },
+      ],
+      [
+        { x: 100, y: 1000 },
+        { x: 0, y: 400 },
+        { x: 50, y: 700 },
+      ],
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+      ],
     ])('.getCenter(%o, %o)', (a, b, expected) => {
       const center = helpers.getCenter(a, b)
       expect(center).toEqual(expected)
@@ -267,13 +287,19 @@ describe('Helpers', () => {
       expect(helpers.rotateAroundMidPoint(0, 0, 66, 77, 90)).toEqual([143, 11])
     })
     test.each([
-      [[0, 0, 66, 77, 9], [12.858023328818689, -9.37667691848084]],
-      [[40, 0, 66, 77, 99], [146.1192983168716, 63.36555695262421]],
-      [[0, 40, 660, 77, 88], [673.9437927760558, -583.8892272105957]],
-      [[70, 40, 9, 737, 240], [-625.1197064377536, 1032.6724503691496]],
-      [[40, 40, 636, 77, 45], [240.72730931671987, -370.5985924910845]],
-    ])('.rotateAroundMidPoint(%s)', (params, expected) => {
-      expect(helpers.rotateAroundMidPoint(...params)).toEqual(expected)
+      [{ x: 0, y: 0, xMid: 66, yMid: 77, degrees: 9 }, [12.858023328818689, -9.37667691848084]],
+      [{ x: 40, y: 0, xMid: 66, yMid: 77, degrees: 99 }, [146.1192983168716, 63.36555695262421]],
+      [{ x: 0, y: 40, xMid: 660, yMid: 77, degrees: 88 }, [673.9437927760558, -583.8892272105957]],
+      [
+        { x: 70, y: 40, xMid: 9, yMid: 737, degrees: 240 },
+        [-625.1197064377536, 1032.6724503691496],
+      ],
+      [
+        { x: 40, y: 40, xMid: 636, yMid: 77, degrees: 45 },
+        [240.72730931671987, -370.5985924910845],
+      ],
+    ])('.rotateAroundMidPoint(%s)', ({ x, y, xMid, yMid, degrees }, expected) => {
+      expect(helpers.rotateAroundMidPoint(x, y, xMid, yMid, degrees)).toEqual(expected)
     })
   })
   describe('translateSize', () => {
@@ -285,21 +311,21 @@ describe('Helpers', () => {
     })
     test.each([
       [
-        [780, 2000, 45],
+        { width: 780, height: 2000, rotation: 45 },
         {
           height: 1965.756851698602,
           width: 1965.756851698602,
         },
       ],
       [
-        [1780, 60, 95],
+        { width: 1780, height: 60, rotation: 95 },
         {
           height: 1778.4559071681665,
           width: 214.90890397633643,
         },
       ],
-    ])('.translateSize(%s)', (params, expected) => {
-      expect(helpers.translateSize(...params)).toEqual(expected)
+    ])('.translateSize(%s)', ({ width, height, rotation }, expected) => {
+      expect(helpers.translateSize(width, height, rotation)).toEqual(expected)
     })
   })
 })

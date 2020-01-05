@@ -1,0 +1,13 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "lib": ["es2015", "dom"],
+    "jsx": "react",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "importHelpers": true
+  }
+}
