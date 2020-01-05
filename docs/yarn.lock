@@ -10200,8 +10200,10 @@ react-dom@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.18.0"
 
-"react-easy-crop@file:.yalc/react-easy-crop":
-  version "1.17.1-3297dc9d"
+react-easy-crop@2.0.0-beta.1:
+  version "2.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-2.0.0-beta.1.tgz#1579e5441890042012d6da02dd4eae1905daf226"
+  integrity sha512-T2nl4+SgSNo2Q2h9RbR+/PS3dmDTFw8Mvfbbu1pVhk5R4j14KKD/9NDlKExqcguihUAKSWsn9dOt6PiKiuaLDA==
   dependencies:
     "@emotion/core" "^10.0.27"
     "@emotion/styled" "^10.0.27"

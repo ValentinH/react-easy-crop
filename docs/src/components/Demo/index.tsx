@@ -4,6 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useCallback, useState } from 'react'
 import Cropper from 'react-easy-crop'
+import { Area } from 'react-easy-crop/types'
 import getCroppedImg from './cropImage'
 import dogImg from './dog.jpeg'
 import ImgDialog from './ImgDialog'
@@ -60,8 +61,8 @@ const Demo: React.FC = props => {
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
   const [zoom, setZoom] = useState(1)
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
-  const [croppedImage, setCroppedImage] = useState(null)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
+  const [croppedImage, setCroppedImage] = useState<string | null>(null)
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -107,7 +108,7 @@ const Demo: React.FC = props => {
             step={0.1}
             aria-labelledby="Zoom"
             classes={{ root: classes.slider }}
-            onChange={(e, zoom: number) => setZoom(zoom)}
+            onChange={(e, zoom) => setZoom(zoom as number)}
           />
         </div>
         <div className={classes.sliderContainer}>
@@ -121,7 +122,7 @@ const Demo: React.FC = props => {
             step={1}
             aria-labelledby="Rotation"
             classes={{ root: classes.slider }}
-            onChange={(e, rotation: number) => setRotation(rotation)}
+            onChange={(e, rotation) => setRotation(rotation as number)}
           />
         </div>
         <Button

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 type Props = {
-  img: HTMLImageElement['src']
+  img: HTMLImageElement['src'] | null
   onClose: () => void
 }
 
