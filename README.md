@@ -17,6 +17,7 @@ Check out the examples:
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
 - [Example with crop saved/loaded to/from local storage](https://codesandbox.io/s/pmj19vp2yx)
+- [Example with a video](https://codesandbox.io/s/react-easy-crop-for-videos-lfhme)
 
 ## Features
 
