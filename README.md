@@ -13,7 +13,7 @@ Check out the examples:
 - [Basic example with hooks](https://codesandbox.io/s/v69ly910ql)
 - [Basic example with class](https://codesandbox.io/s/q80jom5ql6)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
-- [Example with image selected by the user](https://codesandbox.io/s/y09komm059)
+- [Example with image selected by the user (+ auto-rotation for phone pictures)](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
 - [Example with crop saved/loaded to/from local storage](https://codesandbox.io/s/pmj19vp2yx)
