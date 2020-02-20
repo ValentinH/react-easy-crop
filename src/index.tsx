@@ -24,6 +24,7 @@ type Props = {
   cropSize?: Size
   showGrid?: boolean
   zoomSpeed: number
+  zoomWithScroll?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -68,6 +69,7 @@ class Cropper extends React.Component<Props, State> {
     mediaProps: {},
     zoomSpeed: 1,
     restrictPosition: true,
+    zoomWithScroll: true,
   }
 
   imageRef: HTMLImageElement | null = null
@@ -91,7 +93,8 @@ class Cropper extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener('resize', this.computeSizes)
     if (this.containerRef) {
-      this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
+      this.props.zoomWithScroll &&
+        this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
       this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
       this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
     }
@@ -105,14 +108,11 @@ class Cropper extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.computeSizes)
     if (this.containerRef) {
-      this.containerRef.removeEventListener('wheel', this.onWheel)
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
       this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
     }
     this.cleanEvents()
-    if (this.wheelTimer) {
-      clearTimeout(this.wheelTimer)
-    }
+    this.props.zoomWithScroll && this.clearScrollEvent()
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -124,6 +124,11 @@ class Cropper extends React.Component<Props, State> {
     } else if (prevProps.zoom !== this.props.zoom) {
       this.recomputeCropPosition()
     }
+    if (prevProps.zoomWithScroll !== this.props.zoomWithScroll && this.containerRef) {
+      this.props.zoomWithScroll
+        ? this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
+        : this.clearScrollEvent()
+    }
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
@@ -134,6 +139,13 @@ class Cropper extends React.Component<Props, State> {
     document.removeEventListener('mouseup', this.onDragStopped)
     document.removeEventListener('touchmove', this.onTouchMove)
     document.removeEventListener('touchend', this.onDragStopped)
+  }
+
+  clearScrollEvent = () => {
+    if (this.containerRef) this.containerRef.removeEventListener('wheel', this.onWheel)
+    if (this.wheelTimer) {
+      clearTimeout(this.wheelTimer)
+    }
   }
 
   onMediaLoad = () => {
