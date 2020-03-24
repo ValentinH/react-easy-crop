@@ -156,7 +156,7 @@ const CroppedImage = ({ image }) => {
       onZoomChange={onZoomChange}
       onMediaLoaded={mediaSize => {
         // Adapt zoom based on media size to fit max height
-        setZoom(CONTAINER_HEIGHT / mediaSize.naturalHeight)
+        onZoomChange(CONTAINER_HEIGHT / mediaSize.naturalHeight)
       }}
     />
   )
