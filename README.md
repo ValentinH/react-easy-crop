@@ -2,7 +2,7 @@
 
 A React component to crop images/videos with easy interactions
 
-[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-15-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-18-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
 
 ![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
@@ -204,6 +204,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://allcontributors.org"><img src="https://avatars1.githubusercontent.com/u/46410174?v=4" width="100px;" alt=""/><br /><sub><b>All Contributors</b></sub></a><br /><a href="#tool-all-contributors" title="Tools">🔧</a></td>
+    <td align="center"><a href="https://github.com/FillPower1"><img src="https://avatars0.githubusercontent.com/u/46319022?v=4" width="100px;" alt=""/><br /><sub><b>FillPower1</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=FillPower1" title="Code">💻</a></td>
     <td align="center"><a href="https://nihey.org"><img src="https://avatars3.githubusercontent.com/u/5278570?v=4" width="100px;" alt=""/><br /><sub><b>Nihey Takizawa</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=nihey" title="Documentation">📖</a></td>
   </tr>
 </table>
