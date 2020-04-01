@@ -153,6 +153,15 @@
       "contributions": [
         "tool"
       ]
+    },
+    {
+      "login": "FillPower1",
+      "name": "FillPower1",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/46319022?v=4",
+      "profile": "https://github.com/FillPower1",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
