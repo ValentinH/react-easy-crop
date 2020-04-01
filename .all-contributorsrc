@@ -153,6 +153,15 @@
       "contributions": [
         "tool"
       ]
+    },
+    {
+      "login": "nihey",
+      "name": "Nihey Takizawa",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5278570?v=4",
+      "profile": "https://nihey.org",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
