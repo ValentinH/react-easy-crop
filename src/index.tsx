@@ -25,6 +25,10 @@ type Props = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
+  gesture?: {
+    zoom: boolean,
+    rotation: boolean
+  }
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -70,6 +74,10 @@ class Cropper extends React.Component<Props, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    gesture: {
+      zoom: true,
+      rotation: true
+    }
   }
 
   imageRef: HTMLImageElement | null = null
@@ -95,8 +103,10 @@ class Cropper extends React.Component<Props, State> {
     if (this.containerRef) {
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-      this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
+      if (this.props.gesture.zoom || this.props.gesture.rotation) {
+        this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
+        this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
+      }
     }
 
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
@@ -108,8 +118,10 @@ class Cropper extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.computeSizes)
     if (this.containerRef) {
-      this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
+      if (this.props.gesture.zoom || this.props.gesture.rotation) {
+        this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
+        this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
+      }
     }
     this.cleanEvents()
     this.props.zoomWithScroll && this.clearScrollEvent()
@@ -232,7 +244,9 @@ class Cropper extends React.Component<Props, State> {
     document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
     if (e.touches.length === 2) {
-      this.onPinchStart(e)
+      if (this.props.gesture.zoom || this.props.gesture.rotation) {
+        this.onPinchStart(e)
+      }
     } else if (e.touches.length === 1) {
       this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
     }
@@ -242,7 +256,9 @@ class Cropper extends React.Component<Props, State> {
     // Prevent whole page from scrolling on iOS.
     e.preventDefault()
     if (e.touches.length === 2) {
-      this.onPinchMove(e)
+      if (this.props.gesture.zoom || this.props.gesture.rotation) {
+        this.onPinchMove(e)
+      }
     } else if (e.touches.length === 1) {
       this.onDrag(Cropper.getTouchPoint(e.touches[0]))
     }
@@ -289,8 +305,12 @@ class Cropper extends React.Component<Props, State> {
   onPinchStart(e: React.TouchEvent<HTMLDivElement>) {
     const pointA = Cropper.getTouchPoint(e.touches[0])
     const pointB = Cropper.getTouchPoint(e.touches[1])
-    this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
-    this.lastPinchRotation = getRotationBetweenPoints(pointA, pointB)
+    if (this.props.gesture.zoom) {
+      this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
+    }
+    if (this.props.gesture.rotation) {
+      this.lastPinchRotation = getRotationBetweenPoints(pointA, pointB)
+    }
     this.onDragStart(getCenter(pointA, pointB))
   }
 
@@ -302,15 +322,19 @@ class Cropper extends React.Component<Props, State> {
 
     if (this.rafPinchTimeout) window.cancelAnimationFrame(this.rafPinchTimeout)
     this.rafPinchTimeout = window.requestAnimationFrame(() => {
-      const distance = getDistanceBetweenPoints(pointA, pointB)
-      const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
-      this.setNewZoom(newZoom, center)
-      this.lastPinchDistance = distance
+      if (this.props.gesture.zoom) {
+        const distance = getDistanceBetweenPoints(pointA, pointB)
+        const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
+        this.setNewZoom(newZoom, center)
+        this.lastPinchDistance = distance
+      }
 
-      const rotation = getRotationBetweenPoints(pointA, pointB)
-      const newRotation = this.props.rotation + (rotation - this.lastPinchRotation)
-      this.props.onRotationChange && this.props.onRotationChange(newRotation)
-      this.lastPinchRotation = rotation
+      if (this.props.gesture.rotation) {
+        const rotation = getRotationBetweenPoints(pointA, pointB)
+        const newRotation = this.props.rotation + (rotation - this.lastPinchRotation)
+        this.props.onRotationChange && this.props.onRotationChange(newRotation)
+        this.lastPinchRotation = rotation
+      }
     })
   }
 
