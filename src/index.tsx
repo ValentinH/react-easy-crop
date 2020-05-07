@@ -166,10 +166,10 @@ class Cropper extends React.Component<Props, State> {
 
   getGesture = () => {
     return {
-      zoom: "zoom" in this.props.gesture
+      zoom: this.props?.gesture && "zoom" in this.props.gesture
         ? this.props.gesture.zoom
         : true,
-      rotation: "rotation" in this.props.gesture
+      rotation: this.props?.gesture && "rotation" in this.props.gesture
         ? this.props.gesture.rotation
         : true
     }
