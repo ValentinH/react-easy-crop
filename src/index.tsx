@@ -432,7 +432,7 @@ class Cropper extends React.Component<Props, State> {
       classes: { containerClassName, cropAreaClassName, mediaClassName },
       disableInlineCss,
     } = this.props
-    console.log(cssStyles.toString())
+
     return (
       <div
         onMouseDown={this.onMouseDown}
