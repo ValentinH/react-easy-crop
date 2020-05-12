@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Cropper from '../../src/index'
 import { Area, Point } from '../../src/types'
-import './styles.css'
+import styles from './styles.css'
 
 const urlArgs = queryString.parse(window.location.search)
 const imageSrc = typeof urlArgs.img === 'string' ? urlArgs.img : '/images/dog.jpeg' // so we can change the image from our tests
@@ -60,6 +60,7 @@ class App extends React.Component<{}, State> {
   render() {
     return (
       <div className="App">
+        <style>{styles}</style>
         <input
           type="range"
           min={0}

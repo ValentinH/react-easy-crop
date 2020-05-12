@@ -8,6 +8,7 @@ const config: Config = {
     format: ['cjs', 'umd', 'umd-min', 'esm'],
     moduleName: 'ReactEasyCrop',
     sourceMap: true,
+    extractCSS: false,
   },
   globals: {
     react: 'React',

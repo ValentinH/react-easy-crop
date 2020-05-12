@@ -1,5 +1,4 @@
 import React from 'react'
-import { Container, CropArea, Img, Video } from './styles'
 import { Area, MediaSize, Point, Size } from './types'
 import {
   getCropSize,
@@ -9,7 +8,9 @@ import {
   computeCroppedArea,
   getCenter,
   getInitialCropFromCroppedAreaPixels,
+  classNames,
 } from './helpers'
+import cssStyles from './styles.css'
 
 type Props = {
   image?: string
@@ -25,6 +26,7 @@ type Props = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
+  disableInlineCss?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -428,22 +430,24 @@ class Cropper extends React.Component<Props, State> {
       showGrid,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
+      disableInlineCss,
     } = this.props
-
+    console.log(cssStyles.toString())
     return (
-      <Container
+      <div
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
         ref={el => (this.containerRef = el)}
         data-testid="container"
         style={containerStyle}
-        className={containerClassName}
+        className={classNames('reactEasyCrop_Container', containerClassName)}
       >
+        {!disableInlineCss && <style>{cssStyles}</style>}
         {image ? (
-          <Img
+          <img
             alt=""
-            className={mediaClassName}
-            {...mediaProps}
+            className={classNames('reactEasyCrop_Image', mediaClassName)}
+            {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
             src={image}
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
             style={{
@@ -454,12 +458,11 @@ class Cropper extends React.Component<Props, State> {
           />
         ) : (
           video && (
-            <Video
+            <video
               autoPlay
               loop
               muted={true}
-              alt=""
-              className={mediaClassName}
+              className={classNames('reactEasyCrop_Video', mediaClassName)}
               {...mediaProps}
               src={video}
               ref={(el: HTMLVideoElement) => (this.videoRef = el)}
@@ -473,19 +476,22 @@ class Cropper extends React.Component<Props, State> {
           )
         )}
         {this.state.cropSize && (
-          <CropArea
-            cropShape={cropShape}
-            showGrid={showGrid}
+          <div
             style={{
               ...cropAreaStyle,
               width: this.state.cropSize.width,
               height: this.state.cropSize.height,
             }}
             data-testid="cropper"
-            className={cropAreaClassName}
+            className={classNames(
+              'reactEasyCrop_CropArea',
+              cropAreaClassName,
+              cropShape === 'round' && 'reactEasyCrop_CropAreaRound',
+              showGrid && 'reactEasyCrop_CropAreaGrid'
+            )}
           />
         )}
-      </Container>
+      </div>
     )
   }
 }
