@@ -17,7 +17,12 @@ module.exports = {
         exclude: /node_modules/,
       },
       { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
-      { test: /\.css$/, use: 'raw-loader' },
+      {
+        test: /\.css$/,
+        include: [path.resolve('./example')],
+        use: ['style-loader', 'css-loader'],
+      },
+      { test: /\.css$/, include: [path.resolve('./src')], use: 'raw-loader' },
     ],
   },
   plugins: [
