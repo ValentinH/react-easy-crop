@@ -13,6 +13,11 @@ const config: Config = {
   globals: {
     react: 'React',
   },
+  plugins: {
+    postcss: {
+      inject: false,
+    },
+  },
   extendConfig(config, { format }) {
     if (format.startsWith('umd')) {
       config.output.fileName = 'umd/react-easy-crop[min].js'
