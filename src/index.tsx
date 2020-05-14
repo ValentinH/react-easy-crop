@@ -46,6 +46,7 @@ type Props = {
   restrictPosition: boolean
   initialCroppedAreaPixels?: Area
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
+  disableDefaultStyles?: boolean
 }
 
 type State = {
@@ -101,10 +102,12 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
     }
 
-    this.styleRef = document.createElement('style')
-    this.styleRef.setAttribute('type', 'text/css')
-    this.styleRef.innerHTML = cssStyles
-    document.head.appendChild(this.styleRef)
+    if (!this.props.disableDefaultStyles) {
+      this.styleRef = document.createElement('style')
+      this.styleRef.setAttribute('type', 'text/css')
+      this.styleRef.innerHTML = cssStyles
+      document.head.appendChild(this.styleRef)
+    }
 
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
     if (this.imageRef && this.imageRef.complete) {

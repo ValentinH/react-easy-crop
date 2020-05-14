@@ -3,9 +3,9 @@ import path from 'path'
 import fse from 'fs-extra'
 
 async function copyFile(file) {
-  const buildPath = path.resolve(__dirname, '../dist/', path.basename(file))
-  await fse.copy(file, buildPath)
-  console.log(`Copied ${file} to ${buildPath}`)
+  const buildPath = path.resolve(__dirname, '../dist/', path.basename(file.to || file.from))
+  await fse.copy(file.from, buildPath)
+  console.log(`Copied ${file.from} to ${buildPath}`)
 }
 
 async function createPackageFile() {
@@ -34,7 +34,11 @@ async function createPackageFile() {
 }
 
 async function run() {
-  await Promise.all(['./README.md'].map(file => copyFile(file)))
+  await Promise.all(
+    [{ from: './README.md' }, { from: './src/styles.css', to: 'react-easy-crop.css' }].map(file =>
+      copyFile(file)
+    )
+  )
   await createPackageFile()
 }
 
