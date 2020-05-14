@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27"
+    "@emotion/styled": "^10.0.27",
+    "tslib": "1.11.2"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
