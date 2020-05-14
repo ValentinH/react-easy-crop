@@ -171,6 +171,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "ajlende",
+      "name": "Alex Lende",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5129775?v=4",
+      "profile": "http://ajlende.com",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
