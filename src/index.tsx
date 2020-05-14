@@ -26,7 +26,6 @@ type Props = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
-  disableInlineCss?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -77,6 +76,7 @@ class Cropper extends React.Component<Props, State> {
   imageRef: HTMLImageElement | null = null
   videoRef: HTMLVideoElement | null = null
   containerRef: HTMLDivElement | null = null
+  styleRef: HTMLStyleElement | null = null
   containerRect: DOMRect | null = null
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
@@ -101,6 +101,11 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
     }
 
+    this.styleRef = document.createElement('style')
+    this.styleRef.setAttribute('type', 'text/css')
+    this.styleRef.innerHTML = cssStyles
+    document.head.appendChild(this.styleRef)
+
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
     if (this.imageRef && this.imageRef.complete) {
       this.onMediaLoad()
@@ -113,6 +118,11 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
       this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
     }
+
+    if (this.styleRef) {
+      this.styleRef.remove()
+    }
+
     this.cleanEvents()
     this.props.zoomWithScroll && this.clearScrollEvent()
   }
@@ -430,7 +440,6 @@ class Cropper extends React.Component<Props, State> {
       showGrid,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
-      disableInlineCss,
     } = this.props
 
     return (
@@ -442,7 +451,6 @@ class Cropper extends React.Component<Props, State> {
         style={containerStyle}
         className={classNames('reactEasyCrop_Container', containerClassName)}
       >
-        {!disableInlineCss && <style>{cssStyles}</style>}
         {image ? (
           <img
             alt=""
