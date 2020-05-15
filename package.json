@@ -40,8 +40,6 @@
     "react-dom": ">=16.4.0"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27",
     "tslib": "1.11.2"
   },
   "devDependencies": {
@@ -78,6 +76,7 @@
     "np": "^4.0.2",
     "prettier": "^1.19.1",
     "query-string": "^6.1.0",
+    "raw-loader": "^4.0.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "rimraf": "^3.0.0",

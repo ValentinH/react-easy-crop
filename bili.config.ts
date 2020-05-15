@@ -8,9 +8,15 @@ const config: Config = {
     format: ['cjs', 'umd', 'umd-min', 'esm'],
     moduleName: 'ReactEasyCrop',
     sourceMap: true,
+    extractCSS: false,
   },
   globals: {
     react: 'React',
+  },
+  plugins: {
+    postcss: {
+      inject: false,
+    },
   },
   extendConfig(config, { format }) {
     if (format.startsWith('umd')) {

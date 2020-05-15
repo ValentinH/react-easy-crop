@@ -259,3 +259,19 @@ export function translateSize(width: number, height: number, rotation: number): 
 
   return { width: maxX - minX, height: maxY - minY }
 }
+
+/**
+ * Combine multiple class names into a single string.
+ */
+export function classNames(...args: (boolean | string | number | undefined | void | null)[]) {
+  return args
+    .filter(value => {
+      if (typeof value === 'string' && value.length > 0) {
+        return true
+      }
+
+      return false
+    })
+    .join(' ')
+    .trim()
+}

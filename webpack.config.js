@@ -19,8 +19,10 @@ module.exports = {
       { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
       {
         test: /\.css$/,
+        include: [path.resolve('./example')],
         use: ['style-loader', 'css-loader'],
       },
+      { test: /\.css$/, include: [path.resolve('./src')], use: 'raw-loader' },
     ],
   },
   plugins: [
@@ -28,7 +30,7 @@ module.exports = {
     new CopyWebpackPlugin([{ from: 'examples/src/images', to: 'images' }]),
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
   },
   devServer: {
     port: 3001,

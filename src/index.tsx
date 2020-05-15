@@ -1,5 +1,4 @@
 import React from 'react'
-import { Container, CropArea, Img, Video } from './styles'
 import { Area, MediaSize, Point, Size } from './types'
 import {
   getCropSize,
@@ -9,7 +8,9 @@ import {
   computeCroppedArea,
   getCenter,
   getInitialCropFromCroppedAreaPixels,
+  classNames,
 } from './helpers'
+import cssStyles from './styles.css'
 
 type Props = {
   image?: string
@@ -45,6 +46,7 @@ type Props = {
   restrictPosition: boolean
   initialCroppedAreaPixels?: Area
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
+  disableAutomaticStylesInjection?: boolean
 }
 
 type State = {
@@ -75,6 +77,7 @@ class Cropper extends React.Component<Props, State> {
   imageRef: HTMLImageElement | null = null
   videoRef: HTMLVideoElement | null = null
   containerRef: HTMLDivElement | null = null
+  styleRef: HTMLStyleElement | null = null
   containerRect: DOMRect | null = null
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
@@ -99,6 +102,13 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
     }
 
+    if (!this.props.disableAutomaticStylesInjection) {
+      this.styleRef = document.createElement('style')
+      this.styleRef.setAttribute('type', 'text/css')
+      this.styleRef.innerHTML = cssStyles
+      document.head.appendChild(this.styleRef)
+    }
+
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
     if (this.imageRef && this.imageRef.complete) {
       this.onMediaLoad()
@@ -111,6 +121,11 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
       this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
     }
+
+    if (this.styleRef) {
+      this.styleRef.remove()
+    }
+
     this.cleanEvents()
     this.props.zoomWithScroll && this.clearScrollEvent()
   }
@@ -431,19 +446,19 @@ class Cropper extends React.Component<Props, State> {
     } = this.props
 
     return (
-      <Container
+      <div
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
         ref={el => (this.containerRef = el)}
         data-testid="container"
         style={containerStyle}
-        className={containerClassName}
+        className={classNames('reactEasyCrop_Container', containerClassName)}
       >
         {image ? (
-          <Img
+          <img
             alt=""
-            className={mediaClassName}
-            {...mediaProps}
+            className={classNames('reactEasyCrop_Image', mediaClassName)}
+            {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
             src={image}
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
             style={{
@@ -454,12 +469,11 @@ class Cropper extends React.Component<Props, State> {
           />
         ) : (
           video && (
-            <Video
+            <video
               autoPlay
               loop
               muted={true}
-              alt=""
-              className={mediaClassName}
+              className={classNames('reactEasyCrop_Video', mediaClassName)}
               {...mediaProps}
               src={video}
               ref={(el: HTMLVideoElement) => (this.videoRef = el)}
@@ -473,19 +487,22 @@ class Cropper extends React.Component<Props, State> {
           )
         )}
         {this.state.cropSize && (
-          <CropArea
-            cropShape={cropShape}
-            showGrid={showGrid}
+          <div
             style={{
               ...cropAreaStyle,
               width: this.state.cropSize.width,
               height: this.state.cropSize.height,
             }}
             data-testid="cropper"
-            className={cropAreaClassName}
+            className={classNames(
+              'reactEasyCrop_CropArea',
+              cropShape === 'round' && 'reactEasyCrop_CropAreaRound',
+              showGrid && 'reactEasyCrop_CropAreaGrid',
+              cropAreaClassName
+            )}
           />
         )}
-      </Container>
+      </div>
     )
   }
 }
