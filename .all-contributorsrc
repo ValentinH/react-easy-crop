@@ -180,6 +180,16 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "stefanoruth",
+      "name": "Stefano Ruth",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/6178983?v=4",
+      "profile": "https://github.com/stefanoruth",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
