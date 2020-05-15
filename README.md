@@ -212,12 +212,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/FillPower1"><img src="https://avatars0.githubusercontent.com/u/46319022?v=4" width="100px;" alt=""/><br /><sub><b>FillPower1</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=FillPower1" title="Code">💻</a></td>
     <td align="center"><a href="https://nihey.org"><img src="https://avatars3.githubusercontent.com/u/5278570?v=4" width="100px;" alt=""/><br /><sub><b>Nihey Takizawa</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=nihey" title="Documentation">📖</a></td>
     <td align="center"><a href="http://ajlende.com"><img src="https://avatars0.githubusercontent.com/u/5129775?v=4" width="100px;" alt=""/><br /><sub><b>Alex Lende</b></sub></a><br /><a href="#maintenance-ajlende" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/stefanoruth"><img src="https://avatars0.githubusercontent.com/u/6178983?v=4" width="100px;" alt=""/><br /><sub><b>Stefano Ruth</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=stefanoruth" title="Code">💻</a> <a href="#ideas-stefanoruth" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
