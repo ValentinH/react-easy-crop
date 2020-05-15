@@ -47,6 +47,7 @@ type Props = {
   initialCroppedAreaPixels?: Area
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
   disableAutomaticStylesInjection?: boolean
+  logarithmicScrolling: boolean
 }
 
 type State = {
@@ -72,6 +73,7 @@ class Cropper extends React.Component<Props, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    logarithmicScrolling: false,
   }
 
   imageRef: HTMLImageElement | null = null
@@ -329,10 +331,21 @@ class Cropper extends React.Component<Props, State> {
     })
   }
 
+  calculateNewZoom(deltaY: number): number {
+    if (!this.props.logarithmicScrolling) {
+      return this.props.zoom - (deltaY * this.props.zoomSpeed) / 200
+    }
+    const zoomY = Math.log10(this.props.zoom)
+    const minZoomY = Math.log10(this.props.minZoom)
+    const maxZoomY = Math.log10(this.props.maxZoom)
+    const newZoomY = zoomY - (deltaY * this.props.zoomSpeed * (maxZoomY - minZoomY)) / 200
+    return Math.pow(10, newZoomY)
+  }
+
   onWheel = (e: WheelEvent) => {
     e.preventDefault()
     const point = Cropper.getMousePoint(e)
-    const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
+    const newZoom = this.calculateNewZoom(e.deltaY)
     this.setNewZoom(newZoom, point)
 
     if (!this.state.hasWheelJustStarted) {
