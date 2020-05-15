@@ -46,7 +46,7 @@ type Props = {
   restrictPosition: boolean
   initialCroppedAreaPixels?: Area
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
-  disableAutomaticFileInjection?: boolean
+  disableAutomaticStylesInjection?: boolean
 }
 
 type State = {
@@ -102,7 +102,7 @@ class Cropper extends React.Component<Props, State> {
       this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
     }
 
-    if (!this.props.disableAutomaticFileInjection) {
+    if (!this.props.disableAutomaticStylesInjection) {
       this.styleRef = document.createElement('style')
       this.styleRef.setAttribute('type', 'text/css')
       this.styleRef.innerHTML = cssStyles
