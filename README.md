@@ -214,6 +214,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://ajlende.com"><img src="https://avatars0.githubusercontent.com/u/5129775?v=4" width="100px;" alt=""/><br /><sub><b>Alex Lende</b></sub></a><br /><a href="#maintenance-ajlende" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://github.com/stefanoruth"><img src="https://avatars0.githubusercontent.com/u/6178983?v=4" width="100px;" alt=""/><br /><sub><b>Stefano Ruth</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=stefanoruth" title="Code">💻</a> <a href="#ideas-stefanoruth" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/dvail"><img src="https://avatars1.githubusercontent.com/u/1292638?v=4" width="100px;" alt=""/><br /><sub><b>David Vail</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=dvail" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Michal-Sh"><img src="https://avatars1.githubusercontent.com/u/58683426?v=4" width="100px;" alt=""/><br /><sub><b>Michal-Sh</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=Michal-Sh" title="Code">💻</a></td>
   </tr>
 </table>
 
