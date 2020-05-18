@@ -1,4 +1,5 @@
 import Button from '@material-ui/core/Button'
+import NoSsr from '@material-ui/core/NoSsr'
 import Slider from '@material-ui/core/Slider'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -84,17 +85,19 @@ const Demo: React.FC = props => {
   return (
     <div>
       <div className={classes.cropContainer}>
-        <Cropper
-          image={dogImg}
-          crop={crop}
-          rotation={rotation}
-          zoom={zoom}
-          aspect={4 / 3}
-          onCropChange={setCrop}
-          onRotationChange={setRotation}
-          onCropComplete={onCropComplete}
-          onZoomChange={setZoom}
-        />
+        <NoSsr>
+          <Cropper
+            image={dogImg}
+            crop={crop}
+            rotation={rotation}
+            zoom={zoom}
+            aspect={4 / 3}
+            onCropChange={setCrop}
+            onRotationChange={setRotation}
+            onCropComplete={onCropComplete}
+            onZoomChange={setZoom}
+          />
+        </NoSsr>
       </div>
       <div className={classes.controls}>
         <div className={classes.sliderContainer}>
