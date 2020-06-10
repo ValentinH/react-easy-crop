@@ -11,6 +11,11 @@ body {
   bottom: 0;
 }
 
+.controls {
+  z-index: 1;
+  position: fixed;
+}
+
 .crop-container {
   position: absolute;
   top: 0;
