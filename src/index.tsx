@@ -18,6 +18,7 @@ type Props = {
   crop: Point
   zoom: number
   rotation: number
+  flip: { horizontal: boolean; vertical: boolean }
   aspect: number
   minZoom: number
   maxZoom: number
@@ -61,6 +62,7 @@ class Cropper extends React.Component<Props, State> {
   static defaultProps = {
     zoom: 1,
     rotation: 0,
+    flip: { horizontal: false, vertical: false },
     aspect: 4 / 3,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
@@ -441,6 +443,7 @@ class Cropper extends React.Component<Props, State> {
       mediaProps,
       crop: { x, y },
       rotation,
+      flip: { horizontal, vertical },
       zoom,
       cropShape,
       showGrid,
@@ -466,7 +469,13 @@ class Cropper extends React.Component<Props, State> {
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
             style={{
               ...mediaStyle,
-              transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+              transform: [
+                `translate(${x}px, ${y}px)`,
+                `rotateX(${vertical ? 180 : 0}deg)`,
+                `rotateY(${horizontal ? 180 : 0}deg)`,
+                `rotateZ(${rotation}deg)`,
+                `scale(${zoom})`,
+              ].join(' '),
             }}
             onLoad={this.onMediaLoad}
           />
@@ -483,7 +492,13 @@ class Cropper extends React.Component<Props, State> {
               onLoadedMetadata={this.onMediaLoad}
               style={{
                 ...mediaStyle,
-                transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+                transform: [
+                  `translate(${x}px, ${y}px)`,
+                  `rotateX(${vertical ? 180 : 0}deg)`,
+                  `rotateY(${horizontal ? 180 : 0}deg)`,
+                  `rotateZ(${rotation}deg)`,
+                  `scale(${zoom})`,
+                ].join(' '),
               }}
               controls={false}
             />

@@ -12,6 +12,7 @@ type State = {
   imageSrc: string
   crop: Point
   rotation: number
+  flip: { horizontal: boolean; vertical: boolean }
   zoom: number
   aspect: number
   cropShape: 'rect' | 'round'
@@ -25,6 +26,7 @@ class App extends React.Component<{}, State> {
     imageSrc,
     crop: { x: 0, y: 0 },
     rotation: 0,
+    flip: { horizontal: false, vertical: false },
     zoom: 1,
     aspect: 4 / 3,
     cropShape: 'rect',
@@ -60,20 +62,60 @@ class App extends React.Component<{}, State> {
   render() {
     return (
       <div className="App">
-        <input
-          type="range"
-          min={0}
-          max={360}
-          onChange={({ target: { value: rotation } }) =>
-            this.setState({ rotation: Number(rotation) })
-          }
-          style={{ position: 'fixed', zIndex: 9999999 }}
-        />
+        <div className="controls">
+          <div>
+            <label>
+              Rotation
+              <input
+                type="range"
+                min={0}
+                max={360}
+                value={this.state.rotation}
+                onChange={({ target: { value: rotation } }) =>
+                  this.setState({ rotation: Number(rotation) })
+                }
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.state.flip.horizontal}
+                onChange={() =>
+                  this.setState(prev => ({
+                    flip: {
+                      horizontal: !prev.flip.horizontal,
+                      vertical: prev.flip.vertical,
+                    },
+                  }))
+                }
+              />
+              Flip Horizontal
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.state.flip.vertical}
+                onChange={() =>
+                  this.setState(prev => ({
+                    flip: {
+                      horizontal: prev.flip.horizontal,
+                      vertical: !prev.flip.vertical,
+                    },
+                  }))
+                }
+              />
+              Flip Vertical
+            </label>
+          </div>
+        </div>
         <div className="crop-container">
           <Cropper
             image={this.state.imageSrc}
             crop={this.state.crop}
             rotation={this.state.rotation}
+            flip={this.state.flip}
             zoom={this.state.zoom}
             aspect={this.state.aspect}
             cropShape={this.state.cropShape}
