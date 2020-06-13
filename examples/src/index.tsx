@@ -84,6 +84,7 @@ class App extends React.Component<{}, State> {
                 checked={this.state.flip.horizontal}
                 onChange={() =>
                   this.setState(prev => ({
+                    rotation: 360 - prev.rotation,
                     flip: {
                       horizontal: !prev.flip.horizontal,
                       vertical: prev.flip.vertical,
@@ -99,6 +100,7 @@ class App extends React.Component<{}, State> {
                 checked={this.state.flip.vertical}
                 onChange={() =>
                   this.setState(prev => ({
+                    rotation: 360 - prev.rotation,
                     flip: {
                       horizontal: prev.flip.horizontal,
                       vertical: !prev.flip.vertical,
