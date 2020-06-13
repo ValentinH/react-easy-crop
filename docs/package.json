@@ -29,7 +29,7 @@
     "gatsby-transformer-sharp": "^2.1.17",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-easy-crop": "^2.0.0",
+    "react-easy-crop": "file:../dist",
     "react-helmet": "^5.2.0"
   },
   "repository": {
