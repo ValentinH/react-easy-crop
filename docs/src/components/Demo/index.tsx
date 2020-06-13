@@ -1,9 +1,10 @@
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import NoSsr from '@material-ui/core/NoSsr'
 import Slider from '@material-ui/core/Slider'
-import Checkbox from '@material-ui/core/Checkbox'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import FlipIcon from '@material-ui/icons/Flip'
 import React, { useCallback, useState } from 'react'
 import Cropper from 'react-easy-crop'
 import { Area } from 'react-easy-crop/types'
@@ -132,28 +133,24 @@ const Demo: React.FC = props => {
           />
         </div>
         <div className={classes.sliderContainer}>
-          <Typography variant="overline" classes={{ root: classes.sliderLabel }}>
-            Flip Horizontal
-          </Typography>
-          <Checkbox
-            checked={flip.horizontal}
-            aria-labelledby="Flip Horizontal"
-            onChange={e => {
-              setFlip(prev => ({ horizontal: e.target.checked, vertical: prev.vertical }))
+          <IconButton
+            aria-label="Flip Horizontal"
+            onClick={() => {
+              setFlip(prev => ({ horizontal: !prev.horizontal, vertical: prev.vertical }))
               setRotation(prev => 360 - prev)
             }}
-          />
-          <Typography variant="overline" classes={{ root: classes.sliderLabel }}>
-            Flip Vertical
-          </Typography>
-          <Checkbox
-            checked={flip.vertical}
-            aria-labelledby="Flip Vertical"
-            onChange={e => {
-              setFlip(prev => ({ vertical: e.target.checked, horizontal: prev.horizontal }))
+          >
+            <FlipIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Flip Vertical"
+            onClick={() => {
+              setFlip(prev => ({ horizontal: prev.horizontal, vertical: !prev.vertical }))
               setRotation(prev => 360 - prev)
             }}
-          />
+          >
+            <FlipIcon style={{ transform: 'rotate(90deg)' }} />
+          </IconButton>
         </div>
         <Button
           onClick={showCroppedImage}
