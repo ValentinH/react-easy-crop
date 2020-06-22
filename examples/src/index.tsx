@@ -89,6 +89,11 @@ class App extends React.Component<{}, State> {
             initialCroppedAreaPixels={
               !!urlArgs.setInitialCrop ? { width: 699, height: 524, x: 875, y: 157 } : undefined // used to set the initial crop in e2e test
             }
+            transform={[
+              `translate(${this.state.crop.x}px, ${this.state.crop.y}px)`,
+              `rotate(${this.state.rotation}deg)`,
+              `scale(${this.state.zoom})`,
+            ].join(' ')}
           />
         </div>
       </div>

@@ -15,6 +15,7 @@ import cssStyles from './styles.css'
 type Props = {
   image?: string
   video?: string
+  transform?: string
   crop: Point
   zoom: number
   rotation: number
@@ -439,6 +440,7 @@ class Cropper extends React.Component<Props, State> {
       image,
       video,
       mediaProps,
+      transform,
       crop: { x, y },
       rotation,
       zoom,
@@ -466,7 +468,8 @@ class Cropper extends React.Component<Props, State> {
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
             style={{
               ...mediaStyle,
-              transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+              transform:
+                transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
             }}
             onLoad={this.onMediaLoad}
           />
@@ -483,7 +486,8 @@ class Cropper extends React.Component<Props, State> {
               onLoadedMetadata={this.onMediaLoad}
               style={{
                 ...mediaStyle,
-                transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+                transform:
+                  transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
               }}
               controls={false}
             />
