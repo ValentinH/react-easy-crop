@@ -471,9 +471,9 @@ class Cropper extends React.Component<Props, State> {
               ...mediaStyle,
               transform: [
                 `translate(${x}px, ${y}px)`,
-                `rotateX(${vertical ? 180 : 0}deg)`,
+                `rotateZ(${rotation}deg)`,
                 `rotateY(${horizontal ? 180 : 0}deg)`,
-                `rotateZ(${vertical === horizontal ? rotation : -rotation}deg)`,
+                `rotateX(${vertical ? 180 : 0}deg)`,
                 `scale(${zoom})`,
               ].join(' '),
             }}
@@ -494,9 +494,9 @@ class Cropper extends React.Component<Props, State> {
                 ...mediaStyle,
                 transform: [
                   `translate(${x}px, ${y}px)`,
-                  `rotateX(${vertical ? 180 : 0}deg)`,
+                  `rotateZ(${rotation}deg)`,
                   `rotateY(${horizontal ? 180 : 0}deg)`,
-                  `rotateZ(${vertical === horizontal ? rotation : -rotation}deg)`,
+                  `rotateX(${vertical ? 180 : 0}deg)`,
                   `scale(${zoom})`,
                 ].join(' '),
               }}
