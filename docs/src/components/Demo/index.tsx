@@ -1,8 +1,10 @@
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import NoSsr from '@material-ui/core/NoSsr'
 import Slider from '@material-ui/core/Slider'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import FlipIcon from '@material-ui/icons/Flip'
 import React, { useCallback, useState } from 'react'
 import Cropper from 'react-easy-crop'
 import { Area } from 'react-easy-crop/types'
@@ -61,6 +63,7 @@ const Demo: React.FC = props => {
   const classes = useStyles(props)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
+  const [flip, setFlip] = useState({ horizontal: false, vertical: false })
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [croppedImage, setCroppedImage] = useState<string | null>(null)
@@ -71,12 +74,12 @@ const Demo: React.FC = props => {
 
   const showCroppedImage = useCallback(async () => {
     try {
-      const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation)
+      const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation, flip)
       setCroppedImage(croppedImage)
     } catch (e) {
       console.error(e)
     }
-  }, [croppedAreaPixels, rotation])
+  }, [croppedAreaPixels, rotation, flip])
 
   const onClose = useCallback(() => {
     setCroppedImage(null)
@@ -88,6 +91,13 @@ const Demo: React.FC = props => {
         <NoSsr>
           <Cropper
             image={dogImg}
+            transform={[
+              `translate(${crop.x}px, ${crop.y}px)`,
+              `rotateZ(${rotation}deg)`,
+              `rotateY(${flip.horizontal ? 180 : 0}deg)`,
+              `rotateX(${flip.vertical ? 180 : 0}deg)`,
+              `scale(${zoom})`,
+            ].join(' ')}
             crop={crop}
             rotation={rotation}
             zoom={zoom}
@@ -127,6 +137,26 @@ const Demo: React.FC = props => {
             classes={{ root: classes.slider }}
             onChange={(e, rotation) => setRotation(rotation as number)}
           />
+        </div>
+        <div className={classes.sliderContainer}>
+          <IconButton
+            aria-label="Flip Horizontal"
+            onClick={() => {
+              setFlip(prev => ({ horizontal: !prev.horizontal, vertical: prev.vertical }))
+              setRotation(prev => 360 - prev)
+            }}
+          >
+            <FlipIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Flip Vertical"
+            onClick={() => {
+              setFlip(prev => ({ horizontal: prev.horizontal, vertical: !prev.vertical }))
+              setRotation(prev => 360 - prev)
+            }}
+          >
+            <FlipIcon style={{ transform: 'rotate(90deg)' }} />
+          </IconButton>
         </div>
         <Button
           onClick={showCroppedImage}
