@@ -3,24 +3,34 @@ import * as helpers from './helpers'
 describe('Helpers', () => {
   describe('getCropSize', () => {
     test('when media width is higher than the height based on the aspect', () => {
-      const cropSize = helpers.getCropSize(1200, 600, 4 / 3)
+      const cropSize = helpers.getCropSize(1200, 600, 1000, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 600, width: 800 })
     })
     test('when media width is smaller than the height based on the aspect', () => {
-      const cropSize = helpers.getCropSize(600, 1200, 4 / 3)
+      const cropSize = helpers.getCropSize(600, 1200, 1000, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 450, width: 600 })
     })
-    test('when media dimensions exactly match the aspect', () => {
-      const cropSize = helpers.getCropSize(800, 600, 4 / 3)
+    test('when media dimensions exactly match the horizontal aspect', () => {
+      const cropSize = helpers.getCropSize(800, 600, 1000, 600, 4 / 3)
       expect(cropSize).toEqual({ height: 600, width: 800 })
     })
+    test('when media dimensions exactly match the vertical aspect', () => {
+      const cropSize = helpers.getCropSize(600, 800, 1200, 800, 3 / 4)
+      expect(cropSize).toEqual({ height: 800, width: 600 })
+    })
     test('when rotated 66 degrees', () => {
-      const cropSize = helpers.getCropSize(1800, 600, 16 / 9, 66)
-      expect(cropSize).toEqual({ height: 600, width: 1066.6666666666665 })
+      const cropSize = helpers.getCropSize(1000, 524, 1000, 600, 16 / 9, 66)
+      expect(cropSize.width).toBeCloseTo(885, 0)
+      expect(cropSize.height).toBeCloseTo(498, 0)
     })
     test('when rotated 90 degrees', () => {
-      const cropSize = helpers.getCropSize(1800, 600, 16 / 9, 90)
+      const cropSize = helpers.getCropSize(1800, 600, 1000, 600, 16 / 9, 90)
       expect(cropSize).toEqual({ height: 337.5, width: 600 })
+    })
+    test('when rotated 90 degrees and container is vertical', () => {
+      const cropSize = helpers.getCropSize(600, 314, 600, 800, 1000 / 1910, 90)
+      expect(cropSize.width).toBeCloseTo(314, 0)
+      expect(cropSize.height).toBeCloseTo(600, 0)
     })
   })
 

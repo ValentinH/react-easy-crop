@@ -205,7 +205,9 @@ class Cropper extends React.Component<Props, State> {
 
   computeSizes = () => {
     const mediaRef = this.imageRef || this.videoRef
-    if (mediaRef) {
+    if (mediaRef && this.containerRef) {
+      this.containerRect = this.containerRef.getBoundingClientRect()
+
       this.mediaSize = {
         width: mediaRef.offsetWidth,
         height: mediaRef.offsetHeight,
@@ -217,13 +219,12 @@ class Cropper extends React.Component<Props, State> {
         : getCropSize(
             mediaRef.offsetWidth,
             mediaRef.offsetHeight,
+            this.containerRect.width,
+            this.containerRect.height,
             this.props.aspect,
             this.props.rotation
           )
       this.setState({ cropSize }, this.recomputeCropPosition)
-    }
-    if (this.containerRef) {
-      this.containerRect = this.containerRef.getBoundingClientRect()
     }
   }
 
