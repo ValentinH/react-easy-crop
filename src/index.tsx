@@ -31,6 +31,7 @@ type Props = {
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
   onCropComplete?: (croppedArea: Area, croppedAreaPixels: Area) => void
+  onCropSizeChange?: (cropSize: Size) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
   onMediaLoaded?: (mediaSize: MediaSize) => void
@@ -216,7 +217,7 @@ class Cropper extends React.Component<Props, State> {
       }
       const cropSize = this.props.cropSize
         ? this.props.cropSize
-        : getCropSize(
+        : this.getEmitCropSize(
             mediaRef.offsetWidth,
             mediaRef.offsetHeight,
             this.containerRect.width,
@@ -226,6 +227,31 @@ class Cropper extends React.Component<Props, State> {
           )
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
+  }
+
+  getEmitCropSize = (
+    mediaWidth: number,
+    mediaHeight: number,
+    containerWidth: number,
+    containerHeight: number,
+    aspect: number,
+    rotation = 0
+  ) => {
+    const cropSize = getCropSize(
+      mediaWidth,
+      mediaHeight,
+      containerWidth,
+      containerHeight,
+      aspect,
+      rotation
+    )
+    if (
+      this.state.cropSize?.height !== cropSize.height ||
+      this.state.cropSize?.width !== cropSize.width
+    ) {
+      this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
+    }
+    return cropSize
   }
 
   static getMousePoint = (e: MouseEvent | React.MouseEvent) => ({
