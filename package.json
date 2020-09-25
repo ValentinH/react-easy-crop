@@ -15,6 +15,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "webpack-dev-server --mode development",
+    "version": "yarn && yarn build",
     "build": "yarn-or-npm bili && yarn-or-npm build:copy-files",
     "docs:start": "cd docs && yarn-or-npm develop",
     "docs:deploy": "cd docs && yarn-or-npm deploy",
