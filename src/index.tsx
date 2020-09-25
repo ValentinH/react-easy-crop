@@ -31,6 +31,7 @@ type Props = {
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
   onCropComplete?: (croppedArea: Area, croppedAreaPixels: Area) => void
+  onCropSizeChange?: (cropSize: Size) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
   onMediaLoaded?: (mediaSize: MediaSize) => void
@@ -224,6 +225,13 @@ class Cropper extends React.Component<Props, State> {
             this.props.aspect,
             this.props.rotation
           )
+
+      if (
+        this.state.cropSize?.height !== cropSize.height ||
+        this.state.cropSize?.width !== cropSize.width
+      ) {
+        this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
+      }
       this.setState({ cropSize }, this.recomputeCropPosition)
     }
   }
