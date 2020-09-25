@@ -27,7 +27,7 @@ module.exports = {
   },
   plugins: [
     htmlWebpackPlugin,
-    new CopyWebpackPlugin([{ from: 'examples/src/images', to: 'images' }]),
+    new CopyWebpackPlugin({patterns: [{ from: 'examples/src/images', to: 'images' }]}),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
