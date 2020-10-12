@@ -12,7 +12,7 @@ import {
 } from './helpers'
 import cssStyles from './styles.css'
 
-type Props = {
+export type EasyCropperProps = {
   image?: string
   video?: string
   transform?: string
@@ -59,7 +59,7 @@ type State = {
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
-class Cropper extends React.Component<Props, State> {
+class Cropper extends React.Component<EasyCropperProps, State> {
   static defaultProps = {
     zoom: 1,
     rotation: 0,
@@ -132,7 +132,7 @@ class Cropper extends React.Component<Props, State> {
     this.props.zoomWithScroll && this.clearScrollEvent()
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: EasyCropperProps) {
     if (prevProps.rotation !== this.props.rotation) {
       this.computeSizes()
       this.recomputeCropPosition()
