@@ -2,30 +2,33 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cypress/base:10
-        environment:
+    - image: cypress/base:10
+      environment:
           ## this enables colors in the output
-          TERM: xterm
+        TERM: xterm
+      auth:
+        username: $DOCKER_HUB_USERNAME
+        password: $DOCKER_HUB_PASSWORD
     steps:
-      - checkout
-      - restore_cache: # special step to restore the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Setup Dependencies
-          command: yarn install --frozen-lockfile
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache ## cache both yarn and Cypress
-      - run:
-          name: Run linting
-          command: |
-            yarn lint
-      - run:
-          name: Run unit tests
-          command: |
-            yarn unit
-      - run: # run coveralls
-          name: Run e2e tests
-          command: |
-            yarn e2e:ci
+    - checkout
+    - restore_cache:   # special step to restore the dependency cache
+        key: dependency-cache-{{ checksum "yarn.lock" }}
+    - run:
+        name: Setup Dependencies
+        command: yarn install --frozen-lockfile
+    - save_cache:   # special step to save the dependency cache
+        key: dependency-cache-{{ checksum "yarn.lock" }}
+        paths:
+        - ~/.cache     ## cache both yarn and Cypress
+    - run:
+        name: Run linting
+        command: |
+          yarn lint
+    - run:
+        name: Run unit tests
+        command: |
+          yarn unit
+    - run:   # run coveralls
+        name: Run e2e tests
+        command: |
+          yarn e2e:ci
