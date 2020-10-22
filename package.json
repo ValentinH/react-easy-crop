@@ -3,6 +3,12 @@
   "version": "3.2.1",
   "description": "A React component to crop images/videos with easy interactions",
   "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
+  "keywords": [
+    "react",
+    "crop",
+    "cropper",
+    "image crop"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ricardo-ch/react-easy-crop"

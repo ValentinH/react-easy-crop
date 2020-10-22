@@ -24,6 +24,12 @@ async function createPackageFile() {
     'jsnext:main': './index.module.js',
     'react-native': './index.module.js',
     types: './index.d.ts',
+    exports: {
+      '.': {
+        import: './index.module.js',
+        require: './index.js',
+      },
+    },
   }
   const buildPath = path.resolve(__dirname, '../dist/package.json')
 
@@ -35,7 +41,7 @@ async function createPackageFile() {
 
 async function run() {
   await Promise.all(
-    [{ from: './README.md' }, { from: './src/styles.css', to: 'react-easy-crop.css' }].map(file =>
+    [{ from: './README.md' }, { from: './src/styles.css', to: 'react-easy-crop.css' }].map((file) =>
       copyFile(file)
     )
   )
