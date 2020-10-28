@@ -145,6 +145,11 @@ class Cropper extends React.Component<CropperProps, State> {
       prevProps.cropSize?.width !== this.props.cropSize?.width
     ) {
       this.computeSizes()
+    } else if (
+      prevProps.crop?.x !== this.props.crop?.x ||
+      prevProps.crop?.y !== this.props.crop?.y
+    ) {
+      this.emitCropData()
     }
     if (prevProps.zoomWithScroll !== this.props.zoomWithScroll && this.containerRef) {
       this.props.zoomWithScroll
