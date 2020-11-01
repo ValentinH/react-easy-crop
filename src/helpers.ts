@@ -265,3 +265,22 @@ export function classNames(...args: (boolean | string | number | undefined | voi
     .join(' ')
     .trim()
 }
+
+/**
+ * Delay the execution of a function by a given time, if the function is called
+ * multiple times within this delay it will only be fired once at the end of
+ * the delay.
+ */
+export default function debounce(func, delay) {
+  let timeout = null
+  return function (...args) {
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+
+    timeout = setTimeout(function () {
+      timeout = null
+      func(...args)
+    }, delay)
+  }
+}

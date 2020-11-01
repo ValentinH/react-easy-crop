@@ -9,6 +9,7 @@ import {
   getCenter,
   getInitialCropFromCroppedAreaPixels,
   classNames,
+  debounce,
 } from './helpers'
 import cssStyles from './styles.css'
 
@@ -96,6 +97,8 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   componentDidMount() {
+    this.debouncedEmitCropData = debounce(this.emitCropData, 300)
+
     window.addEventListener('resize', this.computeSizes)
     if (this.containerRef) {
       this.props.zoomWithScroll &&
@@ -149,7 +152,7 @@ class Cropper extends React.Component<CropperProps, State> {
       prevProps.crop?.x !== this.props.crop?.x ||
       prevProps.crop?.y !== this.props.crop?.y
     ) {
-      this.emitCropData()
+      this.debouncedEmitCropData(false)
     }
     if (prevProps.zoomWithScroll !== this.props.zoomWithScroll && this.containerRef) {
       this.props.zoomWithScroll
