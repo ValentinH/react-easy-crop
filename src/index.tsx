@@ -408,7 +408,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.props.onZoomChange(newZoom)
   }
 
-  emitCropData = () => {
+  emitCropData = (isCropComplete = true) => {
     if (!this.state.cropSize) return
     // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
@@ -429,8 +429,14 @@ class Cropper extends React.Component<CropperProps, State> {
       this.props.rotation,
       this.props.restrictPosition
     )
-    this.props.onCropComplete &&
+
+    if (isCropComplete && this.props.onCropComplete) {
       this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
+    }
+
+    if (this.props.onCropAreaChange) {
+      this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
+    }
   }
 
   recomputeCropPosition = () => {
