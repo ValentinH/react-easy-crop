@@ -16,7 +16,7 @@ export type Point = {
 }
 
 export type Area = {
-  width: number
+  [width: string]: number
   height: number
   x: number
   y: number
