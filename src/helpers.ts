@@ -271,14 +271,14 @@ export function classNames(...args: (boolean | string | number | undefined | voi
  * multiple times within this delay it will only be fired once at the end of
  * the delay.
  */
-export default function debounce(func, delay) {
-  let timeout = null
-  return function (...args) {
+export function debounce(func: Function, delay: number) {
+  let timeout: number | null = null
+  return function (...args: any[]) {
     if (timeout) {
-      clearTimeout(timeout)
+      window.clearTimeout(timeout)
     }
 
-    timeout = setTimeout(function () {
+    timeout = window.setTimeout(function () {
       timeout = null
       func(...args)
     }, delay)
