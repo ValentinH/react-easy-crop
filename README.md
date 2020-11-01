@@ -109,6 +109,7 @@ This component requires some styles to be available in the document. By default,
 | `onRotationChange`                      | rotation => void                                                                    |          | Called everytime the rotation is changed (with mobile gestures). Use it to update your `rotation` state.                                                                                                                                                                                                        |
 | `onCropSizeChange`                      | cropSize => void                                                                    |          | Called when a change in either the cropSize width or the cropSize height occurs.                                                                                                                                                                                                                                |
 | [`onCropComplete`](#onCropCompleteProp) | Function                                                                            |          | Called when the user stops moving the media or stops zooming. It will be passed the corresponding cropped area on the media in percentages and pixels                                                                                                                                                           |
+| [`onCropAreaChange`](#onCropAreaChangeProp) | Function                                                                            |          | Very similar to [`onCropComplete`](#onCropCompleteProp) but is triggered for every user interaction instead of waiting for the user to stop.                                                                                                                                                           |
 | `transform`                             | string                                                                              |          | CSS transform to apply to the image in the editor. Defaults to `translate(${crop.x}px, ${crop.y}px) rotate(${rotation}deg) scale(${zoom})` with variables being pulled from props.                                                                                                                              |
 | `style`                                 | `{ containerStyle: object, mediaStyle: object, cropAreaStyle: object }`             |          | Custom styles to be used with the Cropper. Styles passed via the style prop are merged with the defaults.                                                                                                                                                                                                       |
 | `classes`                               | `{ containerClassName: string, mediaClassName: string, cropAreaClassName: string }` |          | Custom class names to be used with the Cropper. Classes passed via the classes prop are merged with the defaults. If you have CSS specificity issues, you should probably use the `disableAutomaticStylesInjection` prop.                                                                                       |
@@ -126,6 +127,27 @@ This component requires some styles to be available in the document. By default,
 #### onCropComplete(croppedArea, croppedAreaPixels)
 
 This callback is the one you should use to save the cropped area of the media. It's passed 2 arguments:
+
+1. `croppedArea`: coordinates and dimensions of the cropped area in percentage of the media dimension
+1. `croppedAreaPixels`: coordinates and dimensions of the cropped area in pixels.
+
+Both arguments have the following shape:
+
+```js
+const area = {
+  x: number, // x/y are the coordinates of the top/left corner of the cropped area
+  y: number,
+  width: number, // width of the cropped area
+  height: number, // height of the cropped area
+}
+```
+
+<a name="onCropAreaChangeProp"></a>
+
+#### onCropAreaChange(croppedArea, croppedAreaPixels)
+
+This is the exact same callback as [`onCropComplete`](#onCropCompleteProp), but is triggered for all user interactions.
+It can be used if you are not performing any render action on it.
 
 1. `croppedArea`: coordinates and dimensions of the cropped area in percentage of the media dimension
 1. `croppedAreaPixels`: coordinates and dimensions of the cropped area in pixels.
