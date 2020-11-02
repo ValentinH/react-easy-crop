@@ -127,7 +127,7 @@ class App extends React.Component<{}, State> {
           <div>
             <p>Crop Area:</p>
             <div>
-              {['x', 'y', 'width', 'height'].map((attribute: string) => {
+              {(['x', 'y', 'width', 'height'] as const).map((attribute) => {
                 if (!this.state.croppedArea) {
                   return null
                 }
