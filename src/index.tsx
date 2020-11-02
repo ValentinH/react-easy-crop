@@ -9,7 +9,6 @@ import {
   getCenter,
   getInitialCropFromCroppedAreaPixels,
   classNames,
-  debounce,
 } from './helpers'
 import cssStyles from './styles.css'
 
@@ -436,18 +435,6 @@ class Cropper extends React.Component<CropperProps, State> {
     )
   }
 
-  emitCropAreaChange = () => {
-    const cropData = this.getCropData()
-    if (!cropData) return
-
-    const { croppedAreaPercentages, croppedAreaPixels } = cropData
-    if (this.props.onCropAreaChange) {
-      this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
-    }
-
-    this.debouncedEmitOnCropComplete(croppedAreaPercentages, croppedAreaPixels)
-  }
-
   emitCropData = () => {
     const cropData = this.getCropData()
     if (!cropData) return
@@ -462,14 +449,15 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  debouncedEmitOnCropComplete = debounce(
-    (croppedAreaPercentages: Area, croppedAreaPixels: Area) => {
-      if (this.props.onCropComplete) {
-        this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
-      }
-    },
-    300
-  )
+  emitCropAreaChange = () => {
+    const cropData = this.getCropData()
+    if (!cropData) return
+
+    const { croppedAreaPercentages, croppedAreaPixels } = cropData
+    if (this.props.onCropAreaChange) {
+      this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
+    }
+  }
 
   recomputeCropPosition = () => {
     if (!this.state.cropSize) return
