@@ -19,6 +19,7 @@ type State = {
   showGrid: boolean
   zoomSpeed: number
   restrictPosition: boolean
+  croppedArea: Area | null
 }
 
 class App extends React.Component<{}, State> {
@@ -33,6 +34,7 @@ class App extends React.Component<{}, State> {
     showGrid: true,
     zoomSpeed: 1,
     restrictPosition: true,
+    croppedArea: null,
   }
 
   onCropChange = (crop: Point) => {
@@ -41,6 +43,7 @@ class App extends React.Component<{}, State> {
 
   onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     console.log(croppedArea, croppedAreaPixels)
+    this.setState({ croppedArea })
   }
 
   onZoomChange = (zoom: number) => {
@@ -111,6 +114,35 @@ class App extends React.Component<{}, State> {
               Flip Vertical
             </label>
           </div>
+          <button
+            id="horizontal-center-button"
+            onClick={() => {
+              this.setState({
+                crop: { ...this.state.crop, x: 0 },
+              })
+            }}
+          >
+            Center Horizontally
+          </button>
+          <div>
+            <p>Crop Area:</p>
+            <div>
+              {(['x', 'y', 'width', 'height'] as const).map((attribute) => {
+                if (!this.state.croppedArea) {
+                  return null
+                }
+
+                return (
+                  <div key={attribute}>
+                    {attribute}:
+                    <b id={`crop-area-${attribute}`}>
+                      {Math.round(this.state.croppedArea[attribute])}
+                    </b>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
         <div className="crop-container">
           <Cropper
@@ -126,6 +158,7 @@ class App extends React.Component<{}, State> {
             onCropChange={this.onCropChange}
             onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}
+            onCropAreaChange={this.onCropComplete}
             onZoomChange={this.onZoomChange}
             onInteractionStart={this.onInteractionStart}
             onInteractionEnd={this.onInteractionEnd}

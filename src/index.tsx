@@ -31,6 +31,7 @@ export type CropperProps = {
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
   onCropComplete?: (croppedArea: Area, croppedAreaPixels: Area) => void
+  onCropAreaChange?: (croppedArea: Area, croppedAreaPixels: Area) => void
   onCropSizeChange?: (cropSize: Size) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
@@ -145,6 +146,11 @@ class Cropper extends React.Component<CropperProps, State> {
       prevProps.cropSize?.width !== this.props.cropSize?.width
     ) {
       this.computeSizes()
+    } else if (
+      prevProps.crop?.x !== this.props.crop?.x ||
+      prevProps.crop?.y !== this.props.crop?.y
+    ) {
+      this.emitCropAreaChange()
     }
     if (prevProps.zoomWithScroll !== this.props.zoomWithScroll && this.containerRef) {
       this.props.zoomWithScroll
@@ -403,8 +409,11 @@ class Cropper extends React.Component<CropperProps, State> {
     this.props.onZoomChange(newZoom)
   }
 
-  emitCropData = () => {
-    if (!this.state.cropSize) return
+  getCropData = () => {
+    if (!this.state.cropSize) {
+      return null
+    }
+
     // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
       ? restrictPosition(
@@ -415,7 +424,7 @@ class Cropper extends React.Component<CropperProps, State> {
           this.props.rotation
         )
       : this.props.crop
-    const { croppedAreaPercentages, croppedAreaPixels } = computeCroppedArea(
+    return computeCroppedArea(
       restrictedPosition,
       this.mediaSize,
       this.state.cropSize,
@@ -424,8 +433,30 @@ class Cropper extends React.Component<CropperProps, State> {
       this.props.rotation,
       this.props.restrictPosition
     )
-    this.props.onCropComplete &&
+  }
+
+  emitCropData = () => {
+    const cropData = this.getCropData()
+    if (!cropData) return
+
+    const { croppedAreaPercentages, croppedAreaPixels } = cropData
+    if (this.props.onCropComplete) {
       this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
+    }
+
+    if (this.props.onCropAreaChange) {
+      this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
+    }
+  }
+
+  emitCropAreaChange = () => {
+    const cropData = this.getCropData()
+    if (!cropData) return
+
+    const { croppedAreaPercentages, croppedAreaPixels } = cropData
+    if (this.props.onCropAreaChange) {
+      this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
+    }
   }
 
   recomputeCropPosition = () => {

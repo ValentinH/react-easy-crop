@@ -31,4 +31,11 @@ describe('Basic assertions', function() {
     cy.visit('/?setInitialCrop=true')
     cy.get('img').should('have.css', 'transform', 'matrix(1.9084, 0, 0, 1.9084, -269.274, 80.932)')
   })
+
+  it('should be able to center through external buttons', function() {
+    cy.get('[data-testid=container]').dragAndDrop({ x: -500, y: 0 })
+    cy.get('#crop-area-x').contains('30');
+    cy.get('#horizontal-center-button').click();
+    cy.get('#crop-area-x').contains('15');
+  })
 })
