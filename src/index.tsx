@@ -1,4 +1,5 @@
 import React from 'react'
+import normalizeWheel from 'normalize-wheel'
 import { Area, MediaSize, Point, Size } from './types'
 import {
   getCropSize,
@@ -351,7 +352,8 @@ class Cropper extends React.Component<CropperProps, State> {
   onWheel = (e: WheelEvent) => {
     e.preventDefault()
     const point = Cropper.getMousePoint(e)
-    const newZoom = this.props.zoom - (e.deltaY * this.props.zoomSpeed) / 200
+    const { pixelY } = normalizeWheel(e)
+    const newZoom = this.props.zoom - (pixelY * this.props.zoomSpeed) / 200
     this.setNewZoom(newZoom, point)
 
     if (!this.state.hasWheelJustStarted) {
@@ -494,7 +496,7 @@ class Cropper extends React.Component<CropperProps, State> {
       <div
         onMouseDown={this.onMouseDown}
         onTouchStart={this.onTouchStart}
-        ref={el => (this.containerRef = el)}
+        ref={(el) => (this.containerRef = el)}
         data-testid="container"
         style={containerStyle}
         className={classNames('reactEasyCrop_Container', containerClassName)}
