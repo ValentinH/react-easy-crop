@@ -11,14 +11,10 @@ module.exports = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
-      resolve: `gatsby-plugin-prefetch-google-fonts`,
+      resolve: `gatsby-plugin-google-fonts`,
       options: {
-        fonts: [
-          {
-            family: `Roboto`,
-            variants: [`300`, `400`, `500`],
-          },
-        ],
+        fonts: [`Roboto\:300,400,500`],
+        display: 'swap',
       },
     },
     {

@@ -6550,6 +6550,11 @@ gatsby-page-utils@^0.2.25:
     lodash "^4.17.20"
     micromatch "^3.1.10"
 
+gatsby-plugin-google-fonts@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-google-fonts/-/gatsby-plugin-google-fonts-1.0.1.tgz#d71054f7bf207b9a8da227380369e18e6f4e0201"
+  integrity sha512-p1NVkn27GUnDA5qHM+Z4cCcLCJIardzZXMon3640sT4xuL/AZJbsx3HEt2KY/5oZu0UXIkytkxzV2Da4rQeUIg==
+
 gatsby-plugin-manifest@^2.4.31:
   version "2.4.31"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-manifest/-/gatsby-plugin-manifest-2.4.31.tgz#30c0ce4a2a74f7bb1e4dfc5c4db5a12ced6e52f4"
@@ -10083,6 +10088,11 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
+normalize-wheel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/normalize-wheel/-/normalize-wheel-1.0.1.tgz#aec886affdb045070d856447df62ecf86146ec45"
+  integrity sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=
+
 normalize.css@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
@@ -11716,11 +11726,12 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-easy-crop@^3.1.1:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-3.2.0.tgz#1c668ce1e4c857c09daf25ddaf398ac2475f453c"
-  integrity sha512-eh95jzu/XUFg8RNI45GhTTgfgHAK+J+fh9YBdfeiKxwluERW0FhJ+rh4TcuLL8seK7ol68w1M246Q5sylfTlCA==
+react-easy-crop@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-3.3.1.tgz#c9c9cf4f8255e6fdfc2a8ee00205bbd5ea94cdcf"
+  integrity sha512-fM249ldk9OBONAgkskWVU3sLLP/hkjqmjY0Ah8V9CNlK2aiasNuHJw6vYCtaESR7CrEP3+XvfG1oO3y5hP6CuQ==
   dependencies:
+    normalize-wheel "^1.0.1"
     tslib "2.0.1"
 
 react-error-overlay@^3.0.0:
