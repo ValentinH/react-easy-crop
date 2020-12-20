@@ -10,6 +10,8 @@ import {
   getCenter,
   getInitialCropFromCroppedAreaPixels,
   classNames,
+  transformCoordinateByAngle,
+  getRotationAngle
 } from './helpers'
 import cssStyles from './styles.css'
 
@@ -20,6 +22,7 @@ export type CropperProps = {
   crop: Point
   zoom: number
   rotation: number
+  parentRotationAngle: number
   aspect: number
   minZoom: number
   maxZoom: number
@@ -49,6 +52,7 @@ export type CropperProps = {
   }
   restrictPosition: boolean
   initialCroppedAreaPixels?: Area
+  initialRotation?: number
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
   disableAutomaticStylesInjection?: boolean
 }
@@ -86,6 +90,7 @@ class Cropper extends React.Component<CropperProps, State> {
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
   dragStartCrop: Point = { x: 0, y: 0 }
+  transformAngle: number = 0
   lastPinchDistance = 0
   lastPinchRotation = 0
   rafDragTimeout: number | null = null
@@ -188,7 +193,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   setInitialCrop = () => {
-    const { initialCroppedAreaPixels, cropSize } = this.props
+    const { initialCroppedAreaPixels, cropSize, rotation = 0, initialRotation = 0} = this.props
 
     if (!initialCroppedAreaPixels) {
       return
@@ -197,6 +202,7 @@ class Cropper extends React.Component<CropperProps, State> {
     const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
       initialCroppedAreaPixels,
       this.mediaSize,
+      rotation - initialRotation,
       cropSize
     )
     this.props.onCropChange(crop)
@@ -284,19 +290,20 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onDragStart = ({ x, y }: Point) => {
-    this.dragStartPosition = { x, y }
+    this.transformAngle = this.props.parentRotationAngle || getRotationAngle(this.containerRef!.parentElement!) * Math.PI / 180
+    this.dragStartPosition = transformCoordinateByAngle({ x, y }, this.transformAngle)
     this.dragStartCrop = { ...this.props.crop }
     this.props.onInteractionStart?.()
   }
 
   onDrag = ({ x, y }: Point) => {
     if (this.rafDragTimeout) window.cancelAnimationFrame(this.rafDragTimeout)
-
+    let rotatedCoordinate  = transformCoordinateByAngle({ x, y }, this.transformAngle);
     this.rafDragTimeout = window.requestAnimationFrame(() => {
       if (!this.state.cropSize) return
       if (x === undefined || y === undefined) return
-      const offsetX = x - this.dragStartPosition.x
-      const offsetY = y - this.dragStartPosition.y
+      const offsetX = rotatedCoordinate.x - this.dragStartPosition.x
+      const offsetY = rotatedCoordinate.y - this.dragStartPosition.y
       const requestedPosition = {
         x: this.dragStartCrop.x + offsetX,
         y: this.dragStartCrop.y + offsetY,

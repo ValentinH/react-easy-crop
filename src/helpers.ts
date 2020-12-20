@@ -181,7 +181,8 @@ function getZoomFromCroppedAreaPixels(
 export function getInitialCropFromCroppedAreaPixels(
   croppedAreaPixels: Area,
   mediaSize: MediaSize,
-  cropSize?: Size
+  rotation: number,
+  cropSize?: Size,
 ): { crop: Point; zoom: number } {
   const mediaZoom = mediaSize.width / mediaSize.naturalWidth
 
@@ -189,11 +190,49 @@ export function getInitialCropFromCroppedAreaPixels(
 
   const cropZoom = mediaZoom * zoom
 
-  const crop = {
+  let crop = {
     x: ((mediaSize.naturalWidth - croppedAreaPixels.width) / 2 - croppedAreaPixels.x) * cropZoom,
     y: ((mediaSize.naturalHeight - croppedAreaPixels.height) / 2 - croppedAreaPixels.y) * cropZoom,
   }
+  crop = transformCoordinateByAngle(crop, -rotation * Math.PI / 180);
   return { crop, zoom }
+}
+
+/**
+ * Apply rotation formula to point and return new coordinate
+ * @param point
+ * @param radians
+ */
+export function  transformCoordinateByAngle(point: Point, radians: number){
+    return {
+        x: point.y*Math.sin(radians) + point.x*Math.cos(radians),
+        y: point.y*Math.cos(radians) - point.x*Math.sin(radians)
+    }
+}
+
+/**
+ * Return rotation property of transform style of given element
+ * @param target
+ */
+export function getRotationAngle(target: HTMLElement){
+    const obj = window.getComputedStyle(target, null);
+    const matrix = obj.getPropertyValue('-webkit-transform') ||
+        obj.getPropertyValue('-moz-transform') ||
+        obj.getPropertyValue('-ms-transform') ||
+        obj.getPropertyValue('-o-transform') ||
+        obj.getPropertyValue('transform');
+
+    let angle = 0;
+
+    if (matrix !== 'none')
+    {
+        const values = matrix.split('(')[1].split(')')[0].split(',');
+        const a = parseFloat(values[0]);
+        const b = parseFloat(values[1]);
+        angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+    }
+
+    return (angle < 0) ? angle += 360 : angle;
 }
 
 /**
