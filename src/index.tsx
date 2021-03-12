@@ -127,7 +127,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
 
     if (this.styleRef) {
-      this.styleRef.remove()
+      this.styleRef.parentNode?.removeChild(this.styleRef)
     }
 
     this.cleanEvents()
