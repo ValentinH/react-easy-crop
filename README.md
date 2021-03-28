@@ -12,6 +12,7 @@ Check out the examples:
 
 - [Basic example with hooks](https://codesandbox.io/s/v69ly910ql)
 - [Basic example with class](https://codesandbox.io/s/q80jom5ql6)
+- [Basic example in Typescript](https://codesandbox.io/s/react-easy-crop-in-ts-lj1if)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
 - [Example with image selected by the user (+ auto-rotation for phone pictures)](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
@@ -47,39 +48,25 @@ npm install react-easy-crop --save
 ```js
 import Cropper from 'react-easy-crop'
 
-class App extends React.Component {
-  state = {
-    image: 'your-image-url or as base64',
-    crop: { x: 0, y: 0 },
-    zoom: 1,
-    aspect: 4 / 3,
-  }
+const Demo = () => {
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
 
-  onCropChange = (crop) => {
-    this.setState({ crop })
-  }
-
-  onCropComplete = (croppedArea, croppedAreaPixels) => {
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     console.log(croppedArea, croppedAreaPixels)
-  }
+  }, [])
 
-  onZoomChange = (zoom) => {
-    this.setState({ zoom })
-  }
-
-  render() {
-    return (
-      <Cropper
-        image={this.state.image}
-        crop={this.state.crop}
-        zoom={this.state.zoom}
-        aspect={this.state.aspect}
-        onCropChange={this.onCropChange}
-        onCropComplete={this.onCropComplete}
-        onZoomChange={this.onZoomChange}
-      />
-    )
-  }
+  return (
+    <Cropper
+      image={yourImage}
+      crop={crop}
+      zoom={zoom}
+      aspect={4 / 3}
+      onCropChange={setCrop}
+      onCropComplete={onCropComplete}
+      onZoomChange={setZoom}
+    />
+  )
 }
 ```
 
