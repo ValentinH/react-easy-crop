@@ -23,6 +23,19 @@
   will-change: transform; /* this improves performances and prevent painting issues on iOS Chrome */
 }
 
+.reactEasyCrop_Cover_Horizontal {
+  width: 100%;
+  height: auto;
+  max-width: initial;
+  max-height: initial;
+}
+.reactEasyCrop_Cover_Vertical {
+  width: auto;
+  height: 100%;
+  max-width: initial;
+  max-height: initial;
+}
+
 .reactEasyCrop_CropArea {
   position: absolute;
   left: 50%;
