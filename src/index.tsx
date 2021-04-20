@@ -509,6 +509,7 @@ class Cropper extends React.Component<CropperProps, State> {
             alt=""
             className={classNames(
               'reactEasyCrop_Image',
+              objectFit === 'contain' && 'reactEasyCrop_Contain',
               objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
               objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
               mediaClassName
@@ -531,6 +532,7 @@ class Cropper extends React.Component<CropperProps, State> {
               muted={true}
               className={classNames(
                 'reactEasyCrop_Video',
+                objectFit === 'contain' && 'reactEasyCrop_Contain',
                 objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
                 objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
                 mediaClassName
