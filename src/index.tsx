@@ -25,6 +25,7 @@ export type CropperProps = {
   maxZoom: number
   cropShape: 'rect' | 'round'
   cropSize?: Size
+  objectFit?: 'contain' | 'horizontal-cover' | 'vertical-cover'
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
@@ -69,6 +70,7 @@ class Cropper extends React.Component<CropperProps, State> {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     cropShape: 'rect',
+    objectFit: 'contain',
     showGrid: true,
     style: {},
     classes: {},
@@ -490,6 +492,7 @@ class Cropper extends React.Component<CropperProps, State> {
       showGrid,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
+      objectFit,
     } = this.props
 
     return (
@@ -504,7 +507,13 @@ class Cropper extends React.Component<CropperProps, State> {
         {image ? (
           <img
             alt=""
-            className={classNames('reactEasyCrop_Image', mediaClassName)}
+            className={classNames(
+              'reactEasyCrop_Image',
+              objectFit === 'contain' && 'reactEasyCrop_Contain',
+              objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
+              objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
+              mediaClassName
+            )}
             {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
             src={image}
             ref={(el: HTMLImageElement) => (this.imageRef = el)}
@@ -521,7 +530,13 @@ class Cropper extends React.Component<CropperProps, State> {
               autoPlay
               loop
               muted={true}
-              className={classNames('reactEasyCrop_Video', mediaClassName)}
+              className={classNames(
+                'reactEasyCrop_Video',
+                objectFit === 'contain' && 'reactEasyCrop_Contain',
+                objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
+                objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
+                mediaClassName
+              )}
               {...mediaProps}
               src={video}
               ref={(el: HTMLVideoElement) => (this.videoRef = el)}
