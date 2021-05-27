@@ -552,7 +552,7 @@ class Cropper extends React.Component<CropperProps, State> {
               }}
               controls={false}
             >{
-              (Array.isArray(video) ? video : [{src: video}]).map((item: {src: string, format?: string}) => (<source {...item}/>))
+              (Array.isArray(video) ? video : [{src: video}] as any[]).map((item: {src: string, type?: string}) => (<source {...item}/>))
             }</video>
           )
         )}
