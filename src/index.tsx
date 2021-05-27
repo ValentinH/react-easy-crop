@@ -15,7 +15,12 @@ import cssStyles from './styles.css'
 
 export type CropperProps = {
   image?: string
-  video?: string
+  video?: string | [
+    {
+      src: string
+      type: string
+    }
+  ]
   transform?: string
   crop: Point
   zoom: number
@@ -538,7 +543,6 @@ class Cropper extends React.Component<CropperProps, State> {
                 mediaClassName
               )}
               {...mediaProps}
-              src={video}
               ref={(el: HTMLVideoElement) => (this.videoRef = el)}
               onLoadedMetadata={this.onMediaLoad}
               style={{
@@ -547,7 +551,9 @@ class Cropper extends React.Component<CropperProps, State> {
                   transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
               }}
               controls={false}
-            />
+            >{
+              (Array.isArray(video) ? video : [{src: video}]).map((item: {src: string, format?: string}) => (<source {...item}/>))
+            }</video>
           )
         )}
         {this.state.cropSize && (
