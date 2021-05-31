@@ -15,12 +15,10 @@ import cssStyles from './styles.css'
 
 export type CropperProps = {
   image?: string
-  video?: string | [
-    {
-      src: string
-      type: string
-    }
-  ]
+  video?: string | {
+    src: string
+    type: string
+  }[]
   transform?: string
   crop: Point
   zoom: number
