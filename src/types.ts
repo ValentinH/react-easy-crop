@@ -21,3 +21,8 @@ export type Area = {
   x: number
   y: number
 }
+
+export type VideoSrc = {
+  src: string
+  type?: string
+}
