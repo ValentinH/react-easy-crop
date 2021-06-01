@@ -1,6 +1,6 @@
 import React from 'react'
 import normalizeWheel from 'normalize-wheel'
-import { Area, MediaSize, Point, Size } from './types'
+import { Area, MediaSize, Point, Size, VideoSrc } from './types'
 import {
   getCropSize,
   restrictPosition,
@@ -15,10 +15,7 @@ import cssStyles from './styles.css'
 
 export type CropperProps = {
   image?: string
-  video?: string | {
-    src: string
-    type: string
-  }[]
+  video?: string | VideoSrc[]
   transform?: string
   crop: Point
   zoom: number
@@ -549,9 +546,11 @@ class Cropper extends React.Component<CropperProps, State> {
                   transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
               }}
               controls={false}
-            >{
-              (Array.isArray(video) ? video : [{src: video}] as any[]).map((item: {src: string, type?: string}) => (<source {...item}/>))
-            }</video>
+            >
+              {(Array.isArray(video) ? video : [{ src: video }]).map((item) => (
+                <source {...item} />
+              ))}
+            </video>
           )
         )}
         {this.state.cropSize && (
