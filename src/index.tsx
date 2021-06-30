@@ -160,6 +160,9 @@ class Cropper extends React.Component<CropperProps, State> {
         ? this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
         : this.clearScrollEvent()
     }
+    if (prevProps.video !== this.props.video) {
+        this.videoRef?.load()
+    }
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
