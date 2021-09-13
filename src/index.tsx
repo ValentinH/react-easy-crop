@@ -161,7 +161,7 @@ class Cropper extends React.Component<CropperProps, State> {
         : this.clearScrollEvent()
     }
     if (prevProps.video !== this.props.video) {
-        this.videoRef?.load()
+      this.videoRef?.load()
     }
   }
 
@@ -268,7 +268,6 @@ class Cropper extends React.Component<CropperProps, State> {
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.preventDefault()
     document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
     if (e.touches.length === 2) {
