@@ -29,8 +29,8 @@ Check out the examples:
 - Mobile friendly
 
 ## Video tutorials from the community
-- [Create an image gallery with live cropping](https://www.youtube.com/watch?v=E_AHkWHhUz4)
-- [Crop an avatar and download the result](https://www.youtube.com/watch?v=RmiP1AY5HFM)
+- [Create an image gallery with live cropping](https://www.youtube.com/watch?v=E_AHkWHhUz4) By [Coding With Adam](https://youtube.com/c/codingwithadam)
+- [Crop an avatar and download the result](https://www.youtube.com/watch?v=RmiP1AY5HFM) By [Manish Boro](https://www.youtube.com/channel/UCyq81Ac-Ir4WIhFUgb_kyRw)
 
 ## Installation
 
