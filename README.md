@@ -28,6 +28,10 @@ Check out the examples:
 - Supports any videos format supported in HTML5
 - Mobile friendly
 
+## Video tutorials from the community
+- [Create an image gallery with live cropping](https://www.youtube.com/watch?v=E_AHkWHhUz4)
+- [Crop an avatar and download the result](https://www.youtube.com/watch?v=RmiP1AY5HFM)
+
 ## Installation
 
 ```shell
