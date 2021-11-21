@@ -1,4 +1,4 @@
-import { Area } from 'react-easy-crop/dist/types'
+import { Area } from 'react-easy-crop/types'
 
 function getRadianAngle(degreeValue: number) {
   return (degreeValue * Math.PI) / 180

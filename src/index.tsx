@@ -251,24 +251,46 @@ class Cropper extends React.Component<CropperProps, State> {
 
       // We do not rely on the offsetWidth/offsetHeight if the media is scaled down
       // as the values they report are rounded. That will result in precision losses
-      // when calculating zoom. We use the fact that the media is positionned inside container
-      // as "max-width: 100%; max-height: 100%". That allows us to use the container's
-      // dimensions and natural aspect ratio of the media to calculate accurate
-      // media size. However, for this to work, the container should not be rotated
-      const renderedMediaSize: Size = isMediaScaledDown
-        ? containerAspect > mediaAspect
-          ? {
-              width: this.containerRect.height * mediaAspect,
-              height: this.containerRect.height,
-            }
-          : {
+      // when calculating zoom. We use the fact that the media is positionned relative
+      // to the container. That allows us to use the container's dimensions
+      // and natural aspect ratio of the media to calculate accurate media size.
+      // However, for this to work, the container should not be rotated
+      let renderedMediaSize: Size
+
+      if (isMediaScaledDown) {
+        switch (this.props.objectFit) {
+          default:
+          case 'contain':
+            renderedMediaSize =
+              containerAspect > mediaAspect
+                ? {
+                    width: this.containerRect.height * mediaAspect,
+                    height: this.containerRect.height,
+                  }
+                : {
+                    width: this.containerRect.width,
+                    height: this.containerRect.width / mediaAspect,
+                  }
+            break
+          case 'horizontal-cover':
+            renderedMediaSize = {
               width: this.containerRect.width,
               height: this.containerRect.width / mediaAspect,
             }
-        : {
-            width: mediaRef.offsetWidth,
-            height: mediaRef.offsetHeight,
-          }
+            break
+          case 'vertical-cover':
+            renderedMediaSize = {
+              width: this.containerRect.height * mediaAspect,
+              height: this.containerRect.height,
+            }
+            break
+        }
+      } else {
+        renderedMediaSize = {
+          width: mediaRef.offsetWidth,
+          height: mediaRef.offsetHeight,
+        }
+      }
 
       this.mediaSize = {
         ...renderedMediaSize,

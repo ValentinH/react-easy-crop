@@ -73,6 +73,10 @@ const Demo: React.FC = (props) => {
   }, [])
 
   const showCroppedImage = useCallback(async () => {
+    if (!croppedAreaPixels) {
+      return
+    }
+
     try {
       const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation, flip)
       setCroppedImage(croppedImage)
