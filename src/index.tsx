@@ -15,15 +15,6 @@ import {
 } from './helpers'
 import cssStyles from './styles.css'
 
-// Accept either pixels or percentages, not both
-type InitialCroppedAreaProp =
-  | {
-      initialCroppedAreaPixels?: Area
-    }
-  | {
-      initialCroppedAreaPercentages?: Area
-    }
-
 export type CropperProps = {
   image?: string
   video?: string | VideoSrc[]
@@ -62,7 +53,9 @@ export type CropperProps = {
   restrictPosition: boolean
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
   disableAutomaticStylesInjection?: boolean
-} & InitialCroppedAreaProp
+  initialCroppedAreaPixels?: Area
+  initialCroppedAreaPercentages?: Area
+}
 
 type State = {
   cropSize: Size | null
@@ -203,7 +196,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   setInitialCrop = (cropSize: Size) => {
-    if ('initialCroppedAreaPercentages' in this.props && this.props.initialCroppedAreaPercentages) {
+    if (this.props.initialCroppedAreaPercentages) {
       const { crop, zoom } = getInitialCropFromCroppedAreaPercentages(
         this.props.initialCroppedAreaPercentages,
         this.mediaSize,
@@ -215,7 +208,7 @@ class Cropper extends React.Component<CropperProps, State> {
 
       this.props.onCropChange(crop)
       this.props.onZoomChange && this.props.onZoomChange(zoom)
-    } else if ('initialCroppedAreaPixels' in this.props && this.props.initialCroppedAreaPixels) {
+    } else if (this.props.initialCroppedAreaPixels) {
       const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
         this.props.initialCroppedAreaPixels,
         this.mediaSize,
