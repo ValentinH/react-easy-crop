@@ -43,12 +43,12 @@ export default async function getCroppedImg(
 
   // translate canvas context to a central location to allow rotating and flipping around the center
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
-  ctx.rotate(getRadianAngle(rotation))
+  ctx.rotate(rotRad)
   ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
-  ctx.translate(-bBoxWidth / 2, -bBoxHeight / 2)
+  ctx.translate(-image.width / 2, -image.height / 2)
 
   // draw rotated image
-  ctx.drawImage(image, bBoxWidth / 2 - image.width * 0.5, bBoxHeight / 2 - image.height * 0.5)
+  ctx.drawImage(image, 0, 0)
 
   // croppedAreaPixels values are bounding box relative
   // extract the cropped image using these values

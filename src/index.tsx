@@ -187,8 +187,11 @@ class Cropper extends React.Component<CropperProps, State> {
 
   onMediaLoad = () => {
     const cropSize = this.computeSizes()
-    this.emitCropData()
-    this.setInitialCrop(cropSize as Size)
+
+    if (cropSize) {
+      this.emitCropData()
+      this.setInitialCrop(cropSize)
+    }
 
     if (this.props.onMediaLoaded) {
       this.props.onMediaLoaded(this.mediaSize)
@@ -239,7 +242,8 @@ class Cropper extends React.Component<CropperProps, State> {
       const containerAspect = this.containerRect.width / this.containerRect.height
       const naturalWidth = this.imageRef?.naturalWidth || this.videoRef?.videoWidth || 0
       const naturalHeight = this.imageRef?.naturalHeight || this.videoRef?.videoHeight || 0
-      const isMediaScaledDown = mediaRef.width < naturalWidth || mediaRef.height < naturalHeight
+      const isMediaScaledDown =
+        mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
       const mediaAspect = naturalWidth / naturalHeight
 
       // We do not rely on the offsetWidth/offsetHeight if the media is scaled down
@@ -294,8 +298,8 @@ class Cropper extends React.Component<CropperProps, State> {
       const cropSize = this.props.cropSize
         ? this.props.cropSize
         : getCropSize(
-            mediaRef.offsetWidth,
-            mediaRef.offsetHeight,
+            this.mediaSize.width,
+            this.mediaSize.height,
             this.containerRect.width,
             this.containerRect.height,
             this.props.aspect,
