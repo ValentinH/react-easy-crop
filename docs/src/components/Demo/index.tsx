@@ -6,8 +6,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FlipIcon from '@material-ui/icons/Flip'
 import React, { useCallback, useState } from 'react'
-import Cropper from 'react-easy-crop'
-import { Area } from 'react-easy-crop/types'
+import Cropper from '../../../../src'
+import { Area } from '../../../../src/types'
 import getCroppedImg from './cropImage'
 import dogImg from './dog.jpeg'
 import ImgDialog from './ImgDialog'
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const Demo: React.FC = props => {
+const Demo: React.FC = (props) => {
   const classes = useStyles(props)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
@@ -73,6 +73,10 @@ const Demo: React.FC = props => {
   }, [])
 
   const showCroppedImage = useCallback(async () => {
+    if (!croppedAreaPixels) {
+      return
+    }
+
     try {
       const croppedImage = await getCroppedImg(dogImg, croppedAreaPixels, rotation, flip)
       setCroppedImage(croppedImage)
@@ -142,8 +146,8 @@ const Demo: React.FC = props => {
           <IconButton
             aria-label="Flip Horizontal"
             onClick={() => {
-              setFlip(prev => ({ horizontal: !prev.horizontal, vertical: prev.vertical }))
-              setRotation(prev => 360 - prev)
+              setFlip((prev) => ({ horizontal: !prev.horizontal, vertical: prev.vertical }))
+              setRotation((prev) => 360 - prev)
             }}
           >
             <FlipIcon />
@@ -151,8 +155,8 @@ const Demo: React.FC = props => {
           <IconButton
             aria-label="Flip Vertical"
             onClick={() => {
-              setFlip(prev => ({ horizontal: prev.horizontal, vertical: !prev.vertical }))
-              setRotation(prev => 360 - prev)
+              setFlip((prev) => ({ horizontal: prev.horizontal, vertical: !prev.vertical }))
+              setRotation((prev) => 360 - prev)
             }}
           >
             <FlipIcon style={{ transform: 'rotate(90deg)' }} />

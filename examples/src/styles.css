@@ -3,6 +3,11 @@ body {
   padding: 0;
 }
 
+input[type='range'] {
+  width: 370px;
+  vertical-align: middle;
+}
+
 .App {
   position: absolute;
   top: 0;
@@ -14,6 +19,13 @@ body {
 .controls {
   z-index: 1;
   position: fixed;
+  pointer-events: none;
+}
+
+.controls input,
+.controls button,
+.controls label {
+  pointer-events: all;
 }
 
 .crop-container {
