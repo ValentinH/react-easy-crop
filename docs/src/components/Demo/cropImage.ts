@@ -1,8 +1,5 @@
 import { Area } from 'react-easy-crop/types'
-
-function getRadianAngle(degreeValue: number) {
-  return (degreeValue * Math.PI) / 180
-}
+import { rotateSize, getRadianAngle } from '../../../../src/helpers'
 
 export const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -30,12 +27,10 @@ export default async function getCroppedImg(
     return null
   }
 
-  // calculate bounding box of the rotated image
   const rotRad = getRadianAngle(rotation)
-  const bBoxWidth =
-    Math.abs(Math.cos(rotRad) * image.width) + Math.abs(Math.sin(rotRad) * image.height)
-  const bBoxHeight =
-    Math.abs(Math.sin(rotRad) * image.width) + Math.abs(Math.cos(rotRad) * image.height)
+
+  // calculate bounding box of the rotated image
+  const { width: bBoxWidth, height: bBoxHeight } = rotateSize(image.width, image.height, rotation)
 
   // set canvas size to match the bounding box
   canvas.width = bBoxWidth

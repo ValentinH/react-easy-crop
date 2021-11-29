@@ -25,7 +25,8 @@ describe('Helpers', () => {
     })
     test('when rotated 90 degrees', () => {
       const cropSize = helpers.getCropSize(1800, 600, 1000, 600, 16 / 9, 90)
-      expect(cropSize).toEqual({ height: 337.5, width: 600 })
+      expect(cropSize.width).toBeCloseTo(600, 0)
+      expect(cropSize.height).toBeCloseTo(337.5, 1)
     })
     test('when rotated 90 degrees and container is vertical', () => {
       const cropSize = helpers.getCropSize(600, 314, 600, 800, 1000 / 1910, 90)
@@ -338,26 +339,7 @@ describe('Helpers', () => {
       expect(center).toEqual(expected)
     })
   })
-  describe('rotateAroundMidPoint', () => {
-    test('sould rotate correctly around supplied values', () => {
-      expect(helpers.rotateAroundMidPoint(0, 0, 66, 77, 90)).toEqual([143, 11])
-    })
-    test.each([
-      [{ x: 0, y: 0, xMid: 66, yMid: 77, degrees: 9 }, [12.858023328818689, -9.37667691848084]],
-      [{ x: 40, y: 0, xMid: 66, yMid: 77, degrees: 99 }, [146.1192983168716, 63.36555695262421]],
-      [{ x: 0, y: 40, xMid: 660, yMid: 77, degrees: 88 }, [673.9437927760558, -583.8892272105957]],
-      [
-        { x: 70, y: 40, xMid: 9, yMid: 737, degrees: 240 },
-        [-625.1197064377536, 1032.6724503691496],
-      ],
-      [
-        { x: 40, y: 40, xMid: 636, yMid: 77, degrees: 45 },
-        [240.72730931671987, -370.5985924910845],
-      ],
-    ])('.rotateAroundMidPoint(%s)', ({ x, y, xMid, yMid, degrees }, expected) => {
-      expect(helpers.rotateAroundMidPoint(x, y, xMid, yMid, degrees)).toEqual(expected)
-    })
-  })
+
   describe('rotateSize', () => {
     test('should return correct bounding area once rotated', () => {
       expect(helpers.rotateSize(50, 50, 66)).toEqual({
@@ -377,7 +359,7 @@ describe('Helpers', () => {
         { width: 1780, height: 60, rotation: 95 },
         {
           height: 1778.4559071681665,
-          width: 214.90890397633643,
+          width: 214.9089039763364,
         },
       ],
     ])('.rotateSize(%s)', ({ width, height, rotation }, expected) => {
