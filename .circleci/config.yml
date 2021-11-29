@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: cypress/base:10
+    - image: cypress/browsers:node16.5.0-chrome94-ff93
       environment:
           ## this enables colors in the output
         TERM: xterm
@@ -36,7 +36,3 @@ jobs:
         name: Run e2e tests (Firefox)
         command: |
           yarn e2e:ci:firefox
-    - run:
-        name: Run e2e tests (Eedge)
-        command: |
-          yarn e2e:ci:edge
