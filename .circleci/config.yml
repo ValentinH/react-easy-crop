@@ -28,7 +28,15 @@ jobs:
         name: Run unit tests
         command: |
           yarn unit
-    - run:   # run coveralls
-        name: Run e2e tests
+    - run:
+        name: Run e2e tests (Chrome)
         command: |
-          yarn e2e:ci
+          yarn e2e:ci:chrome
+    - run:
+        name: Run e2e tests (Firefox)
+        command: |
+          yarn e2e:ci:firefox
+    - run:
+        name: Run e2e tests (Eedge)
+        command: |
+          yarn e2e:ci:edge
