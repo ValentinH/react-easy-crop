@@ -1,34 +1,114 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+aliases:
+  - &restore_yarn_cache
+    restore_cache:
+      name: Restore yarn cache
+      keys:
+        - v1-yarn-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+        - v1-yarn-{{ arch }}-{{ .Branch }}
+        - v1-yarn-
+  - &restore_node_modules
+    restore_cache:
+      name: Restore node_modules cache
+      keys:
+        - v1-node-modules-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+        - v1-node-modules-{{ arch }}-{{ .Branch }}
+        - v1-node-modules-
+
+executors:
+  node:
     docker:
-    - image: cypress/base:10
-      environment:
-          ## this enables colors in the output
-        TERM: xterm
-      auth:
-        username: $DOCKER_HUB_USERNAME
-        password: $DOCKER_HUB_PASSWORD
+      - image: cimg/node:16.13.0
+        auth:
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_PASSWORD
+  cypress:
+    docker:
+      - image: cypress/base:10
+        environment:
+          TERM: xterm
+        auth:
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_PASSWORD
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - setup
+      - quality-gate-build:
+          requires:
+            - setup
+      - quality-gate-lint:
+          requires:
+            - setup
+      - quality-gate-test:
+          requires:
+            - setup
+      - quality-gate-e2e:
+          requires:
+            - setup
+
+jobs:
+  setup:
+    executor: node
     steps:
-    - checkout
-    - restore_cache:   # special step to restore the dependency cache
-        key: dependency-cache-{{ checksum "yarn.lock" }}
-    - run:
-        name: Setup Dependencies
-        command: yarn install --frozen-lockfile
-    - save_cache:   # special step to save the dependency cache
-        key: dependency-cache-{{ checksum "yarn.lock" }}
-        paths:
-        - ~/.cache     ## cache both yarn and Cypress
-    - run:
-        name: Run linting
-        command: |
-          yarn lint
-    - run:
-        name: Run unit tests
-        command: |
-          yarn unit
-    - run:   # run coveralls
-        name: Run e2e tests
-        command: |
-          yarn e2e:ci
+      - checkout
+      - *restore_yarn_cache
+      - *restore_node_modules
+      - run:
+          name: Installing dependencies
+          command: yarn --frozen-lockfile --cache-folder ~/.cache/yarn
+      - save_cache:
+          # Store node_modules for all jobs in this workflow so that they don't
+          # need to each run a yarn install for each job. This will speed up
+          # all jobs run on this branch with the same lockfile.
+          name: Save node_modules cache
+          key: v1-node-modules-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+  quality-gate-build:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run build
+          command: yarn build
+  quality-gate-lint:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run linting
+          command: yarn lint
+  quality-gate-test:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run unit tests
+          command: yarn unit
+  quality-gate-e2e:
+    executor: cypress
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Installing Cypress Binary
+          command: yarn cypress install
+      - run:
+          name: Run e2e tests
+          command: yarn e2e:ci
