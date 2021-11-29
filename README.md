@@ -15,7 +15,7 @@ Check out the examples:
 - [Basic example in Typescript](https://codesandbox.io/s/react-easy-crop-in-ts-lj1if)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
 - [Example with server-side cropping using sharp](
-https://codesandbox.io/s/test-easy-crop-next-forked-psj5h)
+https://codesandbox.io/s/react-easy-crop-with-sharp-psj5h)
 - [Example with image selected by the user (+ auto-rotation for phone pictures)](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
