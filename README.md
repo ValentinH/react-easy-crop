@@ -14,11 +14,14 @@ Check out the examples:
 - [Basic example with class](https://codesandbox.io/s/q80jom5ql6)
 - [Basic example in Typescript](https://codesandbox.io/s/react-easy-crop-in-ts-lj1if)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
+- [Example with server-side cropping using sharp](
+https://codesandbox.io/s/test-easy-crop-next-forked-psj5h)
 - [Example with image selected by the user (+ auto-rotation for phone pictures)](https://codesandbox.io/s/y09komm059)
 - [Example with round crop area and no grid](https://codesandbox.io/s/53w20p2o3n)
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
 - [Example with crop saved/loaded to/from local storage](https://codesandbox.io/s/pmj19vp2yx)
 - [Example with a video](https://codesandbox.io/s/react-easy-crop-for-videos-lfhme)
+
 
 ## Features
 
