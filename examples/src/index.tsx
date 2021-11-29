@@ -1,6 +1,7 @@
 import queryString from 'query-string'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
+import debounce from 'lodash/debounce'
 import Cropper from '../../src/index'
 import { Area, Point } from '../../src/types'
 import './styles.css'
@@ -9,6 +10,8 @@ const TEST_IMAGES = {
   '/images/dog.jpeg': 'Landscape',
   '/images/flower.jpeg': 'Portrait',
   '/images/cat.jpeg': 'Small portrait',
+
+  // Photos used in tests, used to verify values:
   '/images/2000x1200.jpeg': '2000x1200',
 }
 
@@ -37,6 +40,21 @@ type State = {
 }
 
 const hashNames = ['imageSrc', 'hashType', 'x', 'y', 'width', 'height', 'rotation'] as const
+
+const debouncedUpdateHash = debounce(
+  ({ hashType, croppedArea, croppedAreaPixels, imageSrc, rotation }: State) => {
+    if (hashType === 'percent') {
+      if (croppedArea) {
+        window.location.hash = `${imageSrc},percent,${croppedArea.x},${croppedArea.y},${croppedArea.width},${croppedArea.height},${rotation}`
+      }
+    } else {
+      if (croppedAreaPixels) {
+        window.location.hash = `${imageSrc},pixel,${croppedAreaPixels.x},${croppedAreaPixels.y},${croppedAreaPixels.width},${croppedAreaPixels.height},${rotation}`
+      }
+    }
+  },
+  150
+)
 
 class App extends React.Component<{}, State> {
   constructor(props: {}) {
@@ -111,24 +129,18 @@ class App extends React.Component<{}, State> {
     this.setState({ croppedArea, croppedAreaPixels }, this.updateHash)
   }
 
+  onCropAreaChange = (croppedArea: Area, croppedAreaPixels: Area) => {
+    console.log('onCropAreaChange!', croppedArea, croppedAreaPixels)
+
+    this.setState({ croppedArea, croppedAreaPixels })
+  }
+
   updateHash = () => {
     if (urlArgs.setInitialCrop) {
       return
     }
 
-    if (this.state.hashType === 'percent') {
-      const { croppedArea } = this.state
-
-      if (croppedArea) {
-        window.location.hash = `${this.state.imageSrc},percent,${croppedArea.x},${croppedArea.y},${croppedArea.width},${croppedArea.height},${this.state.rotation}`
-      }
-    } else {
-      const { croppedAreaPixels } = this.state
-
-      if (croppedAreaPixels) {
-        window.location.hash = `${this.state.imageSrc},pixel,${croppedAreaPixels.x},${croppedAreaPixels.y},${croppedAreaPixels.width},${croppedAreaPixels.height},${this.state.rotation}`
-      }
-    }
+    debouncedUpdateHash(this.state)
   }
 
   onZoomChange = (zoom: number) => {
@@ -230,7 +242,9 @@ class App extends React.Component<{}, State> {
                 Picture:
                 <select value={this.state.imageSrc} onChange={this.onImageSrcChange}>
                   {Object.entries(TEST_IMAGES).map(([key, value]) => (
-                    <option value={key}>{value}</option>
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -285,7 +299,7 @@ class App extends React.Component<{}, State> {
             onCropChange={this.onCropChange}
             onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}
-            onCropAreaChange={this.onCropComplete}
+            onCropAreaChange={this.onCropAreaChange}
             onZoomChange={this.onZoomChange}
             onInteractionStart={this.onInteractionStart}
             onInteractionEnd={this.onInteractionEnd}
