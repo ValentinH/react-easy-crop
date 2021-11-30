@@ -1,28 +1,6 @@
 version: 2.1
 
-aliases:
-  - &restore_yarn_cache
-    restore_cache:
-      name: Restore yarn cache
-      keys:
-        - v1-yarn-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
-        - v1-yarn-{{ arch }}-{{ .Branch }}
-        - v1-yarn-
-  - &restore_node_modules
-    restore_cache:
-      name: Restore node_modules cache
-      keys:
-        - v1-node-modules-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
-        - v1-node-modules-{{ arch }}-{{ .Branch }}
-        - v1-node-modules-
-
 executors:
-  node:
-    docker:
-      - image: cimg/node:16.13.0
-        auth:
-          username: $DOCKER_HUB_USERNAME
-          password: $DOCKER_HUB_PASSWORD
   cypress:
     docker:
       - image: cypress/base:10
@@ -31,7 +9,6 @@ executors:
         auth:
           username: $DOCKER_HUB_USERNAME
           password: $DOCKER_HUB_PASSWORD
-
 
 workflows:
   version: 2
@@ -53,28 +30,30 @@ workflows:
 
 jobs:
   setup:
-    executor: node
+    executor: cypress
     steps:
       - checkout
-      - *restore_yarn_cache
-      - *restore_node_modules
+      - restore_cache:
+          name: Restore cache
+          key: v3-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: Installing dependencies
-          command: yarn --frozen-lockfile --cache-folder ~/.cache/yarn
+          environment:
+            CYPRESS_CACHE_FOLDER: /root/project/cypress_cache
+          command: yarn --frozen-lockfile
       - save_cache:
-          # Store node_modules for all jobs in this workflow so that they don't
-          # need to each run a yarn install for each job. This will speed up
-          # all jobs run on this branch with the same lockfile.
-          name: Save node_modules cache
-          key: v1-node-modules-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          name: Save cache
+          key: v3-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
+            - cypress_cache
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
+            - cypress_cache
   quality-gate-build:
-    executor: node
+    executor: cypress
     steps:
       - checkout
       - attach_workspace:
@@ -83,7 +62,7 @@ jobs:
           name: Run build
           command: yarn build
   quality-gate-lint:
-    executor: node
+    executor: cypress
     steps:
       - checkout
       - attach_workspace:
@@ -92,7 +71,7 @@ jobs:
           name: Run linting
           command: yarn lint
   quality-gate-test:
-    executor: node
+    executor: cypress
     steps:
       - checkout
       - attach_workspace:
@@ -107,8 +86,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Installing Cypress Binary
-          command: yarn cypress install
-      - run:
           name: Run e2e tests
+          environment:
+            CYPRESS_CACHE_FOLDER: /root/project/cypress_cache
           command: yarn e2e:ci
