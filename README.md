@@ -2,7 +2,7 @@
 
 A React component to crop images/videos with easy interactions
 
-[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![gzip size][gzip-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-20-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![brotli size][brotli-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-20-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
 
 ![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
@@ -255,7 +255,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 [downloads-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
 [npmstats]: http://npm-stat.com/charts.html?package=react-easy-crop&from=2018-06-18
 [npmstats-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/umd/react-easy-crop.min.js?compression=gzip&style=flat-square&1
+[brotli-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/umd/react-easy-crop.min.js?compression=brotli&style=flat-square&1
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: https://github.com/ricardo-ch/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
