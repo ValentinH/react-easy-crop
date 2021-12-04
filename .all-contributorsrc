@@ -227,6 +227,15 @@
         "code",
         "example"
       ]
+    },
+    {
+      "login": "raed667",
+      "name": "Raed",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1442690?v=4",
+      "profile": "https://raed.dev",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
