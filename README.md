@@ -241,6 +241,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://russianbrandgardeners.com"><img src="https://avatars.githubusercontent.com/u/640657?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ivan Galiatin</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=trurl-master" title="Code">💻</a> <a href="#example-trurl-master" title="Examples">💡</a></td>
     <td align="center"><a href="https://raed.dev"><img src="https://avatars.githubusercontent.com/u/1442690?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Raed</b></sub></a><br /><a href="#infra-raed667" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://github.com/cvolant"><img src="https://avatars.githubusercontent.com/u/37238472?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cvolant</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=cvolant" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/CodingWith-Adam"><img src="https://avatars.githubusercontent.com/u/62483230?v=4?s=100" width="100px;" alt=""/><br /><sub><b>CodingWith-Adam</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=CodingWith-Adam" title="Documentation">📖</a></td>
   </tr>
 </table>
 
