@@ -217,6 +217,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "trurl-master",
+      "name": "Ivan Galiatin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/640657?v=4",
+      "profile": "http://russianbrandgardeners.com",
+      "contributions": [
+        "code",
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7,
