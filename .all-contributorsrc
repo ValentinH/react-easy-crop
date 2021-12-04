@@ -245,6 +245,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "CodingWith-Adam",
+      "name": "CodingWith-Adam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/62483230?v=4",
+      "profile": "https://github.com/CodingWith-Adam",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
