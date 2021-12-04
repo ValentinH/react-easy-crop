@@ -243,6 +243,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/cvolant"><img src="https://avatars.githubusercontent.com/u/37238472?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cvolant</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=cvolant" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/CodingWith-Adam"><img src="https://avatars.githubusercontent.com/u/62483230?v=4?s=100" width="100px;" alt=""/><br /><sub><b>CodingWith-Adam</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=CodingWith-Adam" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/liveboom"><img src="https://avatars.githubusercontent.com/u/79549285?v=4?s=100" width="100px;" alt=""/><br /><sub><b>LiveBoom</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=liveboom" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/MatixYo"><img src="https://avatars.githubusercontent.com/u/6618041?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mateusz Juszczyk</b></sub></a><br /><a href="https://github.com/ricardo-ch/react-easy-crop/commits?author=MatixYo" title="Code">💻</a></td>
   </tr>
 </table>
 
