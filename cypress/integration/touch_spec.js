@@ -21,9 +21,9 @@ describe('Touch assertions', function () {
 
   it('Zoom in and out with pinch', function () {
     cy.get('[data-testid=container]').pinch({ distance: 10 })
-    cy.percySnapshot()
+    cy.percySnapshot('Zoom in with pinch')
     cy.get('[data-testid=container]').pinch({ distance: -4 })
-    cy.percySnapshot()
+    cy.percySnapshot('Zoom out with pinch')
   })
 
   it('Zoom in and out with pinch based on the center between 2 fingers', function () {
@@ -41,7 +41,7 @@ describe('Touch assertions', function () {
         ],
       })
       .trigger('touchend')
-    cy.percySnapshot()
+    cy.percySnapshot('Zoom in with pinch based on the center between 2 fingers')
     cy.get('[data-testid=container]')
       .trigger('touchstart', {
         touches: [
@@ -56,7 +56,7 @@ describe('Touch assertions', function () {
         ],
       })
       .trigger('touchend')
-    cy.percySnapshot()
+    cy.percySnapshot('Zoom out with pinch based on the center between 2 fingers')
   })
 
   it('Move image with pinch based on the center between 2 fingers', function () {
@@ -79,8 +79,8 @@ describe('Touch assertions', function () {
 
   it('Rotate with pinch', function () {
     cy.get('[data-testid=container]').rotate({ rotation: 30 })
-    cy.percySnapshot()
+    cy.percySnapshot('Rotate with pinch clockwise')
     cy.get('[data-testid=container]').rotate({ rotation: -45 })
-    cy.percySnapshot()
+    cy.percySnapshot('Rotate with pinch anti-clockwise')
   })
 })

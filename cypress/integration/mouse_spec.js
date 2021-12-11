@@ -21,16 +21,16 @@ describe('Mouse assertions', function () {
 
   it('Mouse wheel should zoom in and out', function () {
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: -100, clientX: 500, clientY: 300 })
-    cy.percySnapshot()
+    cy.percySnapshot('Mouse wheel should zoom in')
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: 50, clientX: 500, clientY: 300 })
-    cy.percySnapshot()
+    cy.percySnapshot('Mouse wheel should zoom out')
   })
 
   it('Mouse wheel should zoom in and out following the pointer', function () {
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: -100, clientX: 0, clientY: 0 })
-    cy.percySnapshot()
+    cy.percySnapshot('Mouse wheel should zoom in following the pointer')
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: 50, clientX: 800, clientY: 400 })
-    cy.percySnapshot()
+    cy.percySnapshot('Mouse wheel should zoom out following the pointer')
   })
 
   it('Move down and right after zoom', function () {
