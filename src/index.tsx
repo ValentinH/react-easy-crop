@@ -372,7 +372,7 @@ class Cropper extends React.Component<CropperProps, State> {
       const offsetX = x - this.dragStartPosition.x
       const offsetY = y - this.dragStartPosition.y
       const requestedPosition = {
-        x: this.dragStartCrop.x + offsetX,
+        x: this.dragStartCrop.x + offsetX + 100,
         y: this.dragStartCrop.y + offsetY,
       }
 
