@@ -14,6 +14,7 @@ Check out the examples:
 - [Basic example with class](https://codesandbox.io/s/q80jom5ql6)
 - [Basic example in Typescript](https://codesandbox.io/s/react-easy-crop-in-ts-lj1if)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
+- [Example with live output](https://codesandbox.io/s/react-easy-crop-with-live-output-kkqj0)
 - [Example with server-side cropping using sharp](
 https://codesandbox.io/s/react-easy-crop-with-sharp-psj5h)
 - [Example with image selected by the user (+ auto-rotation for phone pictures)](https://codesandbox.io/s/y09komm059)
