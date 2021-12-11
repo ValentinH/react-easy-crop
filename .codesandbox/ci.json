@@ -1,5 +1,6 @@
 {
   "sandboxes": ["v69ly910ql"],
+  "node": "16",
   "publishDirectory": {
     "react-easy-crop": "dist"
   }
