@@ -3,7 +3,7 @@ version: 2.1
 executors:
   cypress:
     docker:
-      - image: cypress/base:10
+      - image: cypress/base:16.13.0
         environment:
           TERM: xterm
         auth:
