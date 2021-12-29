@@ -7,7 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 
 const sandboxes = [
-  { id: 'v69ly910ql', title: 'Basic with hooks' },
+  { id: 'blazing-lake-f8qm2', title: 'Basic with hooks' },
   { id: 'q80jom5ql6', title: 'Basic with class' },
   { id: 'q8q1mnr01w', title: 'With output of the cropped image' },
   { id: 'y09komm059', title: 'With image selected by the user' },
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CodeSandboxes: React.FC = props => {
   const classes = useStyles(props)
-  const [sandbox, setSandbox] = useState('v69ly910ql')
+  const [sandbox, setSandbox] = useState('blazing-lake-f8qm2')
   return (
     <div>
       <FormControl variant="filled" className={classes.formControl}>
