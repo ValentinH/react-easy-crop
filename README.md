@@ -10,7 +10,7 @@ A React component to crop images/videos with easy interactions
 
 Check out the examples:
 
-- [Basic example with hooks](https://codesandbox.io/s/v69ly910ql)
+- [Basic example with hooks](https://codesandbox.io/s/blazing-lake-f8qm2)
 - [Basic example with class](https://codesandbox.io/s/q80jom5ql6)
 - [Basic example in Typescript](https://codesandbox.io/s/react-easy-crop-in-ts-lj1if)
 - [Example with output of the cropped image](https://codesandbox.io/s/q8q1mnr01w)
