@@ -281,6 +281,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "oleksi-l",
+      "name": "Oleksii",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30208419?v=4",
+      "profile": "https://github.com/oleksi-l",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
