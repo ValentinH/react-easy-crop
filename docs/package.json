@@ -3,7 +3,7 @@
   "private": true,
   "description": "Documentation website of react-easy-crop",
   "version": "1.0.0",
-  "author": "Ricardo.ch",
+  "author": "ValentinH",
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",
@@ -35,7 +35,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ricardo-ch/react-easy-crop"
+    "url": "https://github.com/ValentinH/react-easy-crop"
   },
   "devDependencies": {
     "@types/node": "^14.11.2",

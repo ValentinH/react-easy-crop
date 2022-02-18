@@ -2,7 +2,7 @@
   "name": "react-easy-crop",
   "version": "4.0.1",
   "description": "A React component to crop images/videos with easy interactions",
-  "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
+  "homepage": "https://ValentinH.github.io/react-easy-crop/",
   "keywords": [
     "react",
     "crop",
@@ -11,12 +11,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ricardo-ch/react-easy-crop"
+    "url": "https://github.com/ValentinH/react-easy-crop"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "Ricardo.ch",
+  "author": "ValentinH",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
