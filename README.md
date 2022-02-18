@@ -200,6 +200,12 @@ Now, open `http://localhost:3001/index.html` and start hacking!
 
 [MIT](https://github.com/ValentinH/react-easy-crop/blob/master/LICENSE)
 
+## Maintainers
+This project is maintained by Valentin Hervieu.
+
+This project was originally part of [@ricardo-ch](https://github.com/ricardo-ch/) organisation because I (Valentin) was working at Ricardo.
+After leaving this company, they gracefully accepted to transfer the project to me. ❤️
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
