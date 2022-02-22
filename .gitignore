@@ -10,3 +10,4 @@ docs/public
 *.iml
 .yalc
 yalc.lock
+.DS_Store

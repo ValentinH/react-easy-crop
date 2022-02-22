@@ -4,9 +4,10 @@
     "react-app",
     "prettier",
     "prettier/@typescript-eslint",
-    "prettier/react"
+    "prettier/react",
+    "plugin:cypress/recommended"
   ],
-  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "plugins": ["@typescript-eslint/eslint-plugin", "cypress"],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/ban-ts-ignore": 0,

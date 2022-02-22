@@ -9,7 +9,9 @@ import {
   computeCroppedArea,
   getCenter,
   getInitialCropFromCroppedAreaPixels,
+  getInitialCropFromCroppedAreaPercentages,
   classNames,
+  clamp,
 } from './helpers'
 import cssStyles from './styles.css'
 
@@ -49,9 +51,10 @@ export type CropperProps = {
     cropAreaClassName?: string
   }
   restrictPosition: boolean
-  initialCroppedAreaPixels?: Area
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
   disableAutomaticStylesInjection?: boolean
+  initialCroppedAreaPixels?: Area
+  initialCroppedAreaPercentages?: Area
 }
 
 type State = {
@@ -69,8 +72,8 @@ class Cropper extends React.Component<CropperProps, State> {
     aspect: 4 / 3,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    cropShape: 'rect',
-    objectFit: 'contain',
+    cropShape: 'rect' as const,
+    objectFit: 'contain' as const,
     showGrid: true,
     style: {},
     classes: {},
@@ -160,6 +163,9 @@ class Cropper extends React.Component<CropperProps, State> {
         ? this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
         : this.clearScrollEvent()
     }
+    if (prevProps.video !== this.props.video) {
+      this.videoRef?.load()
+    }
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
@@ -180,29 +186,44 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onMediaLoad = () => {
-    this.computeSizes()
-    this.emitCropData()
-    this.setInitialCrop()
+    const cropSize = this.computeSizes()
+
+    if (cropSize) {
+      this.emitCropData()
+      this.setInitialCrop(cropSize)
+    }
 
     if (this.props.onMediaLoaded) {
       this.props.onMediaLoaded(this.mediaSize)
     }
   }
 
-  setInitialCrop = () => {
-    const { initialCroppedAreaPixels, cropSize } = this.props
+  setInitialCrop = (cropSize: Size) => {
+    if (this.props.initialCroppedAreaPercentages) {
+      const { crop, zoom } = getInitialCropFromCroppedAreaPercentages(
+        this.props.initialCroppedAreaPercentages,
+        this.mediaSize,
+        this.props.rotation,
+        cropSize,
+        this.props.minZoom,
+        this.props.maxZoom
+      )
 
-    if (!initialCroppedAreaPixels) {
-      return
+      this.props.onCropChange(crop)
+      this.props.onZoomChange && this.props.onZoomChange(zoom)
+    } else if (this.props.initialCroppedAreaPixels) {
+      const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
+        this.props.initialCroppedAreaPixels,
+        this.mediaSize,
+        this.props.rotation,
+        cropSize,
+        this.props.minZoom,
+        this.props.maxZoom
+      )
+
+      this.props.onCropChange(crop)
+      this.props.onZoomChange && this.props.onZoomChange(zoom)
     }
-
-    const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
-      initialCroppedAreaPixels,
-      this.mediaSize,
-      cropSize
-    )
-    this.props.onCropChange(crop)
-    this.props.onZoomChange && this.props.onZoomChange(zoom)
   }
 
   getAspect() {
@@ -215,20 +236,70 @@ class Cropper extends React.Component<CropperProps, State> {
 
   computeSizes = () => {
     const mediaRef = this.imageRef || this.videoRef
+
     if (mediaRef && this.containerRef) {
       this.containerRect = this.containerRef.getBoundingClientRect()
+      const containerAspect = this.containerRect.width / this.containerRect.height
+      const naturalWidth = this.imageRef?.naturalWidth || this.videoRef?.videoWidth || 0
+      const naturalHeight = this.imageRef?.naturalHeight || this.videoRef?.videoHeight || 0
+      const isMediaScaledDown =
+        mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
+      const mediaAspect = naturalWidth / naturalHeight
+
+      // We do not rely on the offsetWidth/offsetHeight if the media is scaled down
+      // as the values they report are rounded. That will result in precision losses
+      // when calculating zoom. We use the fact that the media is positionned relative
+      // to the container. That allows us to use the container's dimensions
+      // and natural aspect ratio of the media to calculate accurate media size.
+      // However, for this to work, the container should not be rotated
+      let renderedMediaSize: Size
+
+      if (isMediaScaledDown) {
+        switch (this.props.objectFit) {
+          default:
+          case 'contain':
+            renderedMediaSize =
+              containerAspect > mediaAspect
+                ? {
+                    width: this.containerRect.height * mediaAspect,
+                    height: this.containerRect.height,
+                  }
+                : {
+                    width: this.containerRect.width,
+                    height: this.containerRect.width / mediaAspect,
+                  }
+            break
+          case 'horizontal-cover':
+            renderedMediaSize = {
+              width: this.containerRect.width,
+              height: this.containerRect.width / mediaAspect,
+            }
+            break
+          case 'vertical-cover':
+            renderedMediaSize = {
+              width: this.containerRect.height * mediaAspect,
+              height: this.containerRect.height,
+            }
+            break
+        }
+      } else {
+        renderedMediaSize = {
+          width: mediaRef.offsetWidth,
+          height: mediaRef.offsetHeight,
+        }
+      }
 
       this.mediaSize = {
-        width: mediaRef.offsetWidth,
-        height: mediaRef.offsetHeight,
-        naturalWidth: this.imageRef?.naturalWidth || this.videoRef?.videoWidth || 0,
-        naturalHeight: this.imageRef?.naturalHeight || this.videoRef?.videoHeight || 0,
+        ...renderedMediaSize,
+        naturalWidth,
+        naturalHeight,
       }
+
       const cropSize = this.props.cropSize
         ? this.props.cropSize
         : getCropSize(
-            mediaRef.offsetWidth,
-            mediaRef.offsetHeight,
+            this.mediaSize.width,
+            this.mediaSize.height,
             this.containerRect.width,
             this.containerRect.height,
             this.props.aspect,
@@ -242,6 +313,8 @@ class Cropper extends React.Component<CropperProps, State> {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
       this.setState({ cropSize }, this.recomputeCropPosition)
+
+      return cropSize
     }
   }
 
@@ -265,7 +338,6 @@ class Cropper extends React.Component<CropperProps, State> {
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.preventDefault()
     document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
     if (e.touches.length === 2) {
@@ -394,7 +466,7 @@ class Cropper extends React.Component<CropperProps, State> {
 
     const zoomPoint = this.getPointOnContainer(point)
     const zoomTarget = this.getPointOnMedia(zoomPoint)
-    const newZoom = Math.min(this.props.maxZoom, Math.max(zoom, this.props.minZoom))
+    const newZoom = clamp(zoom, this.props.minZoom, this.props.maxZoom)
     const requestedPosition = {
       x: zoomTarget.x * newZoom - zoomPoint.x,
       y: zoomTarget.y * newZoom - zoomPoint.y,
@@ -418,7 +490,7 @@ class Cropper extends React.Component<CropperProps, State> {
       return null
     }
 
-    // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ricardo-ch/react-easy-crop/issues/6)
+    // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ValentinH/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
       ? restrictPosition(
           this.props.crop,
@@ -475,6 +547,7 @@ class Cropper extends React.Component<CropperProps, State> {
           this.props.rotation
         )
       : this.props.crop
+
     this.props.onCropChange(newPosition)
     this.emitCropData()
   }

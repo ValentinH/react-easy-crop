@@ -1,6 +1,6 @@
 # Contributing to react-easy-crop
 
-**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+**Working on your first Pull Request?** You can learn how from this _free_ series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
 
 ## Setting Up the project locally
 
@@ -15,6 +15,7 @@ To install the project you need to have `yarn` and `node`
    # Navigate to the newly cloned directory
    cd react-easy-crop
    ```
+
 2. `yarn` to install dependencies
 3. `yarn start` to start the example app
 
@@ -22,7 +23,7 @@ To install the project you need to have `yarn` and `node`
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream git@github.com:ricardo-ch/react-easy-crop.git
+> git remote add upstream git@github.com:ValentinH/react-easy-crop.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/master master
 > ```

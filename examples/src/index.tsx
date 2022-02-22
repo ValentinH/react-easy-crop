@@ -1,18 +1,32 @@
 import queryString from 'query-string'
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
+import debounce from 'lodash/debounce'
 import Cropper from '../../src/index'
 import { Area, Point } from '../../src/types'
 import './styles.css'
 
+const TEST_IMAGES = {
+  '/images/dog.jpeg': 'Landscape',
+  '/images/flower.jpeg': 'Portrait',
+  '/images/cat.jpeg': 'Small portrait',
+
+  // Photos used in tests, used to verify values:
+  '/images/2000x1200.jpeg': '2000x1200',
+}
+
 const urlArgs = queryString.parse(window.location.search)
-const imageSrc = typeof urlArgs.img === 'string' ? urlArgs.img : '/images/dog.jpeg' // so we can change the image from our tests
+const imageSrcFromQuery =
+  typeof urlArgs.img === 'string' ? urlArgs.img : Object.keys(TEST_IMAGES)[0] // so we can change the image from our tests
+
+type HashType = 'percent' | 'pixel'
 
 type State = {
   imageSrc: string
   crop: Point
   rotation: number
   flip: { horizontal: boolean; vertical: boolean }
+  hashType: HashType
   zoom: number
   aspect: number
   cropShape: 'rect' | 'round'
@@ -20,21 +34,89 @@ type State = {
   zoomSpeed: number
   restrictPosition: boolean
   croppedArea: Area | null
+  croppedAreaPixels: Area | null
+  initialCroppedAreaPercentages: Area | undefined
+  initialCroppedAreaPixels: Area | undefined
 }
 
+const hashNames = ['imageSrc', 'hashType', 'x', 'y', 'width', 'height', 'rotation'] as const
+
+const debouncedUpdateHash = debounce(
+  ({ hashType, croppedArea, croppedAreaPixels, imageSrc, rotation }: State) => {
+    if (hashType === 'percent') {
+      if (croppedArea) {
+        window.location.hash = `${imageSrc},percent,${croppedArea.x},${croppedArea.y},${croppedArea.width},${croppedArea.height},${rotation}`
+      }
+    } else {
+      if (croppedAreaPixels) {
+        window.location.hash = `${imageSrc},pixel,${croppedAreaPixels.x},${croppedAreaPixels.y},${croppedAreaPixels.width},${croppedAreaPixels.height},${rotation}`
+      }
+    }
+  },
+  150
+)
+
 class App extends React.Component<{}, State> {
-  state: State = {
-    imageSrc,
-    crop: { x: 0, y: 0 },
-    rotation: 0,
-    flip: { horizontal: false, vertical: false },
-    zoom: 1,
-    aspect: 4 / 3,
-    cropShape: 'rect',
-    showGrid: true,
-    zoomSpeed: 1,
-    restrictPosition: true,
-    croppedArea: null,
+  constructor(props: {}) {
+    super(props)
+
+    let rotation = 0
+    let initialCroppedAreaPercentages: Area | undefined = undefined
+    let initialCroppedAreaPixels: Area | undefined = undefined
+    let hashType: HashType = 'percent'
+    let imageSrc = imageSrcFromQuery
+
+    if (window && !urlArgs.setInitialCrop) {
+      const hashArray = window.location.hash.slice(1).split(',')
+
+      if (hashArray.length === hashNames.length) {
+        const hashInfo = {} as Record<typeof hashNames[number], string>
+        hashNames.forEach((key, index) => (hashInfo[key] = hashArray[index]))
+
+        const {
+          rotation: rotationFromHash,
+          hashType: hashTypeFromHash,
+          imageSrc: imageSrcFromHash,
+          ...croppedArea
+        } = hashInfo
+
+        rotation = parseFloat(rotationFromHash)
+        imageSrc = imageSrcFromHash
+
+        // create a new object called parsedCroppedArea with values converted to floats
+        const parsedCroppedArea = {
+          x: parseFloat(croppedArea.x),
+          y: parseFloat(croppedArea.y),
+          width: parseFloat(croppedArea.width),
+          height: parseFloat(croppedArea.height),
+        } as Area
+
+        if (hashTypeFromHash === 'percent') {
+          initialCroppedAreaPercentages = parsedCroppedArea
+        } else {
+          initialCroppedAreaPixels = parsedCroppedArea
+          hashType = 'pixel'
+        }
+      }
+    }
+
+    this.state = {
+      imageSrc,
+      crop: { x: 0, y: 0 },
+      rotation,
+      flip: { horizontal: false, vertical: false },
+      hashType,
+      zoom: 1,
+      aspect: 4 / 3,
+      cropShape: 'rect',
+      showGrid: true,
+      zoomSpeed: 1,
+      restrictPosition: true,
+      croppedArea: null,
+      croppedAreaPixels: null,
+      initialCroppedAreaPercentages,
+      initialCroppedAreaPixels,
+    }
   }
 
   onCropChange = (crop: Point) => {
@@ -42,8 +124,23 @@ class App extends React.Component<{}, State> {
   }
 
   onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-    console.log(croppedArea, croppedAreaPixels)
-    this.setState({ croppedArea })
+    console.log('onCropComplete!', croppedArea, croppedAreaPixels)
+
+    this.setState({ croppedArea, croppedAreaPixels }, this.updateHash)
+  }
+
+  onCropAreaChange = (croppedArea: Area, croppedAreaPixels: Area) => {
+    console.log('onCropAreaChange!', croppedArea, croppedAreaPixels)
+
+    this.setState({ croppedArea, croppedAreaPixels })
+  }
+
+  updateHash = () => {
+    if (urlArgs.setInitialCrop) {
+      return
+    }
+
+    debouncedUpdateHash(this.state)
   }
 
   onZoomChange = (zoom: number) => {
@@ -62,23 +159,41 @@ class App extends React.Component<{}, State> {
     console.log('user interaction ended')
   }
 
+  onHashTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ hashType: e.target.value as HashType }, this.updateHash)
+  }
+
+  onImageSrcChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      imageSrc: e.target.value,
+      initialCroppedAreaPercentages: undefined,
+      initialCroppedAreaPixels: undefined,
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <div className="controls">
           <div>
             <label>
-              Rotation
               <input
                 type="range"
                 min={0}
                 max={360}
+                list="rotation-detents"
                 value={this.state.rotation}
                 onChange={({ target: { value: rotation } }) =>
                   this.setState({ rotation: Number(rotation) })
                 }
               />
+              {this.state.rotation}°
             </label>
+            <datalist id="rotation-detents">
+              <option value="90" />
+              <option value="180" />
+              <option value="270" />
+            </datalist>
           </div>
           <div>
             <label>
@@ -86,7 +201,7 @@ class App extends React.Component<{}, State> {
                 type="checkbox"
                 checked={this.state.flip.horizontal}
                 onChange={() =>
-                  this.setState(prev => ({
+                  this.setState((prev) => ({
                     rotation: 360 - prev.rotation,
                     flip: {
                       horizontal: !prev.flip.horizontal,
@@ -102,7 +217,7 @@ class App extends React.Component<{}, State> {
                 type="checkbox"
                 checked={this.state.flip.vertical}
                 onChange={() =>
-                  this.setState(prev => ({
+                  this.setState((prev) => ({
                     rotation: 360 - prev.rotation,
                     flip: {
                       horizontal: prev.flip.horizontal,
@@ -113,6 +228,27 @@ class App extends React.Component<{}, State> {
               />
               Flip Vertical
             </label>
+            <div>
+              <label>
+                Save to hash:
+                <select value={this.state.hashType} onChange={this.onHashTypeChange}>
+                  <option value="percent">Percent</option>
+                  <option value="pixel">Pixel</option>
+                </select>
+              </label>
+            </div>
+            <div>
+              <label>
+                Picture:
+                <select value={this.state.imageSrc} onChange={this.onImageSrcChange}>
+                  {Object.entries(TEST_IMAGES).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
           <button
             id="horizontal-center-button"
@@ -124,6 +260,11 @@ class App extends React.Component<{}, State> {
           >
             Center Horizontally
           </button>
+          <div>
+            crop: {this.state.crop.x}, {this.state.crop.y}
+            <br />
+            zoom: {this.state.zoom}
+          </div>
           <div>
             <p>Crop Area:</p>
             <div>
@@ -158,13 +299,16 @@ class App extends React.Component<{}, State> {
             onCropChange={this.onCropChange}
             onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}
-            onCropAreaChange={this.onCropComplete}
+            onCropAreaChange={this.onCropAreaChange}
             onZoomChange={this.onZoomChange}
             onInteractionStart={this.onInteractionStart}
             onInteractionEnd={this.onInteractionEnd}
             initialCroppedAreaPixels={
-              !!urlArgs.setInitialCrop ? { width: 699, height: 524, x: 875, y: 157 } : undefined // used to set the initial crop in e2e test
+              Boolean(urlArgs.setInitialCrop) // used to set the initial crop in e2e test
+                ? { width: 699, height: 524, x: 875, y: 157 }
+                : this.state.initialCroppedAreaPixels
             }
+            initialCroppedAreaPercentages={this.state.initialCroppedAreaPercentages}
             transform={[
               `translate(${this.state.crop.x}px, ${this.state.crop.y}px)`,
               `rotateZ(${this.state.rotation}deg)`,

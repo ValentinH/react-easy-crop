@@ -3,7 +3,7 @@ module.exports = {
   siteMetadata: {
     title: `react-easy-crop`,
     description: `A React component to crop images with easy interactions`,
-    author: `@ricardo-ch`,
+    author: `@ValentinH`,
   },
   plugins: [
     `gatsby-plugin-typescript`,

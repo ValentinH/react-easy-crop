@@ -1,6 +1,6 @@
 {
   "projectName": "react-easy-crop",
-  "projectOwner": "ricardo-ch",
+  "projectOwner": "ValentinH",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
@@ -216,6 +216,79 @@
       "profile": "https://github.com/Michal-Sh",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "trurl-master",
+      "name": "Ivan Galiatin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/640657?v=4",
+      "profile": "http://russianbrandgardeners.com",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "raed667",
+      "name": "Raed",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1442690?v=4",
+      "profile": "https://raed.dev",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "cvolant",
+      "name": "cvolant",
+      "avatar_url": "https://avatars.githubusercontent.com/u/37238472?v=4",
+      "profile": "https://github.com/cvolant",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "CodingWith-Adam",
+      "name": "CodingWith-Adam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/62483230?v=4",
+      "profile": "https://github.com/CodingWith-Adam",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "liveboom",
+      "name": "LiveBoom",
+      "avatar_url": "https://avatars.githubusercontent.com/u/79549285?v=4",
+      "profile": "https://github.com/liveboom",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "MatixYo",
+      "name": "Mateusz Juszczyk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6618041?v=4",
+      "profile": "https://github.com/MatixYo",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "labithiotis",
+      "name": "Darren Labithiotis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/784306?v=4",
+      "profile": "https://labithiotis.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "oleksi-l",
+      "name": "Oleksii",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30208419?v=4",
+      "profile": "https://github.com/oleksi-l",
+      "contributions": [
+        "doc"
       ]
     }
   ],

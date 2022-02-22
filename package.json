@@ -1,8 +1,8 @@
 {
   "name": "react-easy-crop",
-  "version": "3.5.0",
+  "version": "4.0.2",
   "description": "A React component to crop images/videos with easy interactions",
-  "homepage": "https://ricardo-ch.github.io/react-easy-crop/",
+  "homepage": "https://ValentinH.github.io/react-easy-crop/",
   "keywords": [
     "react",
     "crop",
@@ -11,12 +11,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ricardo-ch/react-easy-crop"
+    "url": "https://github.com/ValentinH/react-easy-crop"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "Ricardo.ch",
+  "author": "ValentinH",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
@@ -33,7 +33,7 @@
     "e2e:ci": "start-server-and-test start:ci http://localhost:3001 cy:ci",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "cy:ci": "cypress run --record",
+    "cy:ci": "percy exec -- cypress run --record",
     "lint": "eslint --ext .ts,.tsx ./examples ./src",
     "prebuild": "rimraf dist",
     "build:copy-files": "babel-node ./scripts/copy-build-files.js",
@@ -57,7 +57,10 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
+    "@percy/cli": "^1.0.0-beta.71",
+    "@percy/cypress": "^3.1.1",
     "@types/jest": "^26.0.14",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@typescript-eslint/eslint-plugin": "4.2.0",
@@ -72,6 +75,7 @@
     "eslint": "7.9.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-config-react-app": "^5.1.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-flowtype": "5.2.0",
     "eslint-plugin-import": "2.x",
     "eslint-plugin-jsx-a11y": "6.x",
@@ -81,6 +85,7 @@
     "husky": "^4.3.0",
     "jest": "26.4.2",
     "lint-staged": "^10.4.0",
+    "lodash.debounce": "^4.0.8",
     "np": "^6.5.0",
     "prettier": "^2.1.2",
     "query-string": "^6.1.0",
