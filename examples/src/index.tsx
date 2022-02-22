@@ -37,6 +37,8 @@ type State = {
   croppedAreaPixels: Area | null
   initialCroppedAreaPercentages: Area | undefined
   initialCroppedAreaPixels: Area | undefined
+  requireCtrlKey: boolean
+  requireMultiTouch: boolean
 }
 
 const hashNames = ['imageSrc', 'hashType', 'x', 'y', 'width', 'height', 'rotation'] as const
@@ -116,6 +118,8 @@ class App extends React.Component<{}, State> {
       croppedAreaPixels: null,
       initialCroppedAreaPercentages,
       initialCroppedAreaPixels,
+      requireCtrlKey: false,
+      requireMultiTouch: false,
     }
   }
 
@@ -228,6 +232,30 @@ class App extends React.Component<{}, State> {
               />
               Flip Vertical
             </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.state.requireCtrlKey}
+                onChange={() =>
+                  this.setState((prev) => ({
+                    requireCtrlKey: !prev.requireCtrlKey,
+                  }))
+                }
+              />
+              Require Ctrl Key
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.state.requireMultiTouch}
+                onChange={() =>
+                  this.setState((prev) => ({
+                    requireMultiTouch: !prev.requireMultiTouch,
+                  }))
+                }
+              />
+              Require Multi-Touch
+            </label>
             <div>
               <label>
                 Save to hash:
@@ -296,6 +324,8 @@ class App extends React.Component<{}, State> {
             showGrid={this.state.showGrid}
             zoomSpeed={this.state.zoomSpeed}
             restrictPosition={this.state.restrictPosition}
+            requireCtrlKey={this.state.requireCtrlKey}
+            requireMultiTouch={this.state.requireMultiTouch}
             onCropChange={this.onCropChange}
             onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}

@@ -55,6 +55,8 @@ export type CropperProps = {
   disableAutomaticStylesInjection?: boolean
   initialCroppedAreaPixels?: Area
   initialCroppedAreaPercentages?: Area
+  requireCtrlKey?: boolean
+  requireMultiTouch?: boolean
 }
 
 type State = {
@@ -81,6 +83,8 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    requireCtrlKey: false,
+    requireMultiTouch: false,
   }
 
   imageRef: HTMLImageElement | null = null
@@ -342,17 +346,18 @@ class Cropper extends React.Component<CropperProps, State> {
     document.addEventListener('touchend', this.onDragStopped)
     if (e.touches.length === 2) {
       this.onPinchStart(e)
-    } else if (e.touches.length === 1) {
+    } else if (e.touches.length === 1 && !this.props.requireMultiTouch) {
       this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
     }
   }
 
   onTouchMove = (e: TouchEvent) => {
-    // Prevent whole page from scrolling on iOS.
-    e.preventDefault()
     if (e.touches.length === 2) {
+      // Prevent whole page from scrolling on iOS.
+      e.preventDefault()
       this.onPinchMove(e)
-    } else if (e.touches.length === 1) {
+    } else if (e.touches.length === 1 && !this.props.requireMultiTouch) {
+      e.preventDefault()
       this.onDrag(Cropper.getTouchPoint(e.touches[0]))
     }
   }
@@ -424,6 +429,8 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onWheel = (e: WheelEvent) => {
+    if (this.props.requireCtrlKey && !e.ctrlKey) return
+
     e.preventDefault()
     const point = Cropper.getMousePoint(e)
     const { pixelY } = normalizeWheel(e)
