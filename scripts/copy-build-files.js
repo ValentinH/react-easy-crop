@@ -41,9 +41,11 @@ async function createPackageFile() {
 
 async function run() {
   await Promise.all(
-    [{ from: './README.md' }, { from: './src/styles.css', to: 'react-easy-crop.css' }].map((file) =>
-      copyFile(file)
-    )
+    [
+      { from: './README.md' },
+      { from: './LICENSE' },
+      { from: './src/styles.css', to: 'react-easy-crop.css' },
+    ].map((file) => copyFile(file))
   )
   await createPackageFile()
 }
