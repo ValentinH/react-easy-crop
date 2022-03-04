@@ -55,6 +55,8 @@ export type CropperProps = {
   disableAutomaticStylesInjection?: boolean
   initialCroppedAreaPixels?: Area
   initialCroppedAreaPercentages?: Area
+  onTouchRequest?: (e: React.TouchEvent<HTMLDivElement>) => boolean
+  onWheelRequest?: (e: WheelEvent) => boolean
 }
 
 type State = {
@@ -338,8 +340,13 @@ class Cropper extends React.Component<CropperProps, State> {
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (this.props.onTouchRequest && !this.props.onTouchRequest(e)) {
+      return
+    }
+
     document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
+
     if (e.touches.length === 2) {
       this.onPinchStart(e)
     } else if (e.touches.length === 1) {
@@ -424,6 +431,10 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onWheel = (e: WheelEvent) => {
+    if (this.props.onWheelRequest && !this.props.onWheelRequest(e)) {
+      return
+    }
+
     e.preventDefault()
     const point = Cropper.getMousePoint(e)
     const { pixelY } = normalizeWheel(e)
