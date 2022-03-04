@@ -55,8 +55,8 @@ export type CropperProps = {
   disableAutomaticStylesInjection?: boolean
   initialCroppedAreaPixels?: Area
   initialCroppedAreaPercentages?: Area
-  requireCtrlKey?: boolean
-  requireMultiTouch?: boolean
+  onTouchRequest?: (e: React.TouchEvent<HTMLDivElement>) => boolean
+  onWheelRequest?: (e: WheelEvent) => boolean
 }
 
 type State = {
@@ -83,8 +83,6 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
-    requireCtrlKey: false,
-    requireMultiTouch: false,
   }
 
   imageRef: HTMLImageElement | null = null
@@ -342,22 +340,26 @@ class Cropper extends React.Component<CropperProps, State> {
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (this.props.onTouchRequest && !this.props.onTouchRequest(e)) {
+      return
+    }
+
     document.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     document.addEventListener('touchend', this.onDragStopped)
+
     if (e.touches.length === 2) {
       this.onPinchStart(e)
-    } else if (e.touches.length === 1 && !this.props.requireMultiTouch) {
+    } else if (e.touches.length === 1) {
       this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
     }
   }
 
   onTouchMove = (e: TouchEvent) => {
+    // Prevent whole page from scrolling on iOS.
+    e.preventDefault()
     if (e.touches.length === 2) {
-      // Prevent whole page from scrolling on iOS.
-      e.preventDefault()
       this.onPinchMove(e)
-    } else if (e.touches.length === 1 && !this.props.requireMultiTouch) {
-      e.preventDefault()
+    } else if (e.touches.length === 1) {
       this.onDrag(Cropper.getTouchPoint(e.touches[0]))
     }
   }
@@ -429,7 +431,9 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onWheel = (e: WheelEvent) => {
-    if (this.props.requireCtrlKey && !e.ctrlKey) return
+    if (this.props.onWheelRequest && !this.props.onWheelRequest(e)) {
+      return
+    }
 
     e.preventDefault()
     const point = Cropper.getMousePoint(e)

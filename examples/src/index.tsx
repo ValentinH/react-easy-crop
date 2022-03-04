@@ -324,8 +324,20 @@ class App extends React.Component<{}, State> {
             showGrid={this.state.showGrid}
             zoomSpeed={this.state.zoomSpeed}
             restrictPosition={this.state.restrictPosition}
-            requireCtrlKey={this.state.requireCtrlKey}
-            requireMultiTouch={this.state.requireMultiTouch}
+            onWheelRequest={
+              this.state.requireCtrlKey
+                ? (e) => {
+                    return e.ctrlKey
+                  }
+                : undefined
+            }
+            onTouchRequest={
+              this.state.requireMultiTouch
+                ? (e) => {
+                    return e.touches.length > 1
+                  }
+                : undefined
+            }
             onCropChange={this.onCropChange}
             onRotationChange={this.onRotationChange}
             onCropComplete={this.onCropComplete}
