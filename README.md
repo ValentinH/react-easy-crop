@@ -21,6 +21,7 @@ Check out the examples:
 - [Example without restricted position](https://codesandbox.io/s/1rmqky233q)
 - [Example with crop saved/loaded to/from local storage](https://codesandbox.io/s/pmj19vp2yx)
 - [Example with a video](https://codesandbox.io/s/react-easy-crop-for-videos-lfhme)
+- [Example within scrollable content](https://codesandbox.io/s/react-easy-crop-scroll-demo-fp21qd)
 
 ## Features
 
