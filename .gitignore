@@ -11,3 +11,5 @@ docs/public
 .yalc
 yalc.lock
 .DS_Store
+
+.env
