@@ -193,8 +193,13 @@ const CroppedImage = ({ image }) => {
 ## Development
 
 ```shell
-yarn
-yarn start
+yarn && yarn start
+```
+
+or
+
+```shell
+npm install & npm run
 ```
 
 Now, open `http://localhost:3001/index.html` and start hacking!
