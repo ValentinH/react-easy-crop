@@ -3,7 +3,7 @@ import { AutoRc } from 'auto'
 import { INpmConfig } from '@auto-it/npm'
 
 const npmOptions: INpmConfig = {
-  publishFolder: 'dist',
+  publishFolder: './dist',
 }
 
 export default function rc(): AutoRc {

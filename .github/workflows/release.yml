@@ -1,9 +1,6 @@
 name: Release
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   release:
@@ -11,13 +8,22 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
+
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - uses: actions/setup-node@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
         with:
-          node-version: '16'
-          cache: 'yarn'
+          node-version: 16.x
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: yarn-deps-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-deps-${{ hashFiles('yarn.lock') }}
 
       - run: yarn install --frozen-lockfile
 
@@ -26,3 +32,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx auto shipit
+      
