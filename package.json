@@ -16,12 +16,13 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "ValentinH",
+  "author": "Valentin Hervieu <valentin@hervi.eu>",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "version": "yarn && yarn build",
+    "auto": "auto",
+    "postversion": "yarn build",
     "build": "yarn-or-npm bili && yarn-or-npm build:copy-files",
     "docs:start": "cd docs && yarn-or-npm develop",
     "docs:deploy": "cd docs && yarn-or-npm deploy",
@@ -37,10 +38,8 @@
     "lint": "eslint --ext .ts,.tsx ./examples ./src",
     "prebuild": "rimraf dist",
     "build:copy-files": "babel-node ./scripts/copy-build-files.js",
-    "prepublishOnly": "yarn-or-npm build",
     "precommit": "lint-staged",
-    "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}",
-    "npm:publish": "np --contents=dist"
+    "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}"
   },
   "peerDependencies": {
     "react": ">=16.4.0",
@@ -51,6 +50,9 @@
     "tslib": "2.0.1"
   },
   "devDependencies": {
+    "@auto-it/all-contributors": "^10.34.0",
+    "@auto-it/first-time-contributor": "^10.34.0",
+    "@auto-it/released": "^10.34.0",
     "@babel/core": "^7.3.4",
     "@babel/node": "^7.7.7",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
@@ -66,6 +68,7 @@
     "@typescript-eslint/eslint-plugin": "4.2.0",
     "@typescript-eslint/parser": "4.2.0",
     "all-contributors-cli": "^6.4.0",
+    "auto": "^10.34.0",
     "babel-eslint": "10.x",
     "babel-loader": "^8.0.5",
     "bili": "^5.0.5",
