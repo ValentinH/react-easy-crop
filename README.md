@@ -2,7 +2,7 @@
 
 A React component to crop images/videos with easy interactions
 
-[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![brotli size][brotli-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-20-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs]
+[![version][version-badge]][package] [![Monthly downloads][npmstats-badge]][npmstats] ![brotli size][brotli-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-20-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs] [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 
 ![react-easy-crop Demo](https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif)
 
