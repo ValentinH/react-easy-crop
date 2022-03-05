@@ -279,5 +279,5 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 [license]: https://github.com/ValentinH/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[build-badge]: https://circleci.com/gh/ValentinH/react-easy-crop/tree/master.svg?style=svg
-[build-page]: https://circleci.com/gh/ValentinH/react-easy-crop/tree/master
+[build-badge]: https://circleci.com/gh/ValentinH/react-easy-crop/tree/main.svg?style=svg
+[build-page]: https://circleci.com/gh/ValentinH/react-easy-crop/tree/main
