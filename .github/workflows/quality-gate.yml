@@ -1,14 +1,12 @@
-name: Release
+name: Quality Gate
 
-on: [push]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  release:
+  quality-gate:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci') && github.repository == 'ValentinH/react-easy-crop'"
     steps:
       - uses: actions/checkout@v2
-
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
@@ -24,11 +22,19 @@ jobs:
           key: yarn-deps-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             yarn-deps-${{ hashFiles('yarn.lock') }}
-
       - run: yarn install --frozen-lockfile
 
-      - name: Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx auto shipit
+      - name: Create Build
+        run: yarn build
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: |
+            dist
+
+      - name: Run linting
+        run: yarn lint
+
+      - name: Run unit tests
+        run: yarn unit
