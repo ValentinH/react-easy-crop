@@ -92,7 +92,7 @@
     "np": "^6.5.0",
     "prettier": "^2.1.2",
     "query-string": "^6.1.0",
-    "raw-loader": "^4.0.1",
+    "raw-loader": "^4.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "rimraf": "^3.0.0",
