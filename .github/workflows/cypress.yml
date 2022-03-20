@@ -1,6 +1,6 @@
 name: E2E Tests
 
-on: [push, pull_request, workflow_dispatch]
+on: [push]
 
 jobs:
   cypress-run:
@@ -30,6 +30,7 @@ jobs:
           build: yarn build
           start: yarn e2e:ci
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
