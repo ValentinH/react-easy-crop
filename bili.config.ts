@@ -2,7 +2,7 @@ import { Config } from 'bili'
 
 const config: Config = {
   input: {
-    index: 'src/index.tsx',
+    index: 'src/index.ts',
   },
   output: {
     format: ['cjs', 'umd', 'umd-min', 'esm'],
