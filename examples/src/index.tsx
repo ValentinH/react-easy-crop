@@ -2,8 +2,7 @@ import queryString from 'query-string'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import debounce from 'lodash/debounce'
-import Cropper from '../../src/index'
-import { Area, Point } from '../../src/types'
+import Cropper, { Area, Point } from '../../src/index'
 import './styles.css'
 
 const TEST_IMAGES = {
