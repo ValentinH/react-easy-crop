@@ -291,6 +291,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "vassbence",
+      "name": "Vass Bence",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49574140?v=4",
+      "profile": "https://github.com/vassbence",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
