@@ -31,6 +31,8 @@ export type CropperProps = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
+  playing?: boolean
+  muted?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -62,6 +64,7 @@ export type CropperProps = {
 type State = {
   cropSize: Size | null
   hasWheelJustStarted: boolean
+  muted: boolean
 }
 
 const MIN_ZOOM = 1
@@ -83,6 +86,8 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    playing: true,
+    muted: true,
   }
 
   imageRef: HTMLImageElement | null = null
@@ -102,6 +107,7 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
+    muted: this.props.muted || true,
   }
 
   componentDidMount() {
@@ -167,6 +173,16 @@ class Cropper extends React.Component<CropperProps, State> {
     }
     if (prevProps.video !== this.props.video) {
       this.videoRef?.load()
+    }
+    if (prevProps.muted !== this.props.muted) {
+      this.state.muted = this.props.muted || this.state.muted
+    }
+    if (prevProps.playing !== this.props.playing) {
+      if (this.props.playing) {
+        this.videoRef?.play()
+      } else {
+        this.videoRef?.pause()
+      }
     }
   }
 
@@ -629,7 +645,7 @@ class Cropper extends React.Component<CropperProps, State> {
             <video
               autoPlay
               loop
-              muted={true}
+              muted={this.state.muted}
               className={classNames(
                 'reactEasyCrop_Video',
                 objectFit === 'contain' && 'reactEasyCrop_Contain',
