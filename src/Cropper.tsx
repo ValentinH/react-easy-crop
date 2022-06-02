@@ -107,7 +107,7 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
-    muted: this.props.muted || Cropper.defaultProps.muted,
+    muted: this.props.muted !== undefined ? this.props.muted : Cropper.defaultProps.muted,
   }
 
   componentDidMount() {
