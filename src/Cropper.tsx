@@ -107,7 +107,7 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
-    muted: this.props.muted || true,
+    muted: this.props.muted || false,
   }
 
   componentDidMount() {
@@ -175,7 +175,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.videoRef?.load()
     }
     if (prevProps.muted !== this.props.muted) {
-      this.state.muted = this.props.muted || this.state.muted
+        this.setState((prev) => ({ muted: !prev.muted }))
     }
     if (prevProps.playing !== this.props.playing) {
       if (this.props.playing) {
@@ -643,7 +643,7 @@ class Cropper extends React.Component<CropperProps, State> {
         ) : (
           video && (
             <video
-              autoPlay
+              autoPlay={this.state.muted && this.props.playing /* Since this only needs to work on initial load (not update) we can use props */}
               loop
               muted={this.state.muted}
               className={classNames(
