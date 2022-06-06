@@ -31,8 +31,6 @@ export type CropperProps = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
-  playing?: boolean
-  muted?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -59,12 +57,13 @@ export type CropperProps = {
   initialCroppedAreaPercentages?: Area
   onTouchRequest?: (e: React.TouchEvent<HTMLDivElement>) => boolean
   onWheelRequest?: (e: WheelEvent) => boolean
+  setImageRef?: (ref: React.RefObject<HTMLImageElement>) => void
+  setVideoRef?: (ref: React.RefObject<HTMLVideoElement>) => void
 }
 
 type State = {
   cropSize: Size | null
   hasWheelJustStarted: boolean
-  muted: boolean
 }
 
 const MIN_ZOOM = 1
@@ -86,12 +85,10 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
-    playing: true,
-    muted: true,
   }
 
-  imageRef: HTMLImageElement | null = null
-  videoRef: HTMLVideoElement | null = null
+  imageRef: React.RefObject<HTMLImageElement> = React.createRef()
+  videoRef: React.RefObject<HTMLVideoElement> = React.createRef()
   containerRef: HTMLDivElement | null = null
   styleRef: HTMLStyleElement | null = null
   containerRect: DOMRect | null = null
@@ -107,7 +104,6 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
-    muted: this.props.muted !== undefined ? this.props.muted : Cropper.defaultProps.muted,
   }
 
   componentDidMount() {
@@ -127,8 +123,17 @@ class Cropper extends React.Component<CropperProps, State> {
     }
 
     // when rendered via SSR, the image can already be loaded and its onLoad callback will never be called
-    if (this.imageRef && this.imageRef.complete) {
+    if (this.imageRef.current && this.imageRef.current.complete) {
       this.onMediaLoad()
+    }
+
+    // set image and video refs in the parent if the callbacks exist
+    if (this.props.setImageRef) {
+      this.props.setImageRef(this.imageRef)
+    }
+
+    if (this.props.setVideoRef) {
+      this.props.setVideoRef(this.videoRef)
     }
   }
 
@@ -172,17 +177,7 @@ class Cropper extends React.Component<CropperProps, State> {
         : this.clearScrollEvent()
     }
     if (prevProps.video !== this.props.video) {
-      this.videoRef?.load()
-    }
-    if (prevProps.muted !== this.props.muted) {
-        this.setState((prev) => ({ muted: !prev.muted }))
-    }
-    if (prevProps.playing !== this.props.playing) {
-      if (this.props.playing) {
-        this.videoRef?.play()
-      } else {
-        this.videoRef?.pause()
-      }
+      this.videoRef.current?.load()
     }
   }
 
@@ -253,13 +248,13 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   computeSizes = () => {
-    const mediaRef = this.imageRef || this.videoRef
+    const mediaRef = this.imageRef.current || this.videoRef.current
 
     if (mediaRef && this.containerRef) {
       this.containerRect = this.containerRef.getBoundingClientRect()
       const containerAspect = this.containerRect.width / this.containerRect.height
-      const naturalWidth = this.imageRef?.naturalWidth || this.videoRef?.videoWidth || 0
-      const naturalHeight = this.imageRef?.naturalHeight || this.videoRef?.videoHeight || 0
+      const naturalWidth = this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
+      const naturalHeight = this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
       const isMediaScaledDown =
         mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
       const mediaAspect = naturalWidth / naturalHeight
@@ -632,7 +627,7 @@ class Cropper extends React.Component<CropperProps, State> {
             )}
             {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
             src={image}
-            ref={(el: HTMLImageElement) => (this.imageRef = el)}
+            ref={this.imageRef}
             style={{
               ...mediaStyle,
               transform:
@@ -643,9 +638,9 @@ class Cropper extends React.Component<CropperProps, State> {
         ) : (
           video && (
             <video
-              autoPlay={this.state.muted && this.props.playing /* Since this only needs to work on initial load (not update) we can use props */}
+              autoPlay
               loop
-              muted={this.state.muted}
+              muted={true}
               className={classNames(
                 'reactEasyCrop_Video',
                 objectFit === 'contain' && 'reactEasyCrop_Contain',
@@ -658,7 +653,7 @@ class Cropper extends React.Component<CropperProps, State> {
                 mediaClassName
               )}
               {...mediaProps}
-              ref={(el: HTMLVideoElement) => (this.videoRef = el)}
+              ref={this.videoRef}
               onLoadedMetadata={this.onMediaLoad}
               style={{
                 ...mediaStyle,
