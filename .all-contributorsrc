@@ -301,6 +301,16 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "AnthonyUtt",
+      "name": "Anthony Utt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16091316?v=4",
+      "profile": "https://github.com/AnthonyUtt",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

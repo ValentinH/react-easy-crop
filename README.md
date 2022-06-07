@@ -260,6 +260,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://labithiotis.com/"><img src="https://avatars.githubusercontent.com/u/784306?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Darren Labithiotis</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=labithiotis" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/oleksi-l"><img src="https://avatars.githubusercontent.com/u/30208419?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Oleksii</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=oleksi-l" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/vassbence"><img src="https://avatars.githubusercontent.com/u/49574140?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vass Bence</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=vassbence" title="Documentation">📖</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=vassbence" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/AnthonyUtt"><img src="https://avatars.githubusercontent.com/u/16091316?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anthony Utt</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=AnthonyUtt" title="Documentation">📖</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=AnthonyUtt" title="Code">💻</a></td>
   </tr>
 </table>
 
