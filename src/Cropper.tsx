@@ -59,6 +59,7 @@ export type CropperProps = {
   onWheelRequest?: (e: WheelEvent) => boolean
   setImageRef?: (ref: React.RefObject<HTMLImageElement>) => void
   setVideoRef?: (ref: React.RefObject<HTMLVideoElement>) => void
+  nonce?: string
 }
 
 type State = {
@@ -118,6 +119,9 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!this.props.disableAutomaticStylesInjection) {
       this.styleRef = document.createElement('style')
       this.styleRef.setAttribute('type', 'text/css')
+      if (this.props.nonce) {
+        this.styleRef.setAttribute('nonce', this.props.nonce);
+      }
       this.styleRef.innerHTML = cssStyles
       document.head.appendChild(this.styleRef)
     }
