@@ -120,7 +120,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.styleRef = document.createElement('style')
       this.styleRef.setAttribute('type', 'text/css')
       if (this.props.nonce) {
-        this.styleRef.setAttribute('nonce', this.props.nonce);
+        this.styleRef.setAttribute('nonce', this.props.nonce)
       }
       this.styleRef.innerHTML = cssStyles
       document.head.appendChild(this.styleRef)
@@ -257,8 +257,10 @@ class Cropper extends React.Component<CropperProps, State> {
     if (mediaRef && this.containerRef) {
       this.containerRect = this.containerRef.getBoundingClientRect()
       const containerAspect = this.containerRect.width / this.containerRect.height
-      const naturalWidth = this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
-      const naturalHeight = this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
+      const naturalWidth =
+        this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
+      const naturalHeight =
+        this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
       const isMediaScaledDown =
         mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
       const mediaAspect = naturalWidth / naturalHeight
@@ -447,7 +449,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.rafPinchTimeout = window.requestAnimationFrame(() => {
       const distance = getDistanceBetweenPoints(pointA, pointB)
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
-      this.setNewZoom(newZoom, center)
+      this.setNewZoom(newZoom, center, { shouldUpdatePosition: false })
       this.lastPinchDistance = distance
 
       const rotation = getRotationBetweenPoints(pointA, pointB)
@@ -466,7 +468,7 @@ class Cropper extends React.Component<CropperProps, State> {
     const point = Cropper.getMousePoint(e)
     const { pixelY } = normalizeWheel(e)
     const newZoom = this.props.zoom - (pixelY * this.props.zoomSpeed) / 200
-    this.setNewZoom(newZoom, point)
+    this.setNewZoom(newZoom, point, { shouldUpdatePosition: true })
 
     if (!this.state.hasWheelJustStarted) {
       this.setState({ hasWheelJustStarted: true }, () => this.props.onInteractionStart?.())
@@ -499,7 +501,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  setNewZoom = (zoom: number, point: Point) => {
+  setNewZoom = (zoom: number, point: Point, { shouldUpdatePosition = true } = {}) => {
     if (!this.state.cropSize || !this.props.onZoomChange) return
 
     const zoomPoint = this.getPointOnContainer(point)
@@ -509,17 +511,20 @@ class Cropper extends React.Component<CropperProps, State> {
       x: zoomTarget.x * newZoom - zoomPoint.x,
       y: zoomTarget.y * newZoom - zoomPoint.y,
     }
-    const newPosition = this.props.restrictPosition
-      ? restrictPosition(
-          requestedPosition,
-          this.mediaSize,
-          this.state.cropSize,
-          newZoom,
-          this.props.rotation
-        )
-      : requestedPosition
 
-    this.props.onCropChange(newPosition)
+    if (shouldUpdatePosition) {
+      const newPosition = this.props.restrictPosition
+        ? restrictPosition(
+            requestedPosition,
+            this.mediaSize,
+            this.state.cropSize,
+            newZoom,
+            this.props.rotation
+          )
+        : requestedPosition
+
+      this.props.onCropChange(newPosition)
+    }
     this.props.onZoomChange(newZoom)
   }
 
