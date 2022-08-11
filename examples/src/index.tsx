@@ -1,6 +1,6 @@
 import queryString from 'query-string'
 import * as React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import debounce from 'lodash/debounce'
 import Cropper, { Area, Point } from '../../src/index'
 import './styles.css'
@@ -365,4 +365,12 @@ class App extends React.Component<{}, State> {
 }
 
 const rootElement = document.getElementById('root')
-ReactDOM.render(<App />, rootElement)
+if (!rootElement) {
+  throw new Error('No root element found')
+}
+const root = createRoot(rootElement)
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)

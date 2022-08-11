@@ -28,6 +28,7 @@ async function createPackageFile() {
       '.': {
         import: './index.module.js',
         require: './index.js',
+        types: './index.d.ts',
       },
     },
   }

@@ -301,6 +301,26 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "AnthonyUtt",
+      "name": "Anthony Utt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16091316?v=4",
+      "profile": "https://github.com/AnthonyUtt",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "seanparmelee",
+      "name": "Sean Parmelee",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1933330?v=4",
+      "profile": "https://github.com/seanparmelee",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
