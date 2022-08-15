@@ -121,7 +121,9 @@ This component requires some styles to be available in the document. By default,
 | `disableAutomaticStylesInjection`                                         | boolean                                                                             |          | Whether to auto inject styles using a style tag in the document head on component mount. When disabled you need to import the css file into your application manually (style file is available in `react-easy-crop/react-easy-crop.css`). Example with sass/scss `@import "~react-easy-crop/react-easy-crop";`.                                                                                            |
 | `setImageRef`                                                             | `(ref: React.RefObject<HTMLImageElement>) => void`                                  |          | Called when the component mounts, if present. Used to set the value of the image ref object in the parent component.                                                                                                                                                                                                                                                                                       |
 | `setVideoRef`                                                             | `(ref: React.RefObject<HTMLVideoElement>) => void`                                  |          | Called when the component mounts, if present. Used to set the value of the video ref object in the parent component.                                                                                                                                                                                                                                                                                       |
-| `nonce`                                         | string                                                                             |          | The nonce to add to the style tag when the styles are auto injected.  |
+| `setMediaSize`                                                            | `(size: MediaSize) => void`                                                         |          | [Advanced Usage] Used to expose the `mediaSize` value for use with the `getInitialCropFromCroppedAreaPixels` and `getInitialCropFromCroppedAreaPercentages` functions. See [this CodeSandbox instance](https://codesandbox.io/s/react-easy-crop-forked-3v0hi3) for a simple example.                                                                                                                       |
+| `setCropSize`                                                             | `(size: Size) => void`                                                              |          | [Advanced Usage] Used to expose the `cropSize` value for use with the `getInitialCropFromCroppedAreaPixels` and `getInitialCropFromCroppedAreaPercentages` functions. See [this CodeSandbox instance](https://codesandbox.io/s/react-easy-crop-forked-3v0hi3) for a simple example.                                                                                                                        |
+| `nonce`                                                                   | string                                                                              |          | The nonce to add to the style tag when the styles are auto injected.                                                                                                                                                                                                                                                                                                                                       |
 
 <a name="onCropCompleteProp"></a>
 
@@ -192,6 +194,19 @@ const CroppedImage = ({ image }) => {
   )
 }
 ```
+
+#### getInitialCropFromCroppedAreaPercentages(croppedAreaPercentages: Area, mediaSize: MediaSize, rotation: number, cropSize: Size, minZoom: number, maxZoom: number)
+
+[Advanced Usage]
+
+Used to calculate values for crop and zoom based on a desired `croppedAreaPercentages`
+value. See [this CodeSandbox instance](https://codesandbox.io/s/react-easy-crop-forked-3v0hi3) for a simple example.
+
+#### getInitialCropFromCroppedAreaPixels(croppedAreaPixels: Area, mediaSize: MediaSize, rotation: number, cropSize: Size, minZoom: number, maxZoom: number)
+
+[Advanced Usage]
+
+See `getInitialCropFromCroppedAreaPercentages`.
 
 ## Development
 

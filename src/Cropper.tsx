@@ -59,6 +59,8 @@ export type CropperProps = {
   onWheelRequest?: (e: WheelEvent) => boolean
   setImageRef?: (ref: React.RefObject<HTMLImageElement>) => void
   setVideoRef?: (ref: React.RefObject<HTMLVideoElement>) => void
+  setMediaSize?: (size: MediaSize) => void
+  setCropSize?: (size: Size) => void
   nonce?: string
 }
 
@@ -325,6 +327,11 @@ class Cropper extends React.Component<CropperProps, State> {
         naturalWidth,
         naturalHeight,
       }
+      
+      // set media size in the parent
+      if (this.props.setMediaSize) {
+        this.props.setMediaSize(this.mediaSize)
+      }
 
       const cropSize = this.props.cropSize
         ? this.props.cropSize
@@ -344,6 +351,10 @@ class Cropper extends React.Component<CropperProps, State> {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
       this.setState({ cropSize }, this.recomputeCropPosition)
+      // pass crop size to parent
+      if (this.props.setCropSize) {
+        this.props.setCropSize(cropSize)
+      }
 
       return cropSize
     }
