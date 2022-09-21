@@ -114,6 +114,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   componentDidMount() {
+    console.log('running fork - v1')
     this.currentDoc = this.props.parentDocument ? this.props.parentDocument : document
     this.currentWindow = this.props.parentWindow ? this.props.parentWindow : window
 
