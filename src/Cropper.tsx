@@ -62,8 +62,6 @@ export type CropperProps = {
   setMediaSize?: (size: MediaSize) => void
   setCropSize?: (size: Size) => void
   nonce?: string
-  parentDocument?: any
-  parentWindow?: any
 }
 
 type State = {
@@ -105,8 +103,8 @@ class Cropper extends React.Component<CropperProps, State> {
   rafDragTimeout: number | null = null
   rafPinchTimeout: number | null = null
   wheelTimer: number | null = null
-  currentDoc: any = document
-  currentWindow: any = window
+  currentDoc: Document = document
+  currentWindow: Window = window
 
   state: State = {
     cropSize: null,
@@ -114,11 +112,13 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   componentDidMount() {
-    console.log('running fork - v1')
-    this.currentDoc = this.props.parentDocument ? this.props.parentDocument : document
-    this.currentWindow = this.props.parentWindow ? this.props.parentWindow : window
-
     if (this.containerRef) {
+      if (this.containerRef.ownerDocument) {
+        this.currentDoc = this.containerRef.ownerDocument
+      }
+      if (this.currentDoc.defaultView) {
+        this.currentWindow = this.currentDoc.defaultView
+      }
       this.currentWindow.addEventListener('resize', this.computeSizes)
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
@@ -128,9 +128,9 @@ class Cropper extends React.Component<CropperProps, State> {
 
     if (!this.props.disableAutomaticStylesInjection) {
       this.styleRef = this.currentDoc.createElement('style')
-      this.styleRef?.setAttribute('type', 'text/css')
+      this.styleRef.setAttribute('type', 'text/css')
       if (this.props.nonce) {
-        this.styleRef?.setAttribute('nonce', this.props.nonce)
+        this.styleRef.setAttribute('nonce', this.props.nonce)
       }
       if (this.styleRef) {
         this.styleRef.innerHTML = cssStyles
@@ -154,7 +154,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   componentWillUnmount() {
-    this.currentWindow?.removeEventListener('resize', this.computeSizes)
+    this.currentWindow.removeEventListener('resize', this.computeSizes)
     if (this.containerRef) {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
       this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
@@ -201,10 +201,10 @@ class Cropper extends React.Component<CropperProps, State> {
   preventZoomSafari = (e: Event) => e.preventDefault()
 
   cleanEvents = () => {
-    this.currentDoc?.removeEventListener('mousemove', this.onMouseMove)
-    this.currentDoc?.removeEventListener('mouseup', this.onDragStopped)
-    this.currentDoc?.removeEventListener('touchmove', this.onTouchMove)
-    this.currentDoc?.removeEventListener('touchend', this.onDragStopped)
+    this.currentDoc.removeEventListener('mousemove', this.onMouseMove)
+    this.currentDoc.removeEventListener('mouseup', this.onDragStopped)
+    this.currentDoc.removeEventListener('touchmove', this.onTouchMove)
+    this.currentDoc.removeEventListener('touchend', this.onDragStopped)
   }
 
   clearScrollEvent = () => {
@@ -382,8 +382,8 @@ class Cropper extends React.Component<CropperProps, State> {
 
   onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault()
-    this.currentDoc?.addEventListener('mousemove', this.onMouseMove)
-    this.currentDoc?.addEventListener('mouseup', this.onDragStopped)
+    this.currentDoc.addEventListener('mousemove', this.onMouseMove)
+    this.currentDoc.addEventListener('mouseup', this.onDragStopped)
     this.onDragStart(Cropper.getMousePoint(e))
   }
 
@@ -394,8 +394,8 @@ class Cropper extends React.Component<CropperProps, State> {
       return
     }
 
-    this.currentDoc?.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
-    this.currentDoc?.addEventListener('touchend', this.onDragStopped)
+    this.currentDoc.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
+    this.currentDoc.addEventListener('touchend', this.onDragStopped)
 
     if (e.touches.length === 2) {
       this.onPinchStart(e)
@@ -421,9 +421,9 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onDrag = ({ x, y }: Point) => {
-    if (this.rafDragTimeout) this.currentWindow?.cancelAnimationFrame(this.rafDragTimeout)
+    if (this.rafDragTimeout) this.currentWindow.cancelAnimationFrame(this.rafDragTimeout)
 
-    this.rafDragTimeout = this.currentWindow?.requestAnimationFrame(() => {
+    this.rafDragTimeout = this.currentWindow.requestAnimationFrame(() => {
       if (!this.state.cropSize) return
       if (x === undefined || y === undefined) return
       const offsetX = x - this.dragStartPosition.x
@@ -466,8 +466,8 @@ class Cropper extends React.Component<CropperProps, State> {
     const center = getCenter(pointA, pointB)
     this.onDrag(center)
 
-    if (this.rafPinchTimeout) this.currentWindow?.cancelAnimationFrame(this.rafPinchTimeout)
-    this.rafPinchTimeout = this.currentWindow?.requestAnimationFrame(() => {
+    if (this.rafPinchTimeout) this.currentWindow.cancelAnimationFrame(this.rafPinchTimeout)
+    this.rafPinchTimeout = this.currentWindow.requestAnimationFrame(() => {
       const distance = getDistanceBetweenPoints(pointA, pointB)
       const newZoom = this.props.zoom * (distance / this.lastPinchDistance)
       this.setNewZoom(newZoom, center, { shouldUpdatePosition: false })
@@ -498,7 +498,7 @@ class Cropper extends React.Component<CropperProps, State> {
     if (this.wheelTimer) {
       clearTimeout(this.wheelTimer)
     }
-    this.wheelTimer = this.currentWindow?.setTimeout(
+    this.wheelTimer = this.currentWindow.setTimeout(
       () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd?.()),
       250
     )
