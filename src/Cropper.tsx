@@ -132,9 +132,7 @@ class Cropper extends React.Component<CropperProps, State> {
       if (this.props.nonce) {
         this.styleRef.setAttribute('nonce', this.props.nonce)
       }
-      if (this.styleRef) {
-        this.styleRef.innerHTML = cssStyles
-      }
+      this.styleRef.innerHTML = cssStyles
       this.currentDoc.head.appendChild(this.styleRef)
     }
 
