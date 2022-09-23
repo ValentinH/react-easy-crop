@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import debounce from 'lodash/debounce'
 import Cropper, { Area, Point } from '../../src/index'
 import './styles.css'
+import Iframe from './iframe'
 
 const TEST_IMAGES = {
   '/images/dog.jpeg': 'Landscape',
@@ -38,6 +39,7 @@ type State = {
   initialCroppedAreaPixels: Area | undefined
   requireCtrlKey: boolean
   requireMultiTouch: boolean
+  iframed: boolean
 }
 
 const hashNames = ['imageSrc', 'hashType', 'x', 'y', 'width', 'height', 'rotation'] as const
@@ -66,6 +68,7 @@ class App extends React.Component<{}, State> {
     let initialCroppedAreaPixels: Area | undefined = undefined
     let hashType: HashType = 'percent'
     let imageSrc = imageSrcFromQuery
+    const query = new URLSearchParams(window.location.search)
 
     if (window && !urlArgs.setInitialCrop) {
       const hashArray = window.location.hash.slice(1).split(',')
@@ -119,6 +122,7 @@ class App extends React.Component<{}, State> {
       initialCroppedAreaPixels,
       requireCtrlKey: false,
       requireMultiTouch: false,
+      iframed: !!query.get('iframed'),
     }
   }
 
@@ -175,6 +179,33 @@ class App extends React.Component<{}, State> {
   }
 
   render() {
+    if (this.state.iframed) {
+      return (
+        <Iframe>
+          <div className="crop-container">
+            <Cropper
+              image={this.state.imageSrc}
+              crop={this.state.crop}
+              rotation={this.state.rotation}
+              zoom={this.state.zoom}
+              aspect={this.state.aspect}
+              cropShape={this.state.cropShape}
+              showGrid={this.state.showGrid}
+              zoomSpeed={this.state.zoomSpeed}
+              restrictPosition={this.state.restrictPosition}
+              onCropChange={this.onCropChange}
+              onRotationChange={this.onRotationChange}
+              onCropComplete={this.onCropComplete}
+              onCropAreaChange={this.onCropAreaChange}
+              onZoomChange={this.onZoomChange}
+              onInteractionStart={this.onInteractionStart}
+              onInteractionEnd={this.onInteractionEnd}
+            />
+          </div>
+        </Iframe>
+      )
+    }
+
     return (
       <div className="App">
         <div className="controls">
