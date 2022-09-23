@@ -321,6 +321,15 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "glendaviesnz",
+      "name": "Glen Davies",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3629020?v=4",
+      "profile": "http://glendaviesnz.wordpress.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
