@@ -39,6 +39,7 @@ export default function Iframe({ children }: Props) {
         ref={iFrameRef}
         srcDoc="<!doctype html>"
         title="test iframed"
+        data-cy="iframe"
       >
         <>{iframeBody && createPortal(children, iframeBody)}</>
       </iframe>
