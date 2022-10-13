@@ -75,6 +75,8 @@ const MAX_ZOOM = 3
 type GestureEvent = UIEvent & {
   rotation: number
   scale: number
+  clientX: number
+  clientY: number
 }
 
 class Cropper extends React.Component<CropperProps, State> {
@@ -130,8 +132,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.currentWindow.addEventListener('resize', this.computeSizes)
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-      // @ts-expect-error this is not a standard event
-      this.containerRef.addEventListener('gesturestart', this.onGestureStart)
+      this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
     }
 
     if (!this.props.disableAutomaticStylesInjection) {
@@ -210,10 +211,8 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('mouseup', this.onDragStopped)
     this.currentDoc.removeEventListener('touchmove', this.onTouchMove)
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
-    // @ts-expect-error this is not a standard event
-    this.currentDoc.removeEventListener('gesturemove', this.onGestureMove)
-    // @ts-expect-error this is not a standard event
-    this.currentDoc.removeEventListener('gestureend', this.onGestureEnd)
+    this.currentDoc.removeEventListener('gesturemove', this.onGestureMove as EventListener)
+    this.currentDoc.removeEventListener('gestureend', this.onGestureEnd as EventListener)
   }
 
   clearScrollEvent = () => {
@@ -379,7 +378,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  static getMousePoint = (e: MouseEvent | React.MouseEvent) => ({
+  static getMousePoint = (e: MouseEvent | React.MouseEvent | GestureEvent) => ({
     x: Number(e.clientX),
     y: Number(e.clientY),
   })
@@ -426,10 +425,8 @@ class Cropper extends React.Component<CropperProps, State> {
 
   onGestureStart = (e: GestureEvent) => {
     e.preventDefault()
-    // @ts-expect-error this is not a standard event
-    this.currentDoc.addEventListener('gesturechange', this.onGestureMove)
-    // @ts-expect-error this is not a standard event
-    this.currentDoc.addEventListener('gestureend', this.onGestureEnd)
+    this.currentDoc.addEventListener('gesturechange', this.onGestureMove as EventListener)
+    this.currentDoc.addEventListener('gestureend', this.onGestureEnd as EventListener)
     this.gestureZoomStart = this.props.zoom
     this.gestureRotationStart = this.props.rotation
   }
@@ -440,8 +437,10 @@ class Cropper extends React.Component<CropperProps, State> {
       // this is to avoid conflict between gesture and touch events
       return
     }
+
+    const point = Cropper.getMousePoint(e)
     const newZoom = this.gestureZoomStart - 1 + e.scale
-    this.setNewZoom(newZoom)
+    this.setNewZoom(newZoom, point, { shouldUpdatePosition: true })
     if (this.props.onRotationChange) {
       const newRotation = this.gestureRotationStart + e.rotation
       this.props.onRotationChange(newRotation)
@@ -561,12 +560,12 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  setNewZoom = (zoom: number, point?: Point, { shouldUpdatePosition = true } = {}) => {
+  setNewZoom = (zoom: number, point: Point, { shouldUpdatePosition = true } = {}) => {
     if (!this.state.cropSize || !this.props.onZoomChange) return
 
     const newZoom = clamp(zoom, this.props.minZoom, this.props.maxZoom)
 
-    if (shouldUpdatePosition && point) {
+    if (shouldUpdatePosition) {
       const zoomPoint = this.getPointOnContainer(point)
       const zoomTarget = this.getPointOnMedia(zoomPoint)
       const requestedPosition = {
