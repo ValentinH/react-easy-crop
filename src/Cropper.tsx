@@ -72,6 +72,11 @@ type State = {
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
+type GestureEvent = UIEvent & {
+  rotation: number
+  scale: number
+}
+
 class Cropper extends React.Component<CropperProps, State> {
   static defaultProps = {
     zoom: 1,
@@ -98,6 +103,7 @@ class Cropper extends React.Component<CropperProps, State> {
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
   dragStartCrop: Point = { x: 0, y: 0 }
+  gestureZoomStart = 0
   lastPinchDistance = 0
   lastPinchRotation = 0
   rafDragTimeout: number | null = null
@@ -122,8 +128,8 @@ class Cropper extends React.Component<CropperProps, State> {
       this.currentWindow.addEventListener('resize', this.computeSizes)
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-      this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
+      // @ts-expect-error this is not a standard event
+      this.containerRef.addEventListener('gesturestart', this.onGestureStart)
     }
 
     if (!this.props.disableAutomaticStylesInjection) {
@@ -155,7 +161,6 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentWindow.removeEventListener('resize', this.computeSizes)
     if (this.containerRef) {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
     }
 
     if (this.styleRef) {
@@ -203,6 +208,10 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('mouseup', this.onDragStopped)
     this.currentDoc.removeEventListener('touchmove', this.onTouchMove)
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
+    // @ts-expect-error this is not a standard event
+    this.currentDoc.removeEventListener('gesturemove', this.onGestureMove)
+    // @ts-expect-error this is not a standard event
+    this.currentDoc.removeEventListener('gestureend', this.onGestureEnd)
   }
 
   clearScrollEvent = () => {
@@ -412,6 +421,30 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
+  onGestureStart = (e: GestureEvent) => {
+    e.preventDefault()
+    // @ts-expect-error this is not a standard event
+    this.currentDoc.addEventListener('gesturechange', this.onGestureMove)
+    // @ts-expect-error this is not a standard event
+    this.currentDoc.addEventListener('gestureend', this.onGestureEnd)
+    this.gestureZoomStart = this.props.zoom
+  }
+
+  onGestureMove = (e: GestureEvent) => {
+    e.preventDefault()
+    console.log('onGestureMove', {
+      scale: e.scale,
+      rotation: e.rotation,
+    })
+
+    const newZoom = this.gestureZoomStart - 1 + e.scale
+    this.setNewZoom(newZoom)
+  }
+
+  onGestureEnd = (e: GestureEvent) => {
+    this.cleanEvents()
+  }
+
   onDragStart = ({ x, y }: Point) => {
     this.dragStartPosition = { x, y }
     this.dragStartCrop = { ...this.props.crop }
@@ -520,18 +553,19 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  setNewZoom = (zoom: number, point: Point, { shouldUpdatePosition = true } = {}) => {
+  setNewZoom = (zoom: number, point?: Point, { shouldUpdatePosition = true } = {}) => {
     if (!this.state.cropSize || !this.props.onZoomChange) return
 
-    const zoomPoint = this.getPointOnContainer(point)
-    const zoomTarget = this.getPointOnMedia(zoomPoint)
     const newZoom = clamp(zoom, this.props.minZoom, this.props.maxZoom)
-    const requestedPosition = {
-      x: zoomTarget.x * newZoom - zoomPoint.x,
-      y: zoomTarget.y * newZoom - zoomPoint.y,
-    }
 
-    if (shouldUpdatePosition) {
+    if (shouldUpdatePosition && point) {
+      const zoomPoint = this.getPointOnContainer(point)
+      const zoomTarget = this.getPointOnMedia(zoomPoint)
+      const requestedPosition = {
+        x: zoomTarget.x * newZoom - zoomPoint.x,
+        y: zoomTarget.y * newZoom - zoomPoint.y,
+      }
+
       const newPosition = this.props.restrictPosition
         ? restrictPosition(
             requestedPosition,
