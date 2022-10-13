@@ -72,6 +72,13 @@ type State = {
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 
+type GestureEvent = UIEvent & {
+  rotation: number
+  scale: number
+  clientX: number
+  clientY: number
+}
+
 class Cropper extends React.Component<CropperProps, State> {
   static defaultProps = {
     zoom: 1,
@@ -98,6 +105,9 @@ class Cropper extends React.Component<CropperProps, State> {
   mediaSize: MediaSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
   dragStartPosition: Point = { x: 0, y: 0 }
   dragStartCrop: Point = { x: 0, y: 0 }
+  gestureZoomStart = 0
+  gestureRotationStart = 0
+  isTouching = false
   lastPinchDistance = 0
   lastPinchRotation = 0
   rafDragTimeout: number | null = null
@@ -122,8 +132,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.currentWindow.addEventListener('resize', this.computeSizes)
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-      this.containerRef.addEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.addEventListener('gesturechange', this.preventZoomSafari)
+      this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
     }
 
     if (!this.props.disableAutomaticStylesInjection) {
@@ -155,7 +164,6 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentWindow.removeEventListener('resize', this.computeSizes)
     if (this.containerRef) {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
-      this.containerRef.removeEventListener('gesturechange', this.preventZoomSafari)
     }
 
     if (this.styleRef) {
@@ -203,6 +211,8 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('mouseup', this.onDragStopped)
     this.currentDoc.removeEventListener('touchmove', this.onTouchMove)
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
+    this.currentDoc.removeEventListener('gesturemove', this.onGestureMove as EventListener)
+    this.currentDoc.removeEventListener('gestureend', this.onGestureEnd as EventListener)
   }
 
   clearScrollEvent = () => {
@@ -368,7 +378,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  static getMousePoint = (e: MouseEvent | React.MouseEvent) => ({
+  static getMousePoint = (e: MouseEvent | React.MouseEvent | GestureEvent) => ({
     x: Number(e.clientX),
     y: Number(e.clientY),
   })
@@ -388,6 +398,7 @@ class Cropper extends React.Component<CropperProps, State> {
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    this.isTouching = true
     if (this.props.onTouchRequest && !this.props.onTouchRequest(e)) {
       return
     }
@@ -410,6 +421,34 @@ class Cropper extends React.Component<CropperProps, State> {
     } else if (e.touches.length === 1) {
       this.onDrag(Cropper.getTouchPoint(e.touches[0]))
     }
+  }
+
+  onGestureStart = (e: GestureEvent) => {
+    e.preventDefault()
+    this.currentDoc.addEventListener('gesturechange', this.onGestureMove as EventListener)
+    this.currentDoc.addEventListener('gestureend', this.onGestureEnd as EventListener)
+    this.gestureZoomStart = this.props.zoom
+    this.gestureRotationStart = this.props.rotation
+  }
+
+  onGestureMove = (e: GestureEvent) => {
+    e.preventDefault()
+    if (this.isTouching) {
+      // this is to avoid conflict between gesture and touch events
+      return
+    }
+
+    const point = Cropper.getMousePoint(e)
+    const newZoom = this.gestureZoomStart - 1 + e.scale
+    this.setNewZoom(newZoom, point, { shouldUpdatePosition: true })
+    if (this.props.onRotationChange) {
+      const newRotation = this.gestureRotationStart + e.rotation
+      this.props.onRotationChange(newRotation)
+    }
+  }
+
+  onGestureEnd = (e: GestureEvent) => {
+    this.cleanEvents()
   }
 
   onDragStart = ({ x, y }: Point) => {
@@ -445,6 +484,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onDragStopped = () => {
+    this.isTouching = false
     this.cleanEvents()
     this.emitCropData()
     this.props.onInteractionEnd?.()
@@ -523,15 +563,16 @@ class Cropper extends React.Component<CropperProps, State> {
   setNewZoom = (zoom: number, point: Point, { shouldUpdatePosition = true } = {}) => {
     if (!this.state.cropSize || !this.props.onZoomChange) return
 
-    const zoomPoint = this.getPointOnContainer(point)
-    const zoomTarget = this.getPointOnMedia(zoomPoint)
     const newZoom = clamp(zoom, this.props.minZoom, this.props.maxZoom)
-    const requestedPosition = {
-      x: zoomTarget.x * newZoom - zoomPoint.x,
-      y: zoomTarget.y * newZoom - zoomPoint.y,
-    }
 
     if (shouldUpdatePosition) {
+      const zoomPoint = this.getPointOnContainer(point)
+      const zoomTarget = this.getPointOnMedia(zoomPoint)
+      const requestedPosition = {
+        x: zoomTarget.x * newZoom - zoomPoint.x,
+        y: zoomTarget.y * newZoom - zoomPoint.y,
+      }
+
       const newPosition = this.props.restrictPosition
         ? restrictPosition(
             requestedPosition,
