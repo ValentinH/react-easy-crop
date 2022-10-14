@@ -11771,10 +11771,10 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-easy-crop@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-3.3.1.tgz#c9c9cf4f8255e6fdfc2a8ee00205bbd5ea94cdcf"
-  integrity sha512-fM249ldk9OBONAgkskWVU3sLLP/hkjqmjY0Ah8V9CNlK2aiasNuHJw6vYCtaESR7CrEP3+XvfG1oO3y5hP6CuQ==
+react-easy-crop@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-4.6.0.tgz#eccf23cacd88d89b25792763d2e50b0a17e57ff8"
+  integrity sha512-vD5r3/PFcQ7eyzn7e1u7o0IOQ5+GD2cDjFh1OHLm6ZiquiMg+iTy05wKjQz4Jy4EjLvQ1RRubVG5CBuLwFYC6Q==
   dependencies:
     normalize-wheel "^1.0.1"
     tslib "2.0.1"
