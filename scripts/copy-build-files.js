@@ -30,6 +30,10 @@ async function createPackageFile() {
         require: './index.js',
         types: './index.d.ts',
       },
+      './react-easy-crop.css': {
+        import: './react-easy-crop.css',
+        require: './react-easy-crop.css'
+      }
     },
   }
   const buildPath = path.resolve(__dirname, '../dist/package.json')
