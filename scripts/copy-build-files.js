@@ -31,8 +31,8 @@ async function createPackageFile() {
         types: './index.d.ts',
       },
       './react-easy-crop.css': {
-        'import': './react-easy-crop.css',
-        'require': './react-easy-crop.css'
+        import: './react-easy-crop.css',
+        require: './react-easy-crop.css'
       }
     },
   }
