@@ -20,16 +20,16 @@ export type CropperProps = {
   video?: string | VideoSrc[]
   transform?: string
   crop: Point
-  zoom: number
-  rotation: number
-  aspect: number
-  minZoom: number
-  maxZoom: number
-  cropShape: 'rect' | 'round'
+  zoom?: number
+  rotation?: number
+  aspect?: number
+  minZoom?: number
+  maxZoom?: number
+  cropShape?: 'rect' | 'round'
   cropSize?: Size
   objectFit?: 'contain' | 'horizontal-cover' | 'vertical-cover' | 'auto-cover'
   showGrid?: boolean
-  zoomSpeed: number
+  zoomSpeed?: number
   zoomWithScroll?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
@@ -40,17 +40,17 @@ export type CropperProps = {
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
   onMediaLoaded?: (mediaSize: MediaSize) => void
-  style: {
+  style?: {
     containerStyle?: React.CSSProperties
     mediaStyle?: React.CSSProperties
     cropAreaStyle?: React.CSSProperties
   }
-  classes: {
+  classes?: {
     containerClassName?: string
     mediaClassName?: string
     cropAreaClassName?: string
   }
-  restrictPosition: boolean
+  restrictPosition?: boolean
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
   disableAutomaticStylesInjection?: boolean
   initialCroppedAreaPixels?: Area
