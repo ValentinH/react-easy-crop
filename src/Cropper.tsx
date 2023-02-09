@@ -115,6 +115,7 @@ class Cropper extends React.Component<CropperProps, State> {
   wheelTimer: number | null = null
   currentDoc: Document = document
   currentWindow: Window = window
+  resizeObserver: ResizeObserver | null = null
 
   state: State = {
     cropSize: null,
@@ -129,7 +130,12 @@ class Cropper extends React.Component<CropperProps, State> {
       if (this.currentDoc.defaultView) {
         this.currentWindow = this.currentDoc.defaultView
       }
-      this.currentWindow.addEventListener('resize', this.computeSizes)
+
+      this.initResizeObserver()
+      // only add window resize listener if ResizeObserver is not supported. Otherwise, it would be redundant
+      if (typeof window.ResizeObserver === 'undefined') {
+        this.currentWindow.addEventListener('resize', this.computeSizes)
+      }
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
       this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
@@ -161,7 +167,10 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   componentWillUnmount() {
-    this.currentWindow.removeEventListener('resize', this.computeSizes)
+    if (typeof window.ResizeObserver === 'undefined') {
+      this.currentWindow.removeEventListener('resize', this.computeSizes)
+    }
+    this.resizeObserver?.disconnect()
     if (this.containerRef) {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
     }
@@ -201,6 +210,21 @@ class Cropper extends React.Component<CropperProps, State> {
     if (prevProps.video !== this.props.video) {
       this.videoRef.current?.load()
     }
+  }
+
+  initResizeObserver = () => {
+    if (typeof window.ResizeObserver === 'undefined' || !this.containerRef) {
+      return
+    }
+    let isFirstResize = true
+    this.resizeObserver = new window.ResizeObserver((entries) => {
+      if (isFirstResize) {
+        isFirstResize = false // observe() is called on mount, we don't want to trigger a recompute on mount
+        return
+      }
+      this.computeSizes()
+    })
+    this.resizeObserver.observe(this.containerRef)
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
