@@ -3,8 +3,6 @@
     "plugin:@typescript-eslint/recommended",
     "react-app",
     "prettier",
-    "prettier/@typescript-eslint",
-    "prettier/react",
     "plugin:cypress/recommended"
   ],
   "plugins": ["@typescript-eslint/eslint-plugin", "cypress"],

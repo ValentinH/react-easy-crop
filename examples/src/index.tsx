@@ -7,12 +7,12 @@ import './styles.css'
 import Iframe from './iframe'
 
 const TEST_IMAGES = {
-  '/images/dog.jpeg': 'Landscape',
-  '/images/flower.jpeg': 'Portrait',
-  '/images/cat.jpeg': 'Small portrait',
+  './images/dog.jpeg': 'Landscape',
+  './images/flower.jpeg': 'Portrait',
+  './images/cat.jpeg': 'Small portrait',
 
   // Photos used in tests, used to verify values:
-  '/images/2000x1200.jpeg': '2000x1200',
+  './images/2000x1200.jpeg': '2000x1200',
 }
 
 const urlArgs = queryString.parse(window.location.search)
