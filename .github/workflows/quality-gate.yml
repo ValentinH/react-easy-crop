@@ -1,6 +1,11 @@
 name: Quality Gate
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   quality-gate:
@@ -38,3 +43,11 @@ jobs:
 
       - name: Run unit tests
         run: yarn unit
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5.0.5
+        with:
+          start: yarn start:ci
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

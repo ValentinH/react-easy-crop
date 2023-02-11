@@ -1,8 +1,11 @@
 import Cropper, { CropperProps } from './Cropper'
-import { getInitialCropFromCroppedAreaPixels, getInitialCropFromCroppedAreaPercentages } from './helpers'
+import {
+  getInitialCropFromCroppedAreaPixels,
+  getInitialCropFromCroppedAreaPercentages,
+} from './helpers'
 
 export * from './types'
 
-export { CropperProps, getInitialCropFromCroppedAreaPixels, getInitialCropFromCroppedAreaPercentages }
-
+export { getInitialCropFromCroppedAreaPixels, getInitialCropFromCroppedAreaPercentages }
+export type { CropperProps }
 export default Cropper

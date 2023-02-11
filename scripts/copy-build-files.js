@@ -1,6 +1,6 @@
 /* eslint-disable no-console, import/no-extraneous-dependencies */
-import path from 'path'
-import fse from 'fs-extra'
+const path = require('path')
+const fse = require('fs-extra')
 
 async function copyFile(file) {
   const buildPath = path.resolve(__dirname, '../dist/', path.basename(file.to || file.from))
@@ -32,8 +32,8 @@ async function createPackageFile() {
       },
       './react-easy-crop.css': {
         import: './react-easy-crop.css',
-        require: './react-easy-crop.css'
-      }
+        require: './react-easy-crop.css',
+      },
     },
   }
   const buildPath = path.resolve(__dirname, '../dist/package.json')
