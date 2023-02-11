@@ -1,12 +1,10 @@
-import { AutoRc } from 'auto'
+// not using TS anymore due to https://github.com/intuit/auto/issues/2248
 
-import { INpmConfig } from '@auto-it/npm'
-
-const npmOptions: INpmConfig = {
+const npmOptions = {
   publishFolder: './dist',
 }
 
-export default function rc(): AutoRc {
+module.exports = function rc() {
   return {
     shipit: {
       noChangelog: true,

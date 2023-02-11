@@ -10,7 +10,7 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@auto-it/all-contributors@^10.34.0":
+"@auto-it/all-contributors@^10.42.0":
   version "10.42.0"
   resolved "https://registry.yarnpkg.com/@auto-it/all-contributors/-/all-contributors-10.42.0.tgz#8c40b0a64fd066522987d97b2a7643152ef86083"
   integrity sha512-NJnnps/WHcppRdsumsUUO0mBeJroCdqs7AQhhpC330ujpusakS5uXhQthh5bqgDcqa2LjdMgWdVqrZHCSbtF+w==
@@ -79,7 +79,7 @@
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
 
-"@auto-it/first-time-contributor@^10.34.0":
+"@auto-it/first-time-contributor@^10.42.0":
   version "10.42.0"
   resolved "https://registry.yarnpkg.com/@auto-it/first-time-contributor/-/first-time-contributor-10.42.0.tgz#641d2bd94b3c0d07baf198dbcff3be2282242a80"
   integrity sha512-/X0cCNe7l5FOfZZx3oRDtD4fhvnhoAHhiEcT+D1Q0v/b4acr3lS6vRAU3LURG/TBawbrV9KpWufbu/tNIqrIbw==
@@ -119,7 +119,7 @@
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
-"@auto-it/released@10.42.0", "@auto-it/released@^10.34.0":
+"@auto-it/released@10.42.0", "@auto-it/released@^10.42.0":
   version "10.42.0"
   resolved "https://registry.yarnpkg.com/@auto-it/released/-/released-10.42.0.tgz#58087068536ad5c495e93b1427028bf5525bf0cd"
   integrity sha512-iBxXtLfaqXlcHKxl6z2Vi6TfW50qyPetSXvZHyrSw7p+hkQ+4fSIPiNR+bWE/51kD3UbpzIpt22k5xqdi8jzBg==
@@ -2858,7 +2858,7 @@ author-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/author-regex/-/author-regex-1.0.0.tgz#d08885be6b9bbf9439fe087c76287245f0a81450"
   integrity sha512-KbWgR8wOYRAPekEmMXrYYdc7BRyhn2Ftk7KWfMUnQ43hFdojWEFRxhhRUm3/OFEdPa1r0KAvTTg9YQK57xTe0g==
 
-auto@^10.34.0:
+auto@^10.42.0:
   version "10.42.0"
   resolved "https://registry.yarnpkg.com/auto/-/auto-10.42.0.tgz#ff157dafe9366bba6e4f44b9c7451b0e890c4fb0"
   integrity sha512-Yekf1zKXCMI8IuI/uTrHyeGjDUbsby5r9Z2IjAWr02zA6WpkZFz+pxsf+nuOdlg6OM1O7Yy+rFoOF+x0xRkAxA==
