@@ -296,9 +296,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [package]: https://www.npmjs.com/package/react-easy-crop
-[downloads-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
-[npmstats]: http://npm-stat.com/charts.html?package=react-easy-crop&from=2018-06-18
-[npmstats-badge]: https://img.shields.io/npm/dm/react-easy-crop.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/react-easy-crop.svg?style=flat-square
 [brotli-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/umd/react-easy-crop.min.js?compression=brotli&style=flat-square&1
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: https://github.com/ValentinH/react-easy-crop/blob/master/LICENSE
