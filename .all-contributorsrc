@@ -330,6 +330,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "carlosdi0",
+      "name": "carlosdi0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53301152?v=4",
+      "profile": "https://github.com/carlosdi0",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
