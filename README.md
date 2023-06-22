@@ -58,7 +58,7 @@ npm install react-easy-crop --save
 > Thus, you need to wrap it with an element that uses `position: relative` or the Cropper will fill the whole page.
 
 ```js
-import { useState } from 'react'
+import { useState } from 'React'
 import Cropper from 'react-easy-crop'
 
 const Demo = () => {
