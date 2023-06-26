@@ -286,6 +286,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://glendaviesnz.wordpress.com/"><img src="https://avatars.githubusercontent.com/u/3629020?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Glen Davies</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=glendaviesnz" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/carlosdi0"><img src="https://avatars.githubusercontent.com/u/53301152?v=4?s=100" width="100px;" alt=""/><br /><sub><b>carlosdi0</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=carlosdi0" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/huseyinbuyukdere"><img src="https://avatars.githubusercontent.com/u/39594189?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hüseyin Büyükdere</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=huseyinbuyukdere" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
