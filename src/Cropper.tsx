@@ -27,7 +27,7 @@ export type CropperProps = {
   maxZoom: number
   cropShape: 'rect' | 'round'
   cropSize?: Size
-  objectFit?: 'contain' | 'horizontal-cover' | 'vertical-cover' | 'auto-cover'
+  objectFit?: 'contain' | 'cover' | 'horizontal-cover' | 'vertical-cover'
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
@@ -298,6 +298,27 @@ class Cropper extends React.Component<CropperProps, State> {
     return aspect
   }
 
+  getObjectFit() {
+    if (this.props.objectFit === 'cover') {
+      const mediaRef = this.imageRef.current || this.videoRef.current
+
+      if (mediaRef && this.containerRef) {
+        this.containerRect = this.containerRef.getBoundingClientRect()
+        const containerAspect = this.containerRect.width / this.containerRect.height
+        const naturalWidth =
+          this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
+        const naturalHeight =
+          this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
+        const mediaAspect = naturalWidth / naturalHeight
+
+        return mediaAspect < containerAspect ? 'horizontal-cover' : 'vertical-cover'
+      }
+      return 'horizontal-cover'
+    }
+
+    return this.props.objectFit
+  }
+
   computeSizes = () => {
     const mediaRef = this.imageRef.current || this.videoRef.current
 
@@ -321,7 +342,8 @@ class Cropper extends React.Component<CropperProps, State> {
       let renderedMediaSize: Size
 
       if (isMediaScaledDown) {
-        switch (this.props.objectFit) {
+        const objectFit = this.getObjectFit()
+        switch (objectFit) {
           default:
           case 'contain':
             renderedMediaSize =
@@ -346,18 +368,6 @@ class Cropper extends React.Component<CropperProps, State> {
               width: this.containerRect.height * mediaAspect,
               height: this.containerRect.height,
             }
-            break
-          case 'auto-cover':
-            renderedMediaSize =
-              naturalWidth > naturalHeight
-                ? {
-                    width: this.containerRect.width,
-                    height: this.containerRect.width / mediaAspect,
-                  }
-                : {
-                    width: this.containerRect.height * mediaAspect,
-                    height: this.containerRect.height,
-                  }
             break
         }
       } else {
@@ -701,8 +711,9 @@ class Cropper extends React.Component<CropperProps, State> {
       showGrid,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
-      objectFit,
     } = this.props
+
+    const objectFit = this.getObjectFit()
 
     return (
       <div
@@ -721,10 +732,6 @@ class Cropper extends React.Component<CropperProps, State> {
               objectFit === 'contain' && 'reactEasyCrop_Contain',
               objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
               objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
-              objectFit === 'auto-cover' &&
-                (this.mediaSize.naturalWidth > this.mediaSize.naturalHeight
-                  ? 'reactEasyCrop_Cover_Horizontal'
-                  : 'reactEasyCrop_Cover_Vertical'),
               mediaClassName
             )}
             {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
@@ -748,10 +755,6 @@ class Cropper extends React.Component<CropperProps, State> {
                 objectFit === 'contain' && 'reactEasyCrop_Contain',
                 objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
                 objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
-                objectFit === 'auto-cover' &&
-                  (this.mediaSize.naturalWidth > this.mediaSize.naturalHeight
-                    ? 'reactEasyCrop_Cover_Horizontal'
-                    : 'reactEasyCrop_Cover_Vertical'),
                 mediaClassName
               )}
               {...mediaProps}
