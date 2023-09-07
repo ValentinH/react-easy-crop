@@ -116,6 +116,7 @@ class Cropper extends React.Component<CropperProps, State> {
   currentDoc: Document | null = typeof document !== 'undefined' ? document : null
   currentWindow: Window | null = typeof window !== 'undefined' ? window : null
   resizeObserver: ResizeObserver | null = null
+  initialScroll: { scrollX: number, scrollY: number} | null = null
 
   state: State = {
     cropSize: null,
@@ -165,6 +166,8 @@ class Cropper extends React.Component<CropperProps, State> {
     if (this.props.setVideoRef) {
       this.props.setVideoRef(this.videoRef)
     }
+
+    this.initialScroll = {...window};
   }
 
   componentWillUnmount() {
@@ -592,8 +595,8 @@ class Cropper extends React.Component<CropperProps, State> {
       throw new Error('The Cropper is not mounted')
     }
     return {
-      x: this.containerRect.width / 2 - (x - this.containerRect.left),
-      y: this.containerRect.height / 2 - (y - this.containerRect.top),
+      x: this.containerRect.width / 2 - (x - this.containerRect.left + (window.scrollX - this.initialScroll!.scrollX)),
+      y: this.containerRect.height / 2 - (y - this.containerRect.top + (window.scrollY - this.initialScroll!.scrollY)),
     }
   }
 
