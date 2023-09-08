@@ -99,6 +99,7 @@ class Cropper extends React.Component<CropperProps, State> {
 
   imageRef: React.RefObject<HTMLImageElement> = React.createRef()
   videoRef: React.RefObject<HTMLVideoElement> = React.createRef()
+  containerPosition: Point = { x: 0, y: 0 }
   containerRef: HTMLDivElement | null = null
   styleRef: HTMLStyleElement | null = null
   containerRect: DOMRect | null = null
@@ -142,6 +143,8 @@ class Cropper extends React.Component<CropperProps, State> {
       this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
     }
 
+    this.currentDoc.addEventListener('scroll', this.onScroll);
+
     if (!this.props.disableAutomaticStylesInjection) {
       this.styleRef = this.currentDoc.createElement('style')
       this.styleRef.setAttribute('type', 'text/css')
@@ -165,6 +168,7 @@ class Cropper extends React.Component<CropperProps, State> {
     if (this.props.setVideoRef) {
       this.props.setVideoRef(this.videoRef)
     }
+
   }
 
   componentWillUnmount() {
@@ -242,6 +246,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
     this.currentDoc.removeEventListener('gesturemove', this.onGestureMove as EventListener)
     this.currentDoc.removeEventListener('gestureend', this.onGestureEnd as EventListener)
+    this.currentDoc.removeEventListener('scroll', this.onScroll);
   }
 
   clearScrollEvent = () => {
@@ -326,6 +331,7 @@ class Cropper extends React.Component<CropperProps, State> {
 
     if (mediaRef && this.containerRef) {
       this.containerRect = this.containerRef.getBoundingClientRect()
+      this.saveContainerPosition()
       const containerAspect = this.containerRect.width / this.containerRect.height
       const naturalWidth =
         this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
@@ -417,6 +423,13 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
+  saveContainerPosition = () => {
+    if (this.containerRef) {
+      const bounds = this.containerRef.getBoundingClientRect()
+      this.containerPosition = { x: bounds.left, y: bounds.top }
+    }
+  }
+
   static getMousePoint = (e: MouseEvent | React.MouseEvent | GestureEvent) => ({
     x: Number(e.clientX),
     y: Number(e.clientY),
@@ -432,10 +445,17 @@ class Cropper extends React.Component<CropperProps, State> {
     e.preventDefault()
     this.currentDoc.addEventListener('mousemove', this.onMouseMove)
     this.currentDoc.addEventListener('mouseup', this.onDragStopped)
+    this.saveContainerPosition()
     this.onDragStart(Cropper.getMousePoint(e))
   }
 
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
+
+  onScroll = (e: Event) => {
+    if (!this.currentDoc) return
+    e.preventDefault()
+    this.saveContainerPosition()
+  }
 
   onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!this.currentDoc) return
@@ -446,6 +466,8 @@ class Cropper extends React.Component<CropperProps, State> {
 
     this.currentDoc.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     this.currentDoc.addEventListener('touchend', this.onDragStopped)
+    
+    this.saveContainerPosition()
 
     if (e.touches.length === 2) {
       this.onPinchStart(e)
@@ -587,13 +609,13 @@ class Cropper extends React.Component<CropperProps, State> {
     )
   }
 
-  getPointOnContainer = ({ x, y }: Point) => {
+  getPointOnContainer = ({ x, y }: Point, containerTopLeft: Point): Point => {
     if (!this.containerRect) {
       throw new Error('The Cropper is not mounted')
     }
     return {
-      x: this.containerRect.width / 2 - (x - this.containerRect.left),
-      y: this.containerRect.height / 2 - (y - this.containerRect.top),
+      x: this.containerRect.width / 2 - (x - containerTopLeft.x),
+      y: this.containerRect.height / 2 - (y - containerTopLeft.y),
     }
   }
 
@@ -611,7 +633,7 @@ class Cropper extends React.Component<CropperProps, State> {
     const newZoom = clamp(zoom, this.props.minZoom, this.props.maxZoom)
 
     if (shouldUpdatePosition) {
-      const zoomPoint = this.getPointOnContainer(point)
+      const zoomPoint = this.getPointOnContainer(point, this.containerPosition)
       const zoomTarget = this.getPointOnMedia(zoomPoint)
       const requestedPosition = {
         x: zoomTarget.x * newZoom - zoomPoint.x,
