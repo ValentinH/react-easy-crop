@@ -348,6 +348,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "pontusdacke",
+      "name": "Pontus Magnusson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2884998?v=4",
+      "profile": "https://github.com/pontusdacke",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
