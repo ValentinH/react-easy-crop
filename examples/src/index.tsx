@@ -236,13 +236,12 @@ class App extends React.Component<{}, State> {
                 min={1}
                 max={3}
                 step={0.1}
-                list="rotation-detents"
-                //value={this.state.zoom}
+                list="rotation-detents"             
                 onChange={({ target: { value: zoom } }) =>
                   this.setState({ zoom: Number(zoom) })
                 }
               />
-              {this.state.zoom}°
+              {this.state.zoom}
             </label>
 
             <datalist id="rotation-detents">
