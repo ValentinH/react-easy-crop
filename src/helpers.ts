@@ -275,7 +275,7 @@ export function getRadianAngle(degreeValue: number) {
  * Returns the new bounding area of a rotated rectangle.
  */
 export function rotateSize(width: number, height: number, rotation: number): Size {
-  const rotRad = getRadianAngle(rotation)
+  const rotRad =  getRadianAngle(rotation)
 
   return {
     width: Math.abs(Math.cos(rotRad) * width) + Math.abs(Math.sin(rotRad) * height),

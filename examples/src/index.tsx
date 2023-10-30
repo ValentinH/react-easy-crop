@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce'
 import Cropper, { Area, Point } from '../../src/index'
 import './styles.css'
 import Iframe from './iframe'
+import Slider from 'react-slider'
 
 const TEST_IMAGES = {
   './images/dog.jpeg': 'Landscape',
@@ -60,6 +61,7 @@ const debouncedUpdateHash = debounce(
 )
 
 class App extends React.Component<{}, State> {
+  
   constructor(props: {}) {
     super(props)
 
@@ -178,6 +180,7 @@ class App extends React.Component<{}, State> {
     })
   }
 
+
   render() {
     if (this.state.iframed) {
       return (
@@ -211,6 +214,7 @@ class App extends React.Component<{}, State> {
         <div className="controls">
           <div>
             <label>
+              Rotation
               <input
                 type="range"
                 min={0}
@@ -223,6 +227,24 @@ class App extends React.Component<{}, State> {
               />
               {this.state.rotation}°
             </label>
+
+            
+            <label>
+              Zoom
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.1}
+                list="rotation-detents"
+                //value={this.state.zoom}
+                onChange={({ target: { value: zoom } }) =>
+                  this.setState({ zoom: Number(zoom) })
+                }
+              />
+              {this.state.zoom}°
+            </label>
+
             <datalist id="rotation-detents">
               <option value="90" />
               <option value="180" />
