@@ -87,6 +87,13 @@ const Demo = () => {
 
 This component requires some styles to be available in the document. By default, you don't need to do anything, the component will automatically inject the required styles in the document head. If you want to disable this behaviour and manually inject the CSS, you can set the `disableAutomaticStylesInjection` prop to `true` and use the file available in the package: `react-easy-crop/react-easy-crop.css`.
 
+## Known issues
+
+### The cropper size isn't correct when displayed in a modal
+
+If you are using the Cropper inside a modal, you should ensure that there is no opening animation that is changing the modal dimensions (scaling effect). Fading or sliding animations are fine.
+See [#428](https://github.com/ValentinH/react-easy-crop/issues/428), [#409](https://github.com/ValentinH/react-easy-crop/issues/409),  [#267](https://github.com/ValentinH/react-easy-crop/issues/267) or [#400](https://github.com/ValentinH/react-easy-crop/issues/400) for more details.
+
 ## Props
 
 | Prop                                                                      | Type                                                                                | Required | Description                                                                                                                                                                                                                                                                                                                                                                                                |
