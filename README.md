@@ -8,7 +8,7 @@ A React component to crop images/videos with easy interactions
   <img src="https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif" alt="Demo GIF" />
 </p>
 
-[![react-easy-crop npminsights.com](https://npminsights.com/api/package/readme-image/react-easy-crop?v=2023-02-22)](https://npminsights.com/package/react-easy-crop)
+[![react-easy-crop npminsights](https://npminsights.vercel.app/api/package/readme-image/react-easy-crop?v=2023-02-22)](https://npminsights.vercel.app/package/react-easy-crop)
 
 ## Demo
 
