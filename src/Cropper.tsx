@@ -67,6 +67,7 @@ export type CropperProps = {
 type State = {
   cropSize: Size | null
   hasWheelJustStarted: boolean
+  mediaObjectFit: String | undefined
 }
 
 const MIN_ZOOM = 1
@@ -121,6 +122,7 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
+    mediaObjectFit: undefined
   }
 
   componentDidMount() {
@@ -217,6 +219,11 @@ class Cropper extends React.Component<CropperProps, State> {
     }
     if (prevProps.video !== this.props.video) {
       this.videoRef.current?.load()
+    }
+
+    const objectFit = this.getObjectFit();
+    if (objectFit !== this.state.mediaObjectFit) {
+      this.setState({mediaObjectFit: objectFit}, this.computeSizes)
     }
   }
 
@@ -350,8 +357,7 @@ class Cropper extends React.Component<CropperProps, State> {
       let renderedMediaSize: Size
 
       if (isMediaScaledDown) {
-        const objectFit = this.getObjectFit()
-        switch (objectFit) {
+        switch (this.state.mediaObjectFit) {
           default:
           case 'contain':
             renderedMediaSize =
@@ -737,7 +743,7 @@ class Cropper extends React.Component<CropperProps, State> {
       classes: { containerClassName, cropAreaClassName, mediaClassName },
     } = this.props
 
-    const objectFit = this.getObjectFit()
+    const objectFit = this.state.mediaObjectFit;
 
     return (
       <div
