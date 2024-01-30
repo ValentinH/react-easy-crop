@@ -35,6 +35,12 @@ Check out the examples:
 - Supports any videos format supported in HTML5
 - Mobile friendly
 
+**If react-easy-crop doesn't cover your needs we recommend taking a look at [Pintura](https://pqina.nl/pintura/?ref=reacteasycrop)**
+
+Pintura features cropping, rotating, flipping, filtering, annotating, and lots of additional functionality to cover all your image and video editing needs on both mobile and desktop devices.
+
+**[Learn more about Pintura](https://pqina.nl/pintura/?ref=reacteasycrop)**
+
 ## Video tutorials from the community
 
 - [Create an image gallery with live cropping](https://www.youtube.com/watch?v=E_AHkWHhUz4) By [Coding With Adam](https://youtube.com/c/codingwithadam)
