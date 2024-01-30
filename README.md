@@ -303,6 +303,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/huseyinbuyukdere"><img src="https://avatars.githubusercontent.com/u/39594189?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hüseyin Büyükdere</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=huseyinbuyukdere" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/pontusdacke"><img src="https://avatars.githubusercontent.com/u/2884998?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pontus Magnusson</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=pontusdacke" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/kruchkou"><img src="https://avatars.githubusercontent.com/u/45610004?v=4?s=100" width="100px;" alt=""/><br /><sub><b>kruchkou</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=kruchkou" title="Code">💻</a></td>
+    <td align="center"><a href="https://pqina.nl/"><img src="https://avatars.githubusercontent.com/u/1132575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rik</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=rikschennink" title="Documentation">📖</a></td>
   </tr>
 </table>
 

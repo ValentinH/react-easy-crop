@@ -366,6 +366,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rikschennink",
+      "name": "Rik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1132575?v=4",
+      "profile": "https://pqina.nl/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
