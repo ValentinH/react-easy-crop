@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import normalizeWheel from 'normalize-wheel'
 import { Area, MediaSize, Point, Size, VideoSrc } from './types'
 import {
@@ -122,7 +122,7 @@ class Cropper extends React.Component<CropperProps, State> {
   state: State = {
     cropSize: null,
     hasWheelJustStarted: false,
-    mediaObjectFit: undefined
+    mediaObjectFit: undefined,
   }
 
   componentDidMount() {
@@ -145,7 +145,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
     }
 
-    this.currentDoc.addEventListener('scroll', this.onScroll);
+    this.currentDoc.addEventListener('scroll', this.onScroll)
 
     if (!this.props.disableAutomaticStylesInjection) {
       this.styleRef = this.currentDoc.createElement('style')
@@ -170,7 +170,6 @@ class Cropper extends React.Component<CropperProps, State> {
     if (this.props.setVideoRef) {
       this.props.setVideoRef(this.videoRef)
     }
-
   }
 
   componentWillUnmount() {
@@ -221,9 +220,9 @@ class Cropper extends React.Component<CropperProps, State> {
       this.videoRef.current?.load()
     }
 
-    const objectFit = this.getObjectFit();
+    const objectFit = this.getObjectFit()
     if (objectFit !== this.state.mediaObjectFit) {
-      this.setState({mediaObjectFit: objectFit}, this.computeSizes)
+      this.setState({ mediaObjectFit: objectFit }, this.computeSizes)
     }
   }
 
@@ -253,7 +252,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
     this.currentDoc.removeEventListener('gesturemove', this.onGestureMove as EventListener)
     this.currentDoc.removeEventListener('gestureend', this.onGestureEnd as EventListener)
-    this.currentDoc.removeEventListener('scroll', this.onScroll);
+    this.currentDoc.removeEventListener('scroll', this.onScroll)
   }
 
   clearScrollEvent = () => {
@@ -472,7 +471,7 @@ class Cropper extends React.Component<CropperProps, State> {
 
     this.currentDoc.addEventListener('touchmove', this.onTouchMove, { passive: false }) // iOS 11 now defaults to passive: true
     this.currentDoc.addEventListener('touchend', this.onDragStopped)
-    
+
     this.saveContainerPosition()
 
     if (e.touches.length === 2) {
@@ -743,7 +742,7 @@ class Cropper extends React.Component<CropperProps, State> {
       classes: { containerClassName, cropAreaClassName, mediaClassName },
     } = this.props
 
-    const objectFit = this.state.mediaObjectFit;
+    const objectFit = this.state.mediaObjectFit
 
     return (
       <div
