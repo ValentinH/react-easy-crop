@@ -51,9 +51,9 @@
     "tslib": "2.0.1"
   },
   "devDependencies": {
-    "@auto-it/all-contributors": "^10.42.0",
-    "@auto-it/first-time-contributor": "^10.42.0",
-    "@auto-it/released": "^10.42.0",
+    "@auto-it/all-contributors": "11.1.2",
+    "@auto-it/first-time-contributor": "11.1.2",
+    "@auto-it/released": "11.1.2",
     "@percy/cli": "^1.0.0-beta.71",
     "@percy/cypress": "^3.1.1",
     "@types/jest": "^29.4.0",
@@ -63,7 +63,7 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "all-contributors-cli": "^6.4.0",
-    "auto": "^10.42.0",
+    "auto": "11.1.2",
     "bili": "^5.0.5",
     "cypress": "^5.2.0",
     "eslint": "^8.34.0",
