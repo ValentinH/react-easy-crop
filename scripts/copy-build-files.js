@@ -22,7 +22,7 @@ async function createPackageFile() {
     exports: {
       '.': {
         import: {
-          types: './index.d.mts',
+          types: './index.module.d.mts',
           default: './index.module.mjs',
         },
         require: {
