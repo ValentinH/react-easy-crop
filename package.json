@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "normalize-wheel": "^1.0.1",
-    "tslib": "2.0.1"
+    "tslib": "^2.0.1"
   },
   "devDependencies": {
     "@auto-it/all-contributors": "11.1.2",
