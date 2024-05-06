@@ -13,3 +13,6 @@ yalc.lock
 .DS_Store
 
 .env
+
+# see https://github.com/intuit/auto/issues/2457
+.nx 

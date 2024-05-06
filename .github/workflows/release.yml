@@ -27,8 +27,6 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - run: rm -rf .nx
-
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
