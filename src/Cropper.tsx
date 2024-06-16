@@ -777,6 +777,7 @@ class Cropper extends React.Component<CropperProps, State> {
           video && (
             <video
               autoPlay
+              playsInline
               loop
               muted={true}
               className={classNames(
