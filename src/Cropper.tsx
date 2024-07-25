@@ -742,7 +742,7 @@ class Cropper extends React.Component<CropperProps, State> {
       classes: { containerClassName, cropAreaClassName, mediaClassName },
     } = this.props
 
-    const objectFit = this.state.mediaObjectFit
+    const objectFit = this.state.mediaObjectFit ?? this.getObjectFit()
 
     return (
       <div
