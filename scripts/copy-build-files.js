@@ -17,18 +17,18 @@ async function createPackageFile() {
     jest: undefined,
     'lint-staged': undefined,
     main: './index.js',
-    'umd:main': './umd/react-easy-crop.js',
-    unpkg: './umd/react-easy-crop.js',
-    jsdelivr: './umd/react-easy-crop.js',
-    module: './index.module.js',
-    'jsnext:main': './index.module.js',
-    'react-native': './index.module.js',
+    module: './index.module.mjs',
     types: './index.d.ts',
     exports: {
       '.': {
-        import: './index.module.js',
-        require: './index.js',
-        types: './index.d.ts',
+        import: {
+          types: './index.module.d.mts',
+          default: './index.module.mjs',
+        },
+        require: {
+          types: './index.d.ts',
+          default: './index.js',
+        },
       },
       './react-easy-crop.css': {
         import: './react-easy-crop.css',
@@ -50,6 +50,7 @@ async function run() {
       { from: './README.md' },
       { from: './LICENSE' },
       { from: './src/styles.css', to: 'react-easy-crop.css' },
+      { from: './dist/index.d.ts', to: './dist/index.module.d.mts' },
     ].map((file) => copyFile(file))
   )
   await createPackageFile()
