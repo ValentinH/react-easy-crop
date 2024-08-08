@@ -62,6 +62,7 @@ export type CropperProps = {
   setMediaSize?: (size: MediaSize) => void
   setCropSize?: (size: Size) => void
   nonce?: string
+  manualResize?: boolean
 }
 
 type State = {
@@ -96,6 +97,7 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    manualResize: false,
   }
 
   imageRef: React.RefObject<HTMLImageElement> = React.createRef()
@@ -120,6 +122,7 @@ class Cropper extends React.Component<CropperProps, State> {
   resizeObserver: ResizeObserver | null = null
 
   state: State = {
+    isResizing: false,
     cropSize: null,
     hasWheelJustStarted: false,
     mediaObjectFit: undefined,
@@ -141,7 +144,7 @@ class Cropper extends React.Component<CropperProps, State> {
         this.currentWindow.addEventListener('resize', this.computeSizes)
       }
       this.props.zoomWithScroll &&
-        this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
+      this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
       this.containerRef.addEventListener('gesturestart', this.onGestureStart as EventListener)
     }
 
@@ -201,20 +204,20 @@ class Cropper extends React.Component<CropperProps, State> {
     } else if (prevProps.zoom !== this.props.zoom) {
       this.recomputeCropPosition()
     } else if (
-      prevProps.cropSize?.height !== this.props.cropSize?.height ||
-      prevProps.cropSize?.width !== this.props.cropSize?.width
+        prevProps.cropSize?.height !== this.props.cropSize?.height ||
+        prevProps.cropSize?.width !== this.props.cropSize?.width
     ) {
       this.computeSizes()
     } else if (
-      prevProps.crop?.x !== this.props.crop?.x ||
-      prevProps.crop?.y !== this.props.crop?.y
+        prevProps.crop?.x !== this.props.crop?.x ||
+        prevProps.crop?.y !== this.props.crop?.y
     ) {
       this.emitCropAreaChange()
     }
     if (prevProps.zoomWithScroll !== this.props.zoomWithScroll && this.containerRef) {
       this.props.zoomWithScroll
-        ? this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
-        : this.clearScrollEvent()
+          ? this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
+          : this.clearScrollEvent()
     }
     if (prevProps.video !== this.props.video) {
       this.videoRef.current?.load()
@@ -278,24 +281,24 @@ class Cropper extends React.Component<CropperProps, State> {
   setInitialCrop = (cropSize: Size) => {
     if (this.props.initialCroppedAreaPercentages) {
       const { crop, zoom } = getInitialCropFromCroppedAreaPercentages(
-        this.props.initialCroppedAreaPercentages,
-        this.mediaSize,
-        this.props.rotation,
-        cropSize,
-        this.props.minZoom,
-        this.props.maxZoom
+          this.props.initialCroppedAreaPercentages,
+          this.mediaSize,
+          this.props.rotation,
+          cropSize,
+          this.props.minZoom,
+          this.props.maxZoom
       )
 
       this.props.onCropChange(crop)
       this.props.onZoomChange && this.props.onZoomChange(zoom)
     } else if (this.props.initialCroppedAreaPixels) {
       const { crop, zoom } = getInitialCropFromCroppedAreaPixels(
-        this.props.initialCroppedAreaPixels,
-        this.mediaSize,
-        this.props.rotation,
-        cropSize,
-        this.props.minZoom,
-        this.props.maxZoom
+          this.props.initialCroppedAreaPixels,
+          this.mediaSize,
+          this.props.rotation,
+          cropSize,
+          this.props.minZoom,
+          this.props.maxZoom
       )
 
       this.props.onCropChange(crop)
@@ -319,9 +322,9 @@ class Cropper extends React.Component<CropperProps, State> {
         this.containerRect = this.containerRef.getBoundingClientRect()
         const containerAspect = this.containerRect.width / this.containerRect.height
         const naturalWidth =
-          this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
+            this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
         const naturalHeight =
-          this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
+            this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
         const mediaAspect = naturalWidth / naturalHeight
 
         return mediaAspect < containerAspect ? 'horizontal-cover' : 'vertical-cover'
@@ -340,11 +343,11 @@ class Cropper extends React.Component<CropperProps, State> {
       this.saveContainerPosition()
       const containerAspect = this.containerRect.width / this.containerRect.height
       const naturalWidth =
-        this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
+          this.imageRef.current?.naturalWidth || this.videoRef.current?.videoWidth || 0
       const naturalHeight =
-        this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
+          this.imageRef.current?.naturalHeight || this.videoRef.current?.videoHeight || 0
       const isMediaScaledDown =
-        mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
+          mediaRef.offsetWidth < naturalWidth || mediaRef.offsetHeight < naturalHeight
       const mediaAspect = naturalWidth / naturalHeight
 
       // We do not rely on the offsetWidth/offsetHeight if the media is scaled down
@@ -360,15 +363,15 @@ class Cropper extends React.Component<CropperProps, State> {
           default:
           case 'contain':
             renderedMediaSize =
-              containerAspect > mediaAspect
-                ? {
-                    width: this.containerRect.height * mediaAspect,
-                    height: this.containerRect.height,
-                  }
-                : {
-                    width: this.containerRect.width,
-                    height: this.containerRect.width / mediaAspect,
-                  }
+                containerAspect > mediaAspect
+                    ? {
+                      width: this.containerRect.height * mediaAspect,
+                      height: this.containerRect.height,
+                    }
+                    : {
+                      width: this.containerRect.width,
+                      height: this.containerRect.width / mediaAspect,
+                    }
             break
           case 'horizontal-cover':
             renderedMediaSize = {
@@ -402,19 +405,19 @@ class Cropper extends React.Component<CropperProps, State> {
       }
 
       const cropSize = this.props.cropSize
-        ? this.props.cropSize
-        : getCropSize(
-            this.mediaSize.width,
-            this.mediaSize.height,
-            this.containerRect.width,
-            this.containerRect.height,
-            this.props.aspect,
-            this.props.rotation
+          ? this.props.cropSize
+          : getCropSize(
+              this.mediaSize.width,
+              this.mediaSize.height,
+              this.containerRect.width,
+              this.containerRect.height,
+              this.props.aspect,
+              this.props.rotation
           )
 
       if (
-        this.state.cropSize?.height !== cropSize.height ||
-        this.state.cropSize?.width !== cropSize.width
+          this.state.cropSize?.height !== cropSize.height ||
+          this.state.cropSize?.width !== cropSize.width
       ) {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
@@ -541,14 +544,14 @@ class Cropper extends React.Component<CropperProps, State> {
       }
 
       const newPosition = this.props.restrictPosition
-        ? restrictPosition(
-            requestedPosition,
-            this.mediaSize,
-            this.state.cropSize,
-            this.props.zoom,
-            this.props.rotation
+          ? restrictPosition(
+              requestedPosition,
+              this.mediaSize,
+              this.state.cropSize,
+              this.props.zoom,
+              this.props.rotation
           )
-        : requestedPosition
+          : requestedPosition
       this.props.onCropChange(newPosition)
     })
   }
@@ -609,8 +612,8 @@ class Cropper extends React.Component<CropperProps, State> {
       clearTimeout(this.wheelTimer)
     }
     this.wheelTimer = this.currentWindow.setTimeout(
-      () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd?.()),
-      250
+        () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd?.()),
+        250
     )
   }
 
@@ -646,14 +649,14 @@ class Cropper extends React.Component<CropperProps, State> {
       }
 
       const newPosition = this.props.restrictPosition
-        ? restrictPosition(
-            requestedPosition,
-            this.mediaSize,
-            this.state.cropSize,
-            newZoom,
-            this.props.rotation
+          ? restrictPosition(
+              requestedPosition,
+              this.mediaSize,
+              this.state.cropSize,
+              newZoom,
+              this.props.rotation
           )
-        : requestedPosition
+          : requestedPosition
 
       this.props.onCropChange(newPosition)
     }
@@ -667,22 +670,22 @@ class Cropper extends React.Component<CropperProps, State> {
 
     // this is to ensure the crop is correctly restricted after a zoom back (https://github.com/ValentinH/react-easy-crop/issues/6)
     const restrictedPosition = this.props.restrictPosition
-      ? restrictPosition(
-          this.props.crop,
-          this.mediaSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
+        ? restrictPosition(
+            this.props.crop,
+            this.mediaSize,
+            this.state.cropSize,
+            this.props.zoom,
+            this.props.rotation
         )
-      : this.props.crop
+        : this.props.crop
     return computeCroppedArea(
-      restrictedPosition,
-      this.mediaSize,
-      this.state.cropSize,
-      this.getAspect(),
-      this.props.zoom,
-      this.props.rotation,
-      this.props.restrictPosition
+        restrictedPosition,
+        this.mediaSize,
+        this.state.cropSize,
+        this.getAspect(),
+        this.props.zoom,
+        this.props.rotation,
+        this.props.restrictPosition
     )
   }
 
@@ -714,19 +717,53 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!this.state.cropSize) return
 
     const newPosition = this.props.restrictPosition
-      ? restrictPosition(
-          this.props.crop,
-          this.mediaSize,
-          this.state.cropSize,
-          this.props.zoom,
-          this.props.rotation
+        ? restrictPosition(
+            this.props.crop,
+            this.mediaSize,
+            this.state.cropSize,
+            this.props.zoom,
+            this.props.rotation
         )
-      : this.props.crop
+        : this.props.crop
 
     this.props.onCropChange(newPosition)
     this.emitCropData()
   }
 
+  onManualResize(e, position) {
+    if (this.state.isResizing) {
+      let movementX, movementY;
+
+      switch (position) {
+        case 'topLeft':
+          movementX = this.state.cropSize?.width - e.movementX * 2
+          movementY = this.state.cropSize?.height - e.movementY * 2
+          break
+
+        case 'topRight':
+          movementX = this.state.cropSize?.width + e.movementX * 2
+          movementY = this.state.cropSize?.height - e.movementY * 2
+          break
+        case 'bottomLeft':
+          movementX = this.state.cropSize?.width - e.movementX * 2
+          movementY = this.state.cropSize?.height + e.movementY * 2
+          break
+        case 'bottomRight':
+          movementX = this.state.cropSize?.width + e.movementX * 2
+          movementY = this.state.cropSize?.height + e.movementY * 2
+          break
+      }
+      this.setState({
+        cropSize: {
+          width: movementX,
+          height: movementY
+        }
+      })
+    }
+  }
+
+
+// Example usage: Simulate mouse move to (150, 150)
   render() {
     const {
       image,
@@ -745,82 +782,110 @@ class Cropper extends React.Component<CropperProps, State> {
     const objectFit = this.state.mediaObjectFit ?? this.getObjectFit()
 
     return (
-      <div
-        onMouseDown={this.onMouseDown}
-        onTouchStart={this.onTouchStart}
-        ref={(el) => (this.containerRef = el)}
-        data-testid="container"
-        style={containerStyle}
-        className={classNames('reactEasyCrop_Container', containerClassName)}
-      >
-        {image ? (
-          <img
-            alt=""
-            className={classNames(
-              'reactEasyCrop_Image',
-              objectFit === 'contain' && 'reactEasyCrop_Contain',
-              objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
-              objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
-              mediaClassName
-            )}
-            {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
-            src={image}
-            ref={this.imageRef}
-            style={{
-              ...mediaStyle,
-              transform:
-                transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+        <div
+            onMouseUp={() => {
+              this.setState({isResizing: false})
             }}
-            onLoad={this.onMediaLoad}
-          />
-        ) : (
-          video && (
-            <video
-              autoPlay
-              playsInline
-              loop
-              muted={true}
-              className={classNames(
-                'reactEasyCrop_Video',
-                objectFit === 'contain' && 'reactEasyCrop_Contain',
-                objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
-                objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
-                mediaClassName
-              )}
-              {...mediaProps}
-              ref={this.videoRef}
-              onLoadedMetadata={this.onMediaLoad}
-              style={{
-                ...mediaStyle,
-                transform:
-                  transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
-              }}
-              controls={false}
-            >
-              {(Array.isArray(video) ? video : [{ src: video }]).map((item) => (
-                <source key={item.src} {...item} />
-              ))}
-            </video>
-          )
-        )}
-        {this.state.cropSize && (
-          <div
-            style={{
-              ...cropAreaStyle,
-              width: this.state.cropSize.width,
-              height: this.state.cropSize.height,
-            }}
-            data-testid="cropper"
-            className={classNames(
-              'reactEasyCrop_CropArea',
-              cropShape === 'round' && 'reactEasyCrop_CropAreaRound',
-              showGrid && 'reactEasyCrop_CropAreaGrid',
-              cropAreaClassName
-            )}
-          />
-        )}
-      </div>
+            onMouseDown={this.onMouseDown}
+            onTouchStart={this.onTouchStart}
+            ref={(el) => (this.containerRef = el)}
+            data-testid="container"
+            style={containerStyle}
+            className={classNames('reactEasyCrop_Container', containerClassName)}
+        >
+          {image ? (
+              <img
+                  alt=""
+                  className={classNames(
+                      'reactEasyCrop_Image',
+                      objectFit === 'contain' && 'reactEasyCrop_Contain',
+                      objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
+                      objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
+                      mediaClassName
+                  )}
+                  {...(mediaProps as React.ImgHTMLAttributes<HTMLElement>)}
+                  src={image}
+                  ref={this.imageRef}
+                  style={{
+                    ...mediaStyle,
+                    transform:
+                        transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+                  }}
+                  onLoad={this.onMediaLoad}
+              />
+          ) : (
+              video && (
+                  <video
+                      autoPlay
+                      playsInline
+                      loop
+                      muted={true}
+                      className={classNames(
+                          'reactEasyCrop_Video',
+                          objectFit === 'contain' && 'reactEasyCrop_Contain',
+                          objectFit === 'horizontal-cover' && 'reactEasyCrop_Cover_Horizontal',
+                          objectFit === 'vertical-cover' && 'reactEasyCrop_Cover_Vertical',
+                          mediaClassName
+                      )}
+                      {...mediaProps}
+                      ref={this.videoRef}
+                      onLoadedMetadata={this.onMediaLoad}
+                      style={{
+                        ...mediaStyle,
+                        transform:
+                            transform || `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${zoom})`,
+                      }}
+                      controls={false}
+                  >
+                    {(Array.isArray(video) ? video : [{ src: video }]).map((item) => (
+                        <source key={item.src} {...item} />
+                    ))}
+                  </video>
+              )
+          )}
+          {this.state.cropSize && (
+              <>
+                <div
+                    style={{
+                      ...cropAreaStyle,
+                      width: this.state.cropSize.width,
+                      height: this.state.cropSize.height,
+                    }}
+                    data-testid="cropper"
+                    className={classNames(
+                        'reactEasyCrop_CropArea',
+                        cropShape === 'round' && 'reactEasyCrop_CropAreaRound',
+                        showGrid && 'reactEasyCrop_CropAreaGrid',
+                        cropAreaClassName
+                    )}
+                />
+                {this.props.manualResize &&   <div
+                    style={{
+                      width: this.state.cropSize.width,
+                      height: this.state.cropSize.height,
+                      border: '2px solid gray'
+                    }}
+                    className={'reactEasyCrop_CropArea'}>
+                  {['topLeft', 'topRight', 'bottomLeft', 'bottomRight'].map(position => (
+                      <div
+                          key={position}
+                          onMouseDown={() => {
+                            this.setState({isResizing: true})
+                          }}
+                          onMouseMove={(e) => this.onManualResize(e, position)}
+                          className={'cropFrameControl ' + position}
+                      >
+                      </div>
+                  ))}
+
+
+                </div>}
+              </>
+          )}
+
+        </div>
     )
+
   }
 }
 
