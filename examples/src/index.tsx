@@ -345,6 +345,7 @@ class App extends React.Component<{}, State> {
         </div>
         <div className="crop-container">
           <Cropper
+            manualResize
             image={this.state.imageSrc}
             crop={this.state.crop}
             rotation={this.state.rotation}

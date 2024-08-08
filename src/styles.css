@@ -78,3 +78,44 @@
   border-left: 0;
   border-right: 0;
 }
+
+.cropFrameControl{
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: 5px solid transparent;
+
+  z-index: 211;
+
+}
+.cropFrameControl.topLeft{
+  border-left-color: white;
+  border-top-color: white;
+
+  cursor: nwse-resize;
+}
+
+.cropFrameControl.topRight{
+  right: 0;
+  border-right-color: white;
+  border-top-color: white;
+  cursor: nesw-resize;
+}
+
+.cropFrameControl.bottomRight{
+  right: 0;
+  bottom: 0;
+  border-right-color: white;
+  border-bottom-color: white;
+  cursor: nwse-resize;
+}
+
+.cropFrameControl.bottomLeft{
+  cursor: nesw-resize;
+  border-left-color: white;
+  border-bottom-color: white;
+  left: 0;
+  bottom: 0;
+
+}
