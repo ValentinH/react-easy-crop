@@ -74,7 +74,7 @@ class App extends React.Component<{}, State> {
       const hashArray = window.location.hash.slice(1).split(',')
 
       if (hashArray.length === hashNames.length) {
-        const hashInfo = {} as Record<(typeof hashNames)[number], string>
+        const hashInfo = {} as Record<typeof hashNames[number], string>
         hashNames.forEach((key, index) => (hashInfo[key] = hashArray[index]))
 
         const {
