@@ -62,6 +62,7 @@ export type CropperProps = {
   setMediaSize?: (size: MediaSize) => void
   setCropSize?: (size: Size) => void
   nonce?: string
+  keyboardStep: number
 }
 
 type State = {
@@ -72,6 +73,7 @@ type State = {
 
 const MIN_ZOOM = 1
 const MAX_ZOOM = 3
+const KEYBOARD_STEP = 1
 
 type GestureEvent = UIEvent & {
   rotation: number
@@ -96,6 +98,7 @@ class Cropper extends React.Component<CropperProps, State> {
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
+    keyboardStep: KEYBOARD_STEP,
   }
 
   imageRef: React.RefObject<HTMLImageElement> = React.createRef()
@@ -727,6 +730,38 @@ class Cropper extends React.Component<CropperProps, State> {
     this.emitCropData()
   }
 
+  onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const { crop, onCropChange, keyboardStep, zoom, rotation } = this.props
+    const step = keyboardStep
+
+    if (!this.state.cropSize) return
+
+    let newCrop = { ...crop }
+
+    switch (event.key) {
+      case 'ArrowUp':
+        newCrop.y -= step
+        break
+      case 'ArrowDown':
+        newCrop.y += step
+        break
+      case 'ArrowLeft':
+        newCrop.x -= step
+        break
+      case 'ArrowRight':
+        newCrop.x += step
+        break
+      default:
+        return
+    }
+
+    if (this.props.restrictPosition) {
+      newCrop = restrictPosition(newCrop, this.mediaSize, this.state.cropSize, zoom, rotation)
+    }
+
+    onCropChange(newCrop)
+  }
+
   render() {
     const {
       image,
@@ -810,6 +845,8 @@ class Cropper extends React.Component<CropperProps, State> {
               width: this.state.cropSize.width,
               height: this.state.cropSize.height,
             }}
+            tabIndex={0}
+            onKeyDown={this.onKeyDown}
             data-testid="cropper"
             className={classNames(
               'reactEasyCrop_CropArea',
