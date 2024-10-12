@@ -23,7 +23,7 @@ const config: Config = {
       config.output.fileName = 'umd/react-easy-crop[min].js'
     }
     if (format === 'esm') {
-      config.output.fileName = '[name].module.js'
+      config.output.fileName = '[name].module.mjs'
     }
     return config
   },
