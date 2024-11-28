@@ -309,6 +309,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/thomasjohansen"><img src="https://avatars.githubusercontent.com/u/4906479?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Thomas Johansen</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=thomasjohansen" title="Code">💻</a></td>
     <td align="center"><a href="https://joseguardiola.dev/"><img src="https://avatars.githubusercontent.com/u/11366193?v=4?s=100" width="100px;" alt=""/><br /><sub><b>José Guardiola</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=JGuardiola95" title="Code">💻</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=JGuardiola95" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/IanSymplectic"><img src="https://avatars.githubusercontent.com/u/1984952?v=4?s=100" width="100px;" alt=""/><br /><sub><b>IanSymplectic</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=IanSymplectic" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
