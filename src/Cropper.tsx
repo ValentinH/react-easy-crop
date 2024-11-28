@@ -732,24 +732,33 @@ class Cropper extends React.Component<CropperProps, State> {
 
   onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const { crop, onCropChange, keyboardStep, zoom, rotation } = this.props
-    const step = keyboardStep
+    let step = keyboardStep
 
     if (!this.state.cropSize) return
+
+    // if the shift key is pressed, reduce the step to allow finer control
+    if (event.shiftKey) {
+      step *= 0.2
+    }
 
     let newCrop = { ...crop }
 
     switch (event.key) {
       case 'ArrowUp':
         newCrop.y -= step
+        event.preventDefault()
         break
       case 'ArrowDown':
         newCrop.y += step
+        event.preventDefault()
         break
       case 'ArrowLeft':
         newCrop.x -= step
+        event.preventDefault()
         break
       case 'ArrowRight':
         newCrop.x += step
+        event.preventDefault()
         break
       default:
         return
