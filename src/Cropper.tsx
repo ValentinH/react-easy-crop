@@ -731,7 +731,7 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const { crop, onCropChange, keyboardStep, zoom, rotation } = this.props
+    const { crop, onCropChange, keyboardStep = Cropper.defaultProps.keyboardStep, zoom, rotation } = this.props
     let step = keyboardStep
 
     if (!this.state.cropSize) return
