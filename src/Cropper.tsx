@@ -62,7 +62,7 @@ export type CropperProps = {
   setMediaSize?: (size: MediaSize) => void
   setCropSize?: (size: Size) => void
   nonce?: string
-  keyboardStep: number
+  keyboardStep?: number
 }
 
 type State = {
