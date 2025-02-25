@@ -52,6 +52,7 @@ export type CropperProps = {
   }
   restrictPosition: boolean
   mediaProps: React.ImgHTMLAttributes<HTMLElement> | React.VideoHTMLAttributes<HTMLElement>
+  cropperProps: React.HTMLAttributes<HTMLDivElement>
   disableAutomaticStylesInjection?: boolean
   initialCroppedAreaPixels?: Area
   initialCroppedAreaPercentages?: Area
@@ -96,6 +97,7 @@ class Cropper extends React.Component<CropperProps, State> {
     style: {},
     classes: {},
     mediaProps: {},
+    cropperProps: {},
     zoomSpeed: 1,
     restrictPosition: true,
     zoomWithScroll: true,
@@ -801,6 +803,7 @@ class Cropper extends React.Component<CropperProps, State> {
       image,
       video,
       mediaProps,
+      cropperProps,
       transform,
       crop: { x, y },
       rotation,
@@ -890,6 +893,7 @@ class Cropper extends React.Component<CropperProps, State> {
               showGrid && 'reactEasyCrop_CropAreaGrid',
               cropAreaClassName
             )}
+            {...cropperProps}
           />
         )}
       </div>
