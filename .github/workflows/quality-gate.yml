@@ -11,17 +11,17 @@ jobs:
   quality-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v1
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: yarn-deps-${{ hashFiles('yarn.lock') }}
@@ -32,7 +32,7 @@ jobs:
       - name: Create Build
         run: yarn build
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: |
@@ -45,7 +45,7 @@ jobs:
         run: yarn unit
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5.0.5
+        uses: cypress-io/github-action@v6
         with:
           start: yarn start:ci
           record: true
