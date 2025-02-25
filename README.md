@@ -311,6 +311,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/IanSymplectic"><img src="https://avatars.githubusercontent.com/u/1984952?v=4?s=100" width="100px;" alt=""/><br /><sub><b>IanSymplectic</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=IanSymplectic" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/priceld"><img src="https://avatars.githubusercontent.com/u/4000919?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Logan Price</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=priceld" title="Documentation">📖</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=priceld" title="Code">💻</a></td>
   </tr>
 </table>
 
