@@ -768,7 +768,26 @@ class Cropper extends React.Component<CropperProps, State> {
       newCrop = restrictPosition(newCrop, this.mediaSize, this.state.cropSize, zoom, rotation)
     }
 
+    if (!event.repeat) {
+      this.props.onInteractionStart?.()
+    }
+
     onCropChange(newCrop)
+  }
+
+  onKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        event.preventDefault()
+        break
+      default:
+        return
+    }
+    this.emitCropData()
+    this.props.onInteractionEnd?.()
   }
 
   render() {
@@ -856,6 +875,7 @@ class Cropper extends React.Component<CropperProps, State> {
             }}
             tabIndex={0}
             onKeyDown={this.onKeyDown}
+            onKeyUp={this.onKeyUp}
             data-testid="cropper"
             className={classNames(
               'reactEasyCrop_CropArea',
