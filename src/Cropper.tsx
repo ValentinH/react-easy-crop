@@ -57,6 +57,7 @@ export type CropperProps = {
   initialCroppedAreaPercentages?: Area
   onTouchRequest?: (e: React.TouchEvent<HTMLDivElement>) => boolean
   onWheelRequest?: (e: WheelEvent) => boolean
+  setCropperRef?: (ref: React.RefObject<HTMLDivElement>) => void
   setImageRef?: (ref: React.RefObject<HTMLImageElement>) => void
   setVideoRef?: (ref: React.RefObject<HTMLVideoElement>) => void
   setMediaSize?: (size: MediaSize) => void
@@ -101,6 +102,7 @@ class Cropper extends React.Component<CropperProps, State> {
     keyboardStep: KEYBOARD_STEP,
   }
 
+  cropperRef: React.RefObject<HTMLDivElement> = React.createRef()
   imageRef: React.RefObject<HTMLImageElement> = React.createRef()
   videoRef: React.RefObject<HTMLVideoElement> = React.createRef()
   containerPosition: Point = { x: 0, y: 0 }
@@ -172,6 +174,10 @@ class Cropper extends React.Component<CropperProps, State> {
 
     if (this.props.setVideoRef) {
       this.props.setVideoRef(this.videoRef)
+    }
+
+    if (this.props.setCropperRef) {
+      this.props.setCropperRef(this.cropperRef)
     }
   }
 
@@ -868,6 +874,7 @@ class Cropper extends React.Component<CropperProps, State> {
         )}
         {this.state.cropSize && (
           <div
+            ref={this.cropperRef}
             style={{
               ...cropAreaStyle,
               width: this.state.cropSize.width,
