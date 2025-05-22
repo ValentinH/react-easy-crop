@@ -261,7 +261,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.removeEventListener('mouseup', this.onDragStopped)
     this.currentDoc.removeEventListener('touchmove', this.onTouchMove)
     this.currentDoc.removeEventListener('touchend', this.onDragStopped)
-    this.currentDoc.removeEventListener('gesturemove', this.onGestureMove as EventListener)
+    this.currentDoc.removeEventListener('gesturechange', this.onGestureChange as EventListener)
     this.currentDoc.removeEventListener('gestureend', this.onGestureEnd as EventListener)
     this.currentDoc.removeEventListener('scroll', this.onScroll)
   }
@@ -505,13 +505,13 @@ class Cropper extends React.Component<CropperProps, State> {
   onGestureStart = (e: GestureEvent) => {
     if (!this.currentDoc) return
     e.preventDefault()
-    this.currentDoc.addEventListener('gesturechange', this.onGestureMove as EventListener)
+    this.currentDoc.addEventListener('gesturechange', this.onGestureChange as EventListener)
     this.currentDoc.addEventListener('gestureend', this.onGestureEnd as EventListener)
     this.gestureZoomStart = this.props.zoom
     this.gestureRotationStart = this.props.rotation
   }
 
-  onGestureMove = (e: GestureEvent) => {
+  onGestureChange = (e: GestureEvent) => {
     e.preventDefault()
     if (this.isTouching) {
       // this is to avoid conflict between gesture and touch events
