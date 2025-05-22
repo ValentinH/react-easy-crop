@@ -430,6 +430,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "mclavin",
+      "name": "Martin Clavin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18396887?v=4",
+      "profile": "https://github.com/mclavin",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
