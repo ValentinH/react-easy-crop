@@ -31,6 +31,7 @@ export type CropperProps = {
   showGrid?: boolean
   zoomSpeed: number
   zoomWithScroll?: boolean
+  roundCropAreaPixels?: boolean
   onCropChange: (location: Point) => void
   onZoomChange?: (zoom: number) => void
   onRotationChange?: (rotation: number) => void
@@ -810,6 +811,7 @@ class Cropper extends React.Component<CropperProps, State> {
       zoom,
       cropShape,
       showGrid,
+      roundCropAreaPixels,
       style: { containerStyle, cropAreaStyle, mediaStyle },
       classes: { containerClassName, cropAreaClassName, mediaClassName },
     } = this.props
@@ -880,8 +882,12 @@ class Cropper extends React.Component<CropperProps, State> {
             ref={this.cropperRef}
             style={{
               ...cropAreaStyle,
-              width: this.state.cropSize.width,
-              height: this.state.cropSize.height,
+              width: roundCropAreaPixels
+                ? Math.round(this.state.cropSize.width)
+                : this.state.cropSize.width,
+              height: roundCropAreaPixels
+                ? Math.round(this.state.cropSize.height)
+                : this.state.cropSize.height,
             }}
             tabIndex={0}
             onKeyDown={this.onKeyDown}
