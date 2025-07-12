@@ -317,6 +317,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/priceld"><img src="https://avatars.githubusercontent.com/u/4000919?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Logan Price</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=priceld" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/apps/allcontributors"><img src="https://avatars.githubusercontent.com/in/23186?v=4?s=100" width="100px;" alt=""/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=allcontributors[bot]" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/mclavin"><img src="https://avatars.githubusercontent.com/u/18396887?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Clavin</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=mclavin" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/osnysantos"><img src="https://avatars.githubusercontent.com/u/710567?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Osny Netto</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=osnysantos" title="Documentation">📖</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=osnysantos" title="Code">💻</a></td>
   </tr>
 </table>
 
