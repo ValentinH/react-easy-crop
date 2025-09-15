@@ -126,6 +126,8 @@ class Cropper extends React.Component<CropperProps, State> {
   currentDoc: Document | null = typeof document !== 'undefined' ? document : null
   currentWindow: Window | null = typeof window !== 'undefined' ? window : null
   resizeObserver: ResizeObserver | null = null
+  canonicalCroppedAreaPercentages: Area | null = null
+  cachedCroppedAreaPixels: Area | null = null
 
   state: State = {
     cropSize: null,
@@ -430,7 +432,13 @@ class Cropper extends React.Component<CropperProps, State> {
       ) {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
-      this.setState({ cropSize }, this.recomputeCropPosition)
+
+      this.setState({ cropSize }, () => {
+        if (!this.applyCanonical(cropSize)) {
+          this.recomputeCropPosition()
+        }
+      })
+
       // pass crop size to parent
       if (this.props.setCropSize) {
         this.props.setCropSize(cropSize)
@@ -438,6 +446,28 @@ class Cropper extends React.Component<CropperProps, State> {
 
       return cropSize
     }
+  }
+
+  applyCanonical = (cropSize: Size): boolean => {
+    if (!this.canonicalCroppedAreaPercentages) return false
+    const { crop, zoom } = getInitialCropFromCroppedAreaPercentages(
+      this.canonicalCroppedAreaPercentages,
+      this.mediaSize,
+      this.props.rotation,
+      cropSize,
+      this.props.minZoom,
+      this.props.maxZoom
+    )
+    if (this.props.onZoomChange && Math.abs(zoom - this.props.zoom) > 1e-6) {
+      this.props.onZoomChange(zoom)
+    }
+    const dx = Math.abs(crop.x - this.props.crop.x)
+    const dy = Math.abs(crop.y - this.props.crop.y)
+    if (dx > 1e-6 || dy > 1e-6) {
+      this.props.onCropChange(crop)
+    }
+    this.emitCropData()
+    return true
   }
 
   saveContainerPosition = () => {
@@ -703,6 +733,10 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!cropData) return
 
     const { croppedAreaPercentages, croppedAreaPixels } = cropData
+
+    this.canonicalCroppedAreaPercentages = croppedAreaPercentages
+    this.cachedCroppedAreaPixels = croppedAreaPixels
+
     if (this.props.onCropComplete) {
       this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
     }
@@ -717,6 +751,10 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!cropData) return
 
     const { croppedAreaPercentages, croppedAreaPixels } = cropData
+
+    this.canonicalCroppedAreaPercentages = croppedAreaPercentages
+    this.cachedCroppedAreaPixels = croppedAreaPixels
+
     if (this.props.onCropAreaChange) {
       this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
     }
