@@ -126,8 +126,8 @@ class Cropper extends React.Component<CropperProps, State> {
   currentDoc: Document | null = typeof document !== 'undefined' ? document : null
   currentWindow: Window | null = typeof window !== 'undefined' ? window : null
   resizeObserver: ResizeObserver | null = null
-  canonicalCroppedAreaPercentages: Area | null = null
-  cachedCroppedAreaPixels: Area | null = null
+  previousCropSize: Size | null = null
+  windowResizeHandler = () => this.computeSizes()
 
   state: State = {
     cropSize: null,
@@ -148,7 +148,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.initResizeObserver()
       // only add window resize listener if ResizeObserver is not supported. Otherwise, it would be redundant
       if (typeof window.ResizeObserver === 'undefined') {
-        this.currentWindow.addEventListener('resize', this.computeSizes)
+        this.currentWindow.addEventListener('resize', this.windowResizeHandler)
       }
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
@@ -189,7 +189,7 @@ class Cropper extends React.Component<CropperProps, State> {
   componentWillUnmount() {
     if (!this.currentDoc || !this.currentWindow) return
     if (typeof window.ResizeObserver === 'undefined') {
-      this.currentWindow.removeEventListener('resize', this.computeSizes)
+      this.currentWindow.removeEventListener('resize', this.windowResizeHandler)
     }
     this.resizeObserver?.disconnect()
     if (this.containerRef) {
@@ -433,11 +433,7 @@ class Cropper extends React.Component<CropperProps, State> {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
 
-      this.setState({ cropSize }, () => {
-        if (!this.applyCanonical(cropSize)) {
-          this.recomputeCropPosition()
-        }
-      })
+      this.setState({ cropSize }, this.recomputeCropPosition)
 
       // pass crop size to parent
       if (this.props.setCropSize) {
@@ -446,28 +442,6 @@ class Cropper extends React.Component<CropperProps, State> {
 
       return cropSize
     }
-  }
-
-  applyCanonical = (cropSize: Size): boolean => {
-    if (!this.canonicalCroppedAreaPercentages) return false
-    const { crop, zoom } = getInitialCropFromCroppedAreaPercentages(
-      this.canonicalCroppedAreaPercentages,
-      this.mediaSize,
-      this.props.rotation,
-      cropSize,
-      this.props.minZoom,
-      this.props.maxZoom
-    )
-    if (this.props.onZoomChange && Math.abs(zoom - this.props.zoom) > 1e-6) {
-      this.props.onZoomChange(zoom)
-    }
-    const dx = Math.abs(crop.x - this.props.crop.x)
-    const dy = Math.abs(crop.y - this.props.crop.y)
-    if (dx > 1e-6 || dy > 1e-6) {
-      this.props.onCropChange(crop)
-    }
-    this.emitCropData()
-    return true
   }
 
   saveContainerPosition = () => {
@@ -733,10 +707,6 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!cropData) return
 
     const { croppedAreaPercentages, croppedAreaPixels } = cropData
-
-    this.canonicalCroppedAreaPercentages = croppedAreaPercentages
-    this.cachedCroppedAreaPixels = croppedAreaPixels
-
     if (this.props.onCropComplete) {
       this.props.onCropComplete(croppedAreaPercentages, croppedAreaPixels)
     }
@@ -751,10 +721,6 @@ class Cropper extends React.Component<CropperProps, State> {
     if (!cropData) return
 
     const { croppedAreaPercentages, croppedAreaPixels } = cropData
-
-    this.canonicalCroppedAreaPercentages = croppedAreaPercentages
-    this.cachedCroppedAreaPixels = croppedAreaPixels
-
     if (this.props.onCropAreaChange) {
       this.props.onCropAreaChange(croppedAreaPercentages, croppedAreaPixels)
     }
@@ -763,15 +729,35 @@ class Cropper extends React.Component<CropperProps, State> {
   recomputeCropPosition = () => {
     if (!this.state.cropSize) return
 
+    let adjustedCrop = this.props.crop
+
+    if (this.previousCropSize && this.state.cropSize) {
+      const sizeChanged =
+        Math.abs(this.previousCropSize.width - this.state.cropSize.width) > 1e-6 ||
+        Math.abs(this.previousCropSize.height - this.state.cropSize.height) > 1e-6
+
+      if (sizeChanged) {
+        const scaleX = this.state.cropSize.width / this.previousCropSize.width
+        const scaleY = this.state.cropSize.height / this.previousCropSize.height
+
+        adjustedCrop = {
+          x: this.props.crop.x * scaleX,
+          y: this.props.crop.y * scaleY,
+        }
+      }
+    }
+
     const newPosition = this.props.restrictPosition
       ? restrictPosition(
-          this.props.crop,
+          adjustedCrop,
           this.mediaSize,
           this.state.cropSize,
           this.props.zoom,
           this.props.rotation
         )
-      : this.props.crop
+      : adjustedCrop
+
+    this.previousCropSize = this.state.cropSize
 
     this.props.onCropChange(newPosition)
     this.emitCropData()
