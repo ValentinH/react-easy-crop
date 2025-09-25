@@ -35,4 +35,22 @@ describe('Basic assertions', function () {
     cy.get('#horizontal-center-button').click()
     cy.get('#crop-area-x').contains('15')
   })
+
+  it('should preserve crop position after window resize', function () {
+    cy.get('[data-testid=container]').dragAndDrop({ x: 1000, y: 0 })
+    cy.get('#crop-area-x').then(($el) => {
+      const initialX = $el.text()
+      cy.setViewportStable(500, 500)
+      cy.setViewportStable(1000, 1000)
+      cy.get('#crop-area-x').should('contain', initialX)
+    })
+    cy.percySnapshot()
+  })
+
+  it('should keep crop area centered when switching orientation', function () {
+    cy.get('#crop-area-x').should('contain', '15')
+    cy.get('#picture-select').select('Portrait')
+    cy.get('#crop-area-y').should('contain', '25')
+    cy.percySnapshot()
+  })
 })

@@ -34,3 +34,19 @@ Cypress.Commands.add('rotate', { prevSubject: 'element' }, (subject, options) =>
     .trigger('touchmove', { touches: moveTouches })
     .trigger('touchend')
 })
+
+Cypress.Commands.add('setViewportStable', (width, height) => {
+  cy.viewport(width, height)
+  cy.window().should((win) => {
+    expect(win.innerWidth).to.eq(width)
+    expect(win.innerHeight).to.eq(height)
+  })
+  cy.window().then(
+    (win) =>
+    new Cypress.Promise((resolve) => {
+      win.requestAnimationFrame(() => {
+        win.requestAnimationFrame(() => resolve())
+      })
+    })
+  )
+})

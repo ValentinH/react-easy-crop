@@ -298,7 +298,11 @@ class App extends React.Component<{}, State> {
             <div>
               <label>
                 Picture:
-                <select value={this.state.imageSrc} onChange={this.onImageSrcChange}>
+                <select
+                  id="picture-select"
+                  value={this.state.imageSrc}
+                  onChange={this.onImageSrcChange}
+                >
                   {Object.entries(TEST_IMAGES).map(([key, value]) => (
                     <option key={key} value={key}>
                       {value}
