@@ -127,7 +127,7 @@ class Cropper extends React.Component<CropperProps, State> {
   currentWindow: Window | null = typeof window !== 'undefined' ? window : null
   resizeObserver: ResizeObserver | null = null
   previousCropSize: Size | null = null
-  windowResizeHandler = () => this.computeSizes()
+  isInitialized = false
 
   state: State = {
     cropSize: null,
@@ -148,7 +148,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.initResizeObserver()
       // only add window resize listener if ResizeObserver is not supported. Otherwise, it would be redundant
       if (typeof window.ResizeObserver === 'undefined') {
-        this.currentWindow.addEventListener('resize', this.windowResizeHandler)
+        this.currentWindow.addEventListener('resize', this.computeSizes)
       }
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
@@ -189,7 +189,7 @@ class Cropper extends React.Component<CropperProps, State> {
   componentWillUnmount() {
     if (!this.currentDoc || !this.currentWindow) return
     if (typeof window.ResizeObserver === 'undefined') {
-      this.currentWindow.removeEventListener('resize', this.windowResizeHandler)
+      this.currentWindow.removeEventListener('resize', this.computeSizes)
     }
     this.resizeObserver?.disconnect()
     if (this.containerRef) {
@@ -280,8 +280,10 @@ class Cropper extends React.Component<CropperProps, State> {
     const cropSize = this.computeSizes()
 
     if (cropSize) {
+      this.previousCropSize = cropSize
       this.emitCropData()
       this.setInitialCrop(cropSize)
+      this.isInitialized = true
     }
 
     if (this.props.onMediaLoaded) {
@@ -731,7 +733,8 @@ class Cropper extends React.Component<CropperProps, State> {
 
     let adjustedCrop = this.props.crop
 
-    if (this.previousCropSize && this.state.cropSize) {
+    // Only scale if we're initialized and this is a legitimate resize
+    if (this.isInitialized && this.previousCropSize) {
       const sizeChanged =
         Math.abs(this.previousCropSize.width - this.state.cropSize.width) > 1e-6 ||
         Math.abs(this.previousCropSize.height - this.state.cropSize.height) > 1e-6
