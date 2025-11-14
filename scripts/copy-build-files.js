@@ -20,13 +20,13 @@ async function createPackageFile() {
     'umd:main': './umd/react-easy-crop.js',
     unpkg: './umd/react-easy-crop.js',
     jsdelivr: './umd/react-easy-crop.js',
-    module: './index.module.js',
-    'jsnext:main': './index.module.js',
-    'react-native': './index.module.js',
+    module: './index.module.mjs',
+    'jsnext:main': './index.module.mjs',
+    'react-native': './index.module.mjs',
     types: './index.d.ts',
     exports: {
       '.': {
-        import: './index.module.js',
+        import: './index.module.mjs',
         require: './index.js',
         types: './index.d.ts',
       },
