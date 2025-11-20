@@ -21,8 +21,8 @@ async function createPackageFile() {
     unpkg: './umd/react-easy-crop.js',
     jsdelivr: './umd/react-easy-crop.js',
     module: './index.module.mjs',
-    'jsnext:main': './index.module.mjs',
     'react-native': './index.module.mjs',
+    'jsnext:main': './index.module.mjs',
     types: './index.d.ts',
     exports: {
       '.': {
