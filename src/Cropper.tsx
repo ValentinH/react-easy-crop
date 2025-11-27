@@ -734,7 +734,7 @@ class Cropper extends React.Component<CropperProps, State> {
     let adjustedCrop = this.props.crop
 
     // Only scale if we're initialized and this is a legitimate resize
-    if (this.isInitialized && this.previousCropSize) {
+    if (this.isInitialized && this.previousCropSize?.width && this.previousCropSize?.height) {
       const sizeChanged =
         Math.abs(this.previousCropSize.width - this.state.cropSize.width) > 1e-6 ||
         Math.abs(this.previousCropSize.height - this.state.cropSize.height) > 1e-6
