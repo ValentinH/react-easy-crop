@@ -64,7 +64,7 @@ function restrictPositionCoord(
   cropSize: number,
   zoom: number
 ): number {
-  const maxPosition = (mediaSize * zoom) / 2 - cropSize / 2
+  const maxPosition = Math.abs((mediaSize * zoom) / 2 - cropSize / 2)
 
   return clamp(position, -maxPosition, maxPosition)
 }

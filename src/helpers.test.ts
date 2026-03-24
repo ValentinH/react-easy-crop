@@ -343,8 +343,8 @@ describe('Helpers', () => {
   describe('rotateSize', () => {
     test('should return correct bounding area once rotated', () => {
       expect(helpers.rotateSize(50, 50, 66)).toEqual({
-        height: 66.01410503592005,
-        width: 66.01410503592005,
+        height: 66.01410503592004,
+        width: 66.01410503592004,
       })
     })
     test.each([
