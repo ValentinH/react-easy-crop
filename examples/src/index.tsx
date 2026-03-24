@@ -1,7 +1,7 @@
 import queryString from 'query-string'
 import * as React from 'react'
 import { createRoot } from 'react-dom/client'
-import debounce from 'lodash/debounce'
+import debounce from 'lodash.debounce'
 import Cropper, { Area, Point } from '../../src/index'
 import './styles.css'
 import Iframe from './iframe'

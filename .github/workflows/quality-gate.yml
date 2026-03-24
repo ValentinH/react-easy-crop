@@ -11,26 +11,29 @@ jobs:
   quality-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 24.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Cache node modules
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: yarn-deps-${{ hashFiles('yarn.lock') }}
+          key: pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            yarn-deps-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --frozen-lockfile
+            pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm install --frozen-lockfile
 
       - name: Create Build
-        run: yarn build
+        run: pnpm build
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -39,15 +42,15 @@ jobs:
             dist
 
       - name: Run linting
-        run: yarn lint
+        run: pnpm lint
 
       - name: Run unit tests
-        run: yarn unit
+        run: pnpm unit
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: yarn start:ci
+          start: pnpm start:ci
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

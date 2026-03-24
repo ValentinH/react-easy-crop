@@ -4,7 +4,7 @@
 
 ## Setting Up the project locally
 
-To install the project you need to have `yarn` and `node`
+To install the project you need to have `pnpm` and `node`
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) the project, clone your fork:
 
@@ -16,8 +16,8 @@ To install the project you need to have `yarn` and `node`
    cd react-easy-crop
    ```
 
-2. `yarn` to install dependencies
-3. `yarn start` to start the example app
+2. `pnpm install` to install dependencies
+3. `pnpm start` to start the example app
 
 > Tip: Keep your `main` branch pointing at the original repository and make
 > pull requests from branches on your fork. To do this, run:

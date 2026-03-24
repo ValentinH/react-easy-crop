@@ -2,6 +2,8 @@
 
 const npmOptions = {
   publishFolder: './dist',
+  // OIDC trusted publishing should not require NPM_TOKEN injection in .npmrc
+  setRcToken: false,
 }
 
 module.exports = function rc() {
