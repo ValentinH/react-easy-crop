@@ -5,7 +5,9 @@ on: [push]
 
 permissions:
   id-token: write  # Required for OIDC
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   release:
