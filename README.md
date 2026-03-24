@@ -49,7 +49,7 @@ Pintura features cropping, rotating, flipping, filtering, annotating, and lots o
 ## Installation
 
 ```shell
-yarn add react-easy-crop
+pnpm add react-easy-crop
 ```
 
 or
@@ -233,8 +233,8 @@ See `getInitialCropFromCroppedAreaPercentages`.
 ## Development
 
 ```shell
-yarn
-yarn start
+pnpm install
+pnpm start
 ```
 
 Now, open `http://localhost:3001/index.html` and start hacking!

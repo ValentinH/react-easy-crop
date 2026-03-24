@@ -26,11 +26,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: yarn-deps-${{ hashFiles('yarn.lock') }}
+          key: pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            yarn-deps-${{ hashFiles('yarn.lock') }}
+            pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
 
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
       - name: Create Release
         env:

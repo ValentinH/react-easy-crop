@@ -10,7 +10,7 @@
     "develop": "gatsby develop",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "deploy": "yarn build --prefix-paths && gh-pages -d public"
+    "deploy": "pnpm build --prefix-paths && gh-pages -d public"
   },
   "engines": {
     "node": "^14.0.0"
