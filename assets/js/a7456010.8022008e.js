@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkreact_easy_crop_docs=self.webpackChunkreact_easy_crop_docs||[]).push([[235],{8552(e){e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);
