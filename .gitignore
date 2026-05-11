@@ -6,6 +6,8 @@ cypress/screenshots
 
 docs/.cache
 docs/public
+docs/.docusaurus
+docs/build
 .idea
 *.iml
 .yalc

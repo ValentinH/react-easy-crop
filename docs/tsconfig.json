@@ -1,7 +1,6 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["src"],
+  "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "typeRoots": ["./typings", "./node_modules/@types"]
+    "baseUrl": "."
   }
 }

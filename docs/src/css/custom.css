@@ -1,0 +1,148 @@
+:root {
+  --ifm-color-primary: #4f6f8f;
+  --ifm-color-primary-dark: #476481;
+  --ifm-color-primary-darker: #435f7a;
+  --ifm-color-primary-darkest: #374e65;
+  --ifm-color-primary-light: #5f7d9a;
+  --ifm-color-primary-lighter: #67849f;
+  --ifm-color-primary-lightest: #839bb2;
+  --ifm-code-font-size: 95%;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #7890aa;
+  --ifm-color-primary-dark: #637f9d;
+  --ifm-color-primary-darker: #5d7794;
+  --ifm-color-primary-darkest: #4d627a;
+  --ifm-color-primary-light: #8da1b9;
+  --ifm-color-primary-lighter: #98abc1;
+  --ifm-color-primary-lightest: #bdcad8;
+}
+
+.hero {
+  padding: 4rem 0 3rem;
+}
+
+[data-theme='dark'] .hero--primary {
+  --ifm-hero-background-color: #3f5368;
+  --ifm-hero-text-color: #f5f7fa;
+}
+
+.hero__subtitle {
+  max-width: 760px;
+}
+
+.home-demo {
+  margin-top: 2rem;
+}
+
+.home-grid,
+.example-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 2rem 0;
+}
+
+.home-card,
+.example-card {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  color: inherit;
+  display: block;
+  padding: 1rem;
+}
+
+.home-card:hover,
+.example-card:hover {
+  color: inherit;
+  text-decoration: none;
+  border-color: var(--ifm-color-primary);
+}
+
+.example-heading {
+  margin-bottom: 1.5rem;
+}
+
+.example-heading h1 {
+  margin-bottom: 0.35rem;
+}
+
+.example-heading p {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.example-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.example-code {
+  margin-top: 2rem;
+}
+
+.example-code h2 {
+  font-size: 1.4rem;
+}
+
+.cropper-stage {
+  background: #111;
+  border-radius: 8px;
+  height: min(64vh, 560px);
+  min-height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+.control-group {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.control-group label {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control-group input[type='range'] {
+  width: 220px;
+}
+
+.control-group button,
+.control-group input[type='file']::file-selector-button {
+  background: var(--ifm-color-primary);
+  border: 0;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.55rem 0.75rem;
+}
+
+.control-group .button-secondary {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+}
+
+.cropped-preview img {
+  border-radius: 8px;
+  max-width: min(420px, 100%);
+}
+
+.example-loading {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+@media (max-width: 760px) {
+  .cropper-stage {
+    height: 420px;
+    min-height: 320px;
+  }
+}

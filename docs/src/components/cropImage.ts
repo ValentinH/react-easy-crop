@@ -1,19 +1,7 @@
-import { Area } from 'react-easy-crop/types'
-import { rotateSize, getRadianAngle } from '../../../../src/helpers'
+import type { Area } from 'react-easy-crop'
+import { getRadianAngle, rotateSize } from '../../../src/helpers'
 
-export const createImage = (url: string): Promise<HTMLImageElement> =>
-  new Promise((resolve, reject) => {
-    const image = new Image()
-    image.addEventListener('load', () => resolve(image))
-    image.addEventListener('error', (error) => reject(error))
-    image.setAttribute('crossOrigin', 'anonymous') // needed to avoid cross-origin issues on CodeSandbox
-    image.src = url
-  })
-
-/**
- * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
- */
-export default async function getCroppedImg(
+export async function getCroppedImg(
   imageSrc: string,
   pixelCrop: Area,
   rotation = 0,
@@ -28,36 +16,27 @@ export default async function getCroppedImg(
   }
 
   const rotRad = getRadianAngle(rotation)
-
-  // calculate bounding box of the rotated image
   const { width: bBoxWidth, height: bBoxHeight } = rotateSize(image.width, image.height, rotation)
 
-  // set canvas size to match the bounding box
   canvas.width = bBoxWidth
   canvas.height = bBoxHeight
 
-  // translate canvas context to a central location to allow rotating and flipping around the center
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
   ctx.rotate(rotRad)
   ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
   ctx.translate(-image.width / 2, -image.height / 2)
-
-  // draw rotated image
   ctx.drawImage(image, 0, 0)
 
   const croppedCanvas = document.createElement('canvas')
-
   const croppedCtx = croppedCanvas.getContext('2d')
 
   if (!croppedCtx) {
     return null
   }
 
-  // Set the size of the cropped canvas
   croppedCanvas.width = pixelCrop.width
   croppedCanvas.height = pixelCrop.height
 
-  // Draw the cropped image onto the new canvas
   croppedCtx.drawImage(
     canvas,
     pixelCrop.x,
@@ -70,13 +49,19 @@ export default async function getCroppedImg(
     pixelCrop.height
   )
 
-  // As Base64 string
-  // return canvas.toDataURL('image/jpeg');
-
-  // As a blob
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     croppedCanvas.toBlob((file) => {
-      resolve(URL.createObjectURL(file))
+      resolve(file ? URL.createObjectURL(file) : null)
     }, 'image/jpeg')
+  })
+}
+
+function createImage(url: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.addEventListener('load', () => resolve(image))
+    image.addEventListener('error', reject)
+    image.setAttribute('crossOrigin', 'anonymous')
+    image.src = url
   })
 }
