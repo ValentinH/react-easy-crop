@@ -24,13 +24,13 @@
     "start": "vite ./examples --port 3001 --clearScreen false",
     "auto": "auto",
     "postversion": "pnpm build",
-    "build": "pnpm bili && pnpm build:copy-files",
+    "build": "tsdown && pnpm build:copy-files",
     "docs:start": "pnpm --dir docs start",
     "docs:build": "pnpm --dir docs build",
     "docs:deploy": "pnpm --dir docs deploy",
     "test": "pnpm unit && pnpm e2e && pnpm lint",
-    "unit": "jest src",
-    "unit:watch": "jest --watchAll src",
+    "unit": "vitest run src",
+    "unit:watch": "vitest src",
     "start:ci": "vite ./examples --port 3001 --mode production",
     "e2e": "start-server-and-test start http://localhost:3001 cy:run",
     "e2e:ci": "start-server-and-test start:ci http://localhost:3001 cy:ci",
@@ -49,8 +49,7 @@
     "react-dom": ">=16.4.0"
   },
   "dependencies": {
-    "normalize-wheel": "^1.0.1",
-    "tslib": "^2.0.1"
+    "normalize-wheel": "^1.0.1"
   },
   "devDependencies": {
     "@auto-it/all-contributors": "11.3.6",
@@ -58,15 +57,14 @@
     "@auto-it/released": "11.3.6",
     "@percy/cli": "^1.0.0-beta.71",
     "@percy/cypress": "^3.1.1",
-    "@types/jest": "^29.4.0",
     "@types/lodash.debounce": "^4.0.6",
+    "@types/node": "^25.9.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "all-contributors-cli": "^6.4.0",
     "auto": "11.3.6",
-    "bili": "^5.0.5",
     "cypress": "^5.2.0",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
@@ -80,7 +78,6 @@
     "fs-extra": "^11.3.4",
     "html-webpack-plugin": "^4.5.0",
     "husky": "^4.3.0",
-    "jest": "^29.4.2",
     "lint-staged": "^10.4.0",
     "lodash.debounce": "^4.0.8",
     "np": "^6.5.0",
@@ -89,12 +86,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.0",
-    "rollup-plugin-typescript2": "^0.27.1",
     "start-server-and-test": "^1.15.3",
-    "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.5",
-    "vite": "^6.4.2"
+    "tsdown": "^0.22.2",
+    "typescript": "^6.0.3",
+    "vite": "^6.4.2",
+    "vitest": "^4.1.8"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -108,13 +105,6 @@
     "*.+(ts|tsx|js|css)": [
       "prettier --write",
       "git add"
-    ]
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist/"
     ]
   }
 }

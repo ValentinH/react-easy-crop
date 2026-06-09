@@ -14,21 +14,16 @@ async function createPackageFile() {
     ...JSON.parse(packageData),
     scripts: undefined,
     devDependencies: undefined,
-    jest: undefined,
     'lint-staged': undefined,
     main: './index.js',
-    'umd:main': './umd/react-easy-crop.js',
-    unpkg: './umd/react-easy-crop.js',
-    jsdelivr: './umd/react-easy-crop.js',
     module: './index.module.mjs',
-    'react-native': './index.module.mjs',
-    'jsnext:main': './index.module.mjs',
     types: './index.d.ts',
     exports: {
       '.': {
+        types: './index.d.ts',
         import: './index.module.mjs',
         require: './index.js',
-        types: './index.d.ts',
+        default: './index.module.mjs',
       },
       './react-easy-crop.css': {
         import: './react-easy-crop.css',

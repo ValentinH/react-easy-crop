@@ -2,7 +2,7 @@
 
 A React component to crop images/videos with easy interactions
 
-[![version][version-badge]][package] ![brotli size][brotli-badge] [![All Contributors](https://img.shields.io/badge/all_contributors-35-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![Test Status][test-badge]][test-action] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs] [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
+[![version][version-badge]][package] [![All Contributors](https://img.shields.io/badge/all_contributors-35-green.svg?style=flat-square)](#contributors) [![Build Status][build-badge]][build-page] [![Test Status][test-badge]][test-action] [![MIT License][license-badge]][license] [![PRs Welcome][prs-badge]][prs] [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/2678610/41561426-365e7a44-734a-11e8-8e0e-1c04251f53e4.gif" alt="Demo GIF" />
@@ -327,7 +327,6 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 [node]: https://nodejs.org
 [package]: https://www.npmjs.com/package/react-easy-crop
 [version-badge]: https://img.shields.io/npm/v/react-easy-crop.svg?style=flat-square
-[brotli-badge]: http://img.badgesize.io/https://unpkg.com/react-easy-crop/umd/react-easy-crop.min.js?compression=brotli&style=flat-square&1
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: https://github.com/ValentinH/react-easy-crop/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
