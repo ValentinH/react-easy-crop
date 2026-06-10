@@ -17,6 +17,7 @@ const sharedConfig = {
   entry: 'src/index.ts',
   format: ['cjs', 'esm'] as Array<'cjs' | 'esm'>,
   dts: {
+    cjsReexport: true,
     sourcemap: true,
   },
   env: {
@@ -30,7 +31,7 @@ const sharedConfig = {
   },
   outExtensions: () => ({
     js: '.js',
-    dts: '.d.ts',
+    dts: '.d.mts',
   }),
   deps: {
     neverBundle: ['react', 'normalize-wheel'],
@@ -41,6 +42,6 @@ export default defineConfig({
   ...sharedConfig,
   outExtensions: ({ format }) => ({
     js: format === 'es' ? '.module.mjs' : '.js',
-    dts: '.d.ts',
+    dts: '.d.mts',
   }),
 })
