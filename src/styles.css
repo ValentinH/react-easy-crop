@@ -16,6 +16,7 @@
 .reactEasyCrop_Image,
 .reactEasyCrop_Video {
   will-change: transform; /* this improves performances and prevent painting issues on iOS Chrome */
+  max-width: unset; /* prevent global img/video reset rules from constraining the cropper media */
 }
 
 .reactEasyCrop_Contain {
