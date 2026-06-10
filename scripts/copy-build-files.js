@@ -23,7 +23,6 @@ async function createPackageFile() {
         'react-easy-crop.css': ['./react-easy-crop.css.d.ts'],
       },
     },
-    pnpm: undefined,
     packageManager: undefined,
     exports: {
       '.': {
