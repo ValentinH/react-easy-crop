@@ -14,25 +14,32 @@ async function createPackageFile() {
     ...JSON.parse(packageData),
     scripts: undefined,
     devDependencies: undefined,
-    jest: undefined,
     'lint-staged': undefined,
     main: './index.js',
-    'umd:main': './umd/react-easy-crop.js',
-    unpkg: './umd/react-easy-crop.js',
-    jsdelivr: './umd/react-easy-crop.js',
     module: './index.module.mjs',
-    'react-native': './index.module.mjs',
-    'jsnext:main': './index.module.mjs',
     types: './index.d.ts',
+    typesVersions: {
+      '*': {
+        'react-easy-crop.css': ['./react-easy-crop.css.d.ts'],
+      },
+    },
+    pnpm: undefined,
+    packageManager: undefined,
     exports: {
       '.': {
-        import: './index.module.mjs',
-        require: './index.js',
-        types: './index.d.ts',
+        import: {
+          types: './index.d.mts',
+          default: './index.module.mjs',
+        },
+        require: {
+          types: './index.d.ts',
+          default: './index.js',
+        },
+        default: './index.module.mjs',
       },
       './react-easy-crop.css': {
-        import: './react-easy-crop.css',
-        require: './react-easy-crop.css',
+        types: './react-easy-crop.css.d.ts',
+        default: './react-easy-crop.css',
       },
     },
   }
@@ -44,6 +51,12 @@ async function createPackageFile() {
   return newPackageData
 }
 
+async function createCssTypesFile() {
+  const buildPath = path.resolve(__dirname, '../dist/react-easy-crop.css.d.ts')
+  await fse.writeFile(buildPath, 'export {}\\n', 'utf8')
+  console.log(`Created ${buildPath}`)
+}
+
 async function run() {
   await Promise.all(
     [
@@ -52,6 +65,7 @@ async function run() {
       { from: './src/styles.css', to: 'react-easy-crop.css' },
     ].map((file) => copyFile(file))
   )
+  await createCssTypesFile()
   await createPackageFile()
 }
 

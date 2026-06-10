@@ -3,6 +3,11 @@ declare module '*.css' {
   export default content
 }
 
+declare module '*.css?raw' {
+  const content: string
+  export default content
+}
+
 declare module 'normalize-wheel' {
   const normalizeWheel: (
     event: WheelEvent

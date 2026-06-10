@@ -8,6 +8,6 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "declarationMap": true,
-    "importHelpers": true
+    "types": ["vitest/globals"]
   }
 }

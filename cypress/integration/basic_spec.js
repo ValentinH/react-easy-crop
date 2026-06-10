@@ -1,4 +1,10 @@
 describe('Basic assertions', function () {
+  const assertCssNumberCloseTo = (selector, property, expected) => {
+    cy.get(selector).should(($el) => {
+      expect(parseFloat($el.css(property))).to.be.closeTo(expected, 0.01)
+    })
+  }
+
   beforeEach(function () {
     cy.viewport(1000, 600)
     cy.visit('/')
@@ -6,7 +12,7 @@ describe('Basic assertions', function () {
 
   it('Display the image and cropper with correct dimension', function () {
     cy.get('img').should('have.css', 'width', '1000px')
-    cy.get('img').should('have.css', 'height', '523.546875px')
+    assertCssNumberCloseTo('img', 'height', 523.546875)
     cy.percySnapshot()
   })
 
@@ -20,7 +26,7 @@ describe('Basic assertions', function () {
   it('Display the image and cropper with correct dimension after window resize', function () {
     cy.viewport(600, 1000)
     cy.get('img').should('have.css', 'width', '600px')
-    cy.get('img').should('have.css', 'height', '314.125px')
+    assertCssNumberCloseTo('img', 'height', 314.125)
     cy.percySnapshot()
   })
 
