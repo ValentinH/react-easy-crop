@@ -16,6 +16,17 @@ describe('Basic assertions', function () {
     cy.percySnapshot()
   })
 
+  it('keeps wide images correctly sized with global CSS reset rules', function () {
+    cy.document().then((doc) => {
+      const style = doc.createElement('style')
+      style.textContent = 'img, video { max-width: 100%; }'
+      doc.head.appendChild(style)
+    })
+
+    cy.get('img').should('have.css', 'width', '1000px')
+    assertCssNumberCloseTo('img', 'height', 523.546875)
+  })
+
   it('Display tall images and set the image and cropper with correct dimension', function () {
     cy.visit('/?img=/images/cat.jpeg')
     cy.get('img').should('have.css', 'width', '338.4375px')
