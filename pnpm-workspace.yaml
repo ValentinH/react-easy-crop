@@ -1,0 +1,10 @@
+allowBuilds:
+  '@percy/core': true
+  cypress: true
+  esbuild: true
+  husky: true
+onlyBuiltDependencies:
+  - '@percy/core'
+  - cypress
+  - esbuild
+  - husky

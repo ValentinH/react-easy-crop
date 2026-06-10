@@ -18,7 +18,7 @@
   },
   "author": "Valentin Hervieu <valentin@hervi.eu>",
   "license": "MIT",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.5.2",
   "sideEffects": false,
   "scripts": {
     "start": "vite ./examples --port 3001 --clearScreen false",
@@ -92,14 +92,6 @@
     "typescript": "^6.0.3",
     "vite": "^6.4.2",
     "vitest": "^4.1.8"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@percy/core",
-      "cypress",
-      "esbuild",
-      "husky"
-    ]
   },
   "lint-staged": {
     "*.+(ts|tsx|js|css)": [
