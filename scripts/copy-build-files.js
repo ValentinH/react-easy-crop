@@ -52,7 +52,7 @@ async function createPackageFile() {
 
 async function createCssTypesFile() {
   const buildPath = path.resolve(__dirname, '../dist/react-easy-crop.css.d.ts')
-  await fse.writeFile(buildPath, 'export {}\\n', 'utf8')
+  await fse.writeFile(buildPath, 'export {}\n', 'utf8')
   console.log(`Created ${buildPath}`)
 }
 
