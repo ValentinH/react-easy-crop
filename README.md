@@ -313,6 +313,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/mclavin"><img src="https://avatars.githubusercontent.com/u/18396887?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Clavin</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=mclavin" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/osnysantos"><img src="https://avatars.githubusercontent.com/u/710567?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Osny Netto</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=osnysantos" title="Documentation">📖</a> <a href="https://github.com/ValentinH/react-easy-crop/commits?author=osnysantos" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/anomiex"><img src="https://avatars.githubusercontent.com/u/1030580?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brad Jorsch</b></sub></a><br /><a href="#infra-anomiex" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://github.com/HyeryongChoi"><img src="https://avatars.githubusercontent.com/u/24777828?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hyeryong Choi</b></sub></a><br /><a href="https://github.com/ValentinH/react-easy-crop/commits?author=HyeryongChoi" title="Code">💻</a></td>
   </tr>
 </table>
 

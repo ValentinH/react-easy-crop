@@ -458,6 +458,15 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "HyeryongChoi",
+      "name": "Hyeryong Choi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24777828?v=4",
+      "profile": "https://github.com/HyeryongChoi",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
