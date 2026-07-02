@@ -718,6 +718,11 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   emitCropData = () => {
+    if (this.resizeEmitTimer) {
+      clearTimeout(this.resizeEmitTimer)
+      this.resizeEmitTimer = null
+    }
+
     const cropData = this.getCropData()
     if (!cropData) return
 
