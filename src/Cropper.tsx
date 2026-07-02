@@ -259,13 +259,13 @@ class Cropper extends React.Component<CropperProps, State> {
         isFirstResize = false // observe() is called on mount, we don't want to trigger a recompute on mount
         return
       }
-      this.computeSizes(true)
+      this.computeSizes({ isResizeTriggered: true })
     })
     this.resizeObserver.observe(this.containerRef)
   }
 
   onWindowResize = () => {
-    this.computeSizes(true)
+    this.computeSizes({ isResizeTriggered: true })
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
@@ -361,7 +361,7 @@ class Cropper extends React.Component<CropperProps, State> {
     return this.props.objectFit
   }
 
-  computeSizes = (isResizeTriggered = false) => {
+  computeSizes = ({ isResizeTriggered = false }: { isResizeTriggered?: boolean } = {}) => {
     const mediaRef = this.imageRef.current || this.videoRef.current
 
     if (mediaRef && this.containerRef) {
@@ -448,7 +448,7 @@ class Cropper extends React.Component<CropperProps, State> {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
 
-      this.setState({ cropSize }, () => this.recomputeCropPosition(isResizeTriggered))
+      this.setState({ cropSize }, () => this.recomputeCropPosition({ isResizeTriggered }))
 
       // pass crop size to parent
       if (this.props.setCropSize) {
@@ -746,7 +746,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  recomputeCropPosition = (isResizeTriggered = false) => {
+  recomputeCropPosition = ({ isResizeTriggered = false }: { isResizeTriggered?: boolean } = {}) => {
     if (!this.state.cropSize) return
 
     let adjustedCrop = this.props.crop
