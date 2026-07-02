@@ -15,6 +15,11 @@ import {
 } from './helpers'
 import cssStyles from './styles.css?raw'
 
+// how long to wait after the last resize-triggered size recompute before
+// firing onCropComplete/onCropAreaChange, so a window/container resize
+// doesn't spam consumers with callbacks on every frame
+const RESIZE_EMIT_DEBOUNCE_TIME = 250
+
 export type CropperProps = {
   image?: string
   video?: string | VideoSrc[]
@@ -123,6 +128,7 @@ class Cropper extends React.Component<CropperProps, State> {
   rafDragTimeout: number | null = null
   rafPinchTimeout: number | null = null
   wheelTimer: number | null = null
+  resizeEmitTimer: number | null = null
   currentDoc: Document | null = typeof document !== 'undefined' ? document : null
   currentWindow: Window | null = typeof window !== 'undefined' ? window : null
   resizeObserver: ResizeObserver | null = null
@@ -148,7 +154,7 @@ class Cropper extends React.Component<CropperProps, State> {
       this.initResizeObserver()
       // only add window resize listener if ResizeObserver is not supported. Otherwise, it would be redundant
       if (typeof window.ResizeObserver === 'undefined') {
-        this.currentWindow.addEventListener('resize', this.computeSizes)
+        this.currentWindow.addEventListener('resize', this.onWindowResize)
       }
       this.props.zoomWithScroll &&
         this.containerRef.addEventListener('wheel', this.onWheel, { passive: false })
@@ -189,9 +195,12 @@ class Cropper extends React.Component<CropperProps, State> {
   componentWillUnmount() {
     if (!this.currentDoc || !this.currentWindow) return
     if (typeof window.ResizeObserver === 'undefined') {
-      this.currentWindow.removeEventListener('resize', this.computeSizes)
+      this.currentWindow.removeEventListener('resize', this.onWindowResize)
     }
     this.resizeObserver?.disconnect()
+    if (this.resizeEmitTimer) {
+      clearTimeout(this.resizeEmitTimer)
+    }
     if (this.containerRef) {
       this.containerRef.removeEventListener('gesturestart', this.preventZoomSafari)
     }
@@ -250,9 +259,13 @@ class Cropper extends React.Component<CropperProps, State> {
         isFirstResize = false // observe() is called on mount, we don't want to trigger a recompute on mount
         return
       }
-      this.computeSizes()
+      this.computeSizes({ isResizeTriggered: true })
     })
     this.resizeObserver.observe(this.containerRef)
+  }
+
+  onWindowResize = () => {
+    this.computeSizes({ isResizeTriggered: true })
   }
 
   // this is to prevent Safari on iOS >= 10 to zoom the page
@@ -348,7 +361,7 @@ class Cropper extends React.Component<CropperProps, State> {
     return this.props.objectFit
   }
 
-  computeSizes = () => {
+  computeSizes = ({ isResizeTriggered = false }: { isResizeTriggered?: boolean } = {}) => {
     const mediaRef = this.imageRef.current || this.videoRef.current
 
     if (mediaRef && this.containerRef) {
@@ -435,7 +448,7 @@ class Cropper extends React.Component<CropperProps, State> {
         this.props.onCropSizeChange && this.props.onCropSizeChange(cropSize)
       }
 
-      this.setState({ cropSize }, this.recomputeCropPosition)
+      this.setState({ cropSize }, () => this.recomputeCropPosition({ isResizeTriggered }))
 
       // pass crop size to parent
       if (this.props.setCropSize) {
@@ -705,6 +718,11 @@ class Cropper extends React.Component<CropperProps, State> {
   }
 
   emitCropData = () => {
+    if (this.resizeEmitTimer) {
+      clearTimeout(this.resizeEmitTimer)
+      this.resizeEmitTimer = null
+    }
+
     const cropData = this.getCropData()
     if (!cropData) return
 
@@ -728,7 +746,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
   }
 
-  recomputeCropPosition = () => {
+  recomputeCropPosition = ({ isResizeTriggered = false }: { isResizeTriggered?: boolean } = {}) => {
     if (!this.state.cropSize) return
 
     let adjustedCrop = this.props.crop
@@ -763,7 +781,24 @@ class Cropper extends React.Component<CropperProps, State> {
     this.previousCropSize = this.state.cropSize
 
     this.props.onCropChange(newPosition)
-    this.emitCropData()
+    if (isResizeTriggered) {
+      this.debouncedEmitCropData()
+    } else {
+      this.emitCropData()
+    }
+  }
+
+  // Same as emitCropData but debounced, so that a burst of resize-triggered
+  // recomputations (e.g. dragging the window edge) only fires
+  // onCropComplete/onCropAreaChange once, after the resize settles.
+  debouncedEmitCropData = () => {
+    if (!this.currentWindow) return
+    if (this.resizeEmitTimer) {
+      clearTimeout(this.resizeEmitTimer)
+    }
+    this.resizeEmitTimer = this.currentWindow.setTimeout(() => {
+      this.emitCropData()
+    }, RESIZE_EMIT_DEBOUNCE_TIME)
   }
 
   onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
