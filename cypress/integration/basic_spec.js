@@ -70,4 +70,48 @@ describe('Basic assertions', function () {
     cy.get('#crop-area-y').should('contain', '25')
     cy.percySnapshot()
   })
+
+  it('should debounce onCropComplete during a burst of window resizes', function () {
+    // let a real frame elapse so the ResizeObserver notification for this
+    // resize has actually been delivered (mirrors cy.setViewportStable above)
+    const settle = () =>
+      cy.window().then(
+        (win) =>
+          new Cypress.Promise((resolve) => {
+            win.requestAnimationFrame(() => win.requestAnimationFrame(() => resolve()))
+          })
+      )
+    const countOnCropComplete = (spy) =>
+      spy.getCalls().filter((call) => call.args[0] === 'onCropComplete!').length
+
+    // let the initial mount settle first so its own onCropComplete call
+    // doesn't get counted as part of the resize burst below
+    settle()
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
+    // freeze only the debounce timer itself (not rAF/Date), so ResizeObserver
+    // notifications are still delivered for real via the settle() waits below,
+    // but the resulting debounce timeout only fires when we call cy.tick
+    cy.clock(Date.now(), ['setTimeout', 'clearTimeout'])
+
+    // several resizes in a row, simulating dragging the window edge
+    cy.viewport(700, 600)
+    settle()
+    cy.viewport(800, 650)
+    settle()
+    cy.viewport(900, 700)
+    settle()
+
+    // right after the burst, onCropComplete should still be debounced (not fired yet)
+    cy.get('@consoleLog').should((spy) => {
+      expect(countOnCropComplete(spy)).to.eq(0)
+    })
+
+    // once the debounce window elapses, it should have fired exactly once for the whole burst
+    cy.tick(260)
+    cy.get('@consoleLog').should((spy) => {
+      expect(countOnCropComplete(spy)).to.eq(1)
+    })
+  })
 })
