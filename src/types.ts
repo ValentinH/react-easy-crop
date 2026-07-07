@@ -26,3 +26,9 @@ export type VideoSrc = {
   src: string
   type?: string
 }
+
+export type CropperInteractionSource = 'mouse' | 'touch' | 'wheel' | 'keyboard'
+
+export type CropperInteraction = {
+  source: CropperInteractionSource
+}

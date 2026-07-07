@@ -5,7 +5,14 @@ describe('Touch assertions', function () {
   })
 
   it('Move the image with touch', function () {
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
     cy.get('[data-testid=container]').dragAndDropWithTouch({ x: 50, y: 0 })
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction started', { source: 'touch' })
+      expect(spy).to.be.calledWith('user interaction ended', { source: 'touch' })
+    })
     cy.percySnapshot()
   })
 
@@ -20,7 +27,14 @@ describe('Touch assertions', function () {
   })
 
   it('Zoom in and out with pinch', function () {
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
     cy.get('[data-testid=container]').pinch({ distance: 10 })
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction started', { source: 'touch' })
+      expect(spy).to.be.calledWith('user interaction ended', { source: 'touch' })
+    })
     cy.percySnapshot('Zoom in with pinch')
     cy.get('[data-testid=container]').pinch({ distance: -4 })
     cy.percySnapshot('Zoom out with pinch')

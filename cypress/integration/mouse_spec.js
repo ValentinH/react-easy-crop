@@ -5,7 +5,14 @@ describe('Mouse assertions', function () {
   })
 
   it('Move the image with mouse', function () {
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
     cy.get('[data-testid=container]').dragAndDrop({ x: 50, y: 0 })
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction started', { source: 'mouse' })
+      expect(spy).to.be.calledWith('user interaction ended', { source: 'mouse' })
+    })
     cy.percySnapshot()
   })
 
@@ -20,7 +27,18 @@ describe('Mouse assertions', function () {
   })
 
   it('Mouse wheel should zoom in and out', function () {
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
+    cy.clock(Date.now(), ['setTimeout', 'clearTimeout'])
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: -100, clientX: 500, clientY: 300 })
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction started', { source: 'wheel' })
+    })
+    cy.tick(260)
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction ended', { source: 'wheel' })
+    })
     cy.percySnapshot('Mouse wheel should zoom in')
     cy.get('[data-testid=container]').trigger('wheel', { deltaY: 50, clientX: 500, clientY: 300 })
     cy.percySnapshot('Mouse wheel should zoom out')

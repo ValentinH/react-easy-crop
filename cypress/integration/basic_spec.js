@@ -71,6 +71,21 @@ describe('Basic assertions', function () {
     cy.percySnapshot()
   })
 
+  it('reports keyboard interaction source', function () {
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log').as('consoleLog')
+    })
+    cy.get('[data-testid=cropper]')
+      .focus()
+      .trigger('keydown', { key: 'ArrowRight' })
+      .trigger('keyup', { key: 'ArrowRight' })
+
+    cy.get('@consoleLog').should((spy) => {
+      expect(spy).to.be.calledWith('user interaction started', { source: 'keyboard' })
+      expect(spy).to.be.calledWith('user interaction ended', { source: 'keyboard' })
+    })
+  })
+
   it('should debounce onCropComplete during a burst of window resizes', function () {
     // let a real frame elapse so the ResizeObserver notification for this
     // resize has actually been delivered (mirrors cy.setViewportStable above)

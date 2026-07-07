@@ -81,3 +81,17 @@ Use `onWheelRequest` and `onTouchRequest` to allow or block interactions.
 ```
 
 `onInteractionStart` and `onInteractionEnd` fire around wheel, touch, mouse, and arrow-key interactions.
+
+They receive an interaction object with a `source` field:
+
+```tsx
+<Cropper
+  onInteractionStart={({ source }) => {
+    if (source === 'touch') {
+      // ...
+    }
+  }}
+/>
+```
+
+`source` is `'mouse'`, `'touch'`, `'wheel'`, or `'keyboard'`.
