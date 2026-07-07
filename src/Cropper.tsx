@@ -1,6 +1,14 @@
 import * as React from 'react'
 import normalizeWheel from 'normalize-wheel'
-import { Area, MediaSize, Point, Size, VideoSrc } from './types'
+import {
+  Area,
+  CropperInteraction,
+  CropperInteractionSource,
+  MediaSize,
+  Point,
+  Size,
+  VideoSrc,
+} from './types'
 import {
   getCropSize,
   restrictPosition,
@@ -43,8 +51,8 @@ export type CropperProps = {
   onCropComplete?: (croppedArea: Area, croppedAreaPixels: Area) => void
   onCropAreaChange?: (croppedArea: Area, croppedAreaPixels: Area) => void
   onCropSizeChange?: (cropSize: Size) => void
-  onInteractionStart?: () => void
-  onInteractionEnd?: () => void
+  onInteractionStart?: (interaction: CropperInteraction) => void
+  onInteractionEnd?: (interaction: CropperInteraction) => void
   onMediaLoaded?: (mediaSize: MediaSize) => void
   style: {
     containerStyle?: React.CSSProperties
@@ -134,6 +142,7 @@ class Cropper extends React.Component<CropperProps, State> {
   resizeObserver: ResizeObserver | null = null
   previousCropSize: Size | null = null
   isInitialized = false
+  dragInteractionSource: CropperInteractionSource | null = null
 
   state: State = {
     cropSize: null,
@@ -482,7 +491,7 @@ class Cropper extends React.Component<CropperProps, State> {
     this.currentDoc.addEventListener('mousemove', this.onMouseMove)
     this.currentDoc.addEventListener('mouseup', this.onDragStopped)
     this.saveContainerPosition()
-    this.onDragStart(Cropper.getMousePoint(e))
+    this.onDragStart(Cropper.getMousePoint(e), 'mouse')
   }
 
   onMouseMove = (e: MouseEvent) => this.onDrag(Cropper.getMousePoint(e))
@@ -508,7 +517,7 @@ class Cropper extends React.Component<CropperProps, State> {
     if (e.touches.length === 2) {
       this.onPinchStart(e)
     } else if (e.touches.length === 1) {
-      this.onDragStart(Cropper.getTouchPoint(e.touches[0]))
+      this.onDragStart(Cropper.getTouchPoint(e.touches[0]), 'touch')
     }
   }
 
@@ -551,10 +560,11 @@ class Cropper extends React.Component<CropperProps, State> {
     this.cleanEvents()
   }
 
-  onDragStart = ({ x, y }: Point) => {
+  onDragStart = ({ x, y }: Point, source: CropperInteractionSource) => {
     this.dragStartPosition = { x, y }
     this.dragStartCrop = { ...this.props.crop }
-    this.props.onInteractionStart?.()
+    this.dragInteractionSource = source
+    this.props.onInteractionStart?.({ source })
   }
 
   onDrag = ({ x, y }: Point) => {
@@ -588,7 +598,8 @@ class Cropper extends React.Component<CropperProps, State> {
     this.isTouching = false
     this.cleanEvents()
     this.emitCropData()
-    this.props.onInteractionEnd?.()
+    this.props.onInteractionEnd?.({ source: this.dragInteractionSource ?? 'mouse' })
+    this.dragInteractionSource = null
   }
 
   onPinchStart(e: React.TouchEvent<HTMLDivElement>) {
@@ -596,7 +607,7 @@ class Cropper extends React.Component<CropperProps, State> {
     const pointB = Cropper.getTouchPoint(e.touches[1])
     this.lastPinchDistance = getDistanceBetweenPoints(pointA, pointB)
     this.lastPinchRotation = getRotationBetweenPoints(pointA, pointB)
-    this.onDragStart(getCenter(pointA, pointB))
+    this.onDragStart(getCenter(pointA, pointB), 'touch')
   }
 
   onPinchMove(e: TouchEvent) {
@@ -633,14 +644,19 @@ class Cropper extends React.Component<CropperProps, State> {
     this.setNewZoom(newZoom, point, { shouldUpdatePosition: true })
 
     if (!this.state.hasWheelJustStarted) {
-      this.setState({ hasWheelJustStarted: true }, () => this.props.onInteractionStart?.())
+      this.setState({ hasWheelJustStarted: true }, () =>
+        this.props.onInteractionStart?.({ source: 'wheel' })
+      )
     }
 
     if (this.wheelTimer) {
       clearTimeout(this.wheelTimer)
     }
     this.wheelTimer = this.currentWindow.setTimeout(
-      () => this.setState({ hasWheelJustStarted: false }, () => this.props.onInteractionEnd?.()),
+      () =>
+        this.setState({ hasWheelJustStarted: false }, () =>
+          this.props.onInteractionEnd?.({ source: 'wheel' })
+        ),
       250
     )
   }
@@ -840,7 +856,7 @@ class Cropper extends React.Component<CropperProps, State> {
     }
 
     if (!event.repeat) {
-      this.props.onInteractionStart?.()
+      this.props.onInteractionStart?.({ source: 'keyboard' })
     }
 
     onCropChange(newCrop)
@@ -858,7 +874,7 @@ class Cropper extends React.Component<CropperProps, State> {
         return
     }
     this.emitCropData()
-    this.props.onInteractionEnd?.()
+    this.props.onInteractionEnd?.({ source: 'keyboard' })
   }
 
   render() {

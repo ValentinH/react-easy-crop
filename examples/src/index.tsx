@@ -2,7 +2,7 @@ import queryString from 'query-string'
 import * as React from 'react'
 import { createRoot } from 'react-dom/client'
 import debounce from 'lodash.debounce'
-import Cropper, { Area, Point } from '../../src/index'
+import Cropper, { Area, CropperInteraction, Point } from '../../src/index'
 import './styles.css'
 import Iframe from './iframe'
 
@@ -158,12 +158,12 @@ class App extends React.Component<{}, State> {
     this.setState({ rotation })
   }
 
-  onInteractionStart = () => {
-    console.log('user interaction started')
+  onInteractionStart = (interaction: CropperInteraction) => {
+    console.log('user interaction started', interaction)
   }
 
-  onInteractionEnd = () => {
-    console.log('user interaction ended')
+  onInteractionEnd = (interaction: CropperInteraction) => {
+    console.log('user interaction ended', interaction)
   }
 
   onHashTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
