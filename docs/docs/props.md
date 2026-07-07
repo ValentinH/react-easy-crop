@@ -25,7 +25,7 @@ title: Props
 | `restrictPosition` | `boolean` |  | Restrict media position to cropper boundaries. Useful when `zoom < 1`. |
 | `initialCroppedAreaPercentages` | `{ width: number; height: number; x: number; y: number }` |  | Restore a crop from a previous `croppedArea` value. Preferred over pixels. |
 | `initialCroppedAreaPixels` | `{ width: number; height: number; x: number; y: number }` |  | Restore a crop from a previous `croppedAreaPixels` value. |
-| `transform` | `string` |  | Custom CSS transform for the media. |
+| `transform` | `string` |  | Custom CSS transform for the media. See [Custom transform](./advanced#custom-transform). |
 | `style` | `{ containerStyle?: object; mediaStyle?: object; cropAreaStyle?: object }` |  | Inline style overrides. |
 | `classes` | `{ containerClassName?: string; mediaClassName?: string; cropAreaClassName?: string }` |  | Custom class names. |
 | `mediaProps` | `object` |  | Props passed to the image or video element. |
