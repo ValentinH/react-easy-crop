@@ -20,7 +20,7 @@ concurrency:
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || contains(fromJSON('["success","skipped"]'), github.event.workflow_run.conclusion)
     steps:
       - uses: actions/checkout@v6
         with:
