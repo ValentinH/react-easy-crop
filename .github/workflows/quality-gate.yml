@@ -21,10 +21,10 @@ jobs:
           node-version: 24.x
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Cache node modules
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
@@ -35,7 +35,7 @@ jobs:
       - name: Create Build
         run: pnpm build
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: |
@@ -48,7 +48,7 @@ jobs:
         run: pnpm unit
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           start: pnpm start:ci
           record: true
