@@ -65,7 +65,7 @@ jobs:
           echo "Using react-easy-crop@${latest_version}"
 
       - name: Install docs dependencies
-        run: pnpm --dir docs install --no-frozen-lockfile --ignore-scripts
+        run: pnpm --dir docs install --ignore-workspace --no-frozen-lockfile --ignore-scripts
 
       - name: Deploy docs to GitHub Pages
         run: pnpm --dir docs deploy
