@@ -1,0 +1,78 @@
+name: Deploy Docs
+
+on:
+  workflow_run:
+    workflows:
+      - Release
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-docs
+  cancel-in-progress: false
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(fromJSON('["success","skipped"]'), github.event.workflow_run.conclusion)
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use latest published package
+        run: |
+          package_version="$(node -p "require('./package.json').version")"
+          latest_version="$(npm view react-easy-crop version)"
+
+          for attempt in {1..18}; do
+            if [ "$latest_version" = "$package_version" ]; then
+              break
+            fi
+
+            echo "npm latest is ${latest_version}; waiting for ${package_version} (${attempt}/18)"
+            sleep 10
+            latest_version="$(npm view react-easy-crop version)"
+          done
+
+          if [ "$latest_version" != "$package_version" ]; then
+            echo "::warning::Expected npm latest ${package_version}, got ${latest_version}; deploying docs with npm latest."
+          fi
+
+          REACT_EASY_CROP_VERSION="$latest_version" node <<'NODE'
+          const fs = require('fs')
+
+          const path = 'docs/package.json'
+          const pkg = JSON.parse(fs.readFileSync(path, 'utf8'))
+          pkg.dependencies['react-easy-crop'] = process.env.REACT_EASY_CROP_VERSION
+          fs.writeFileSync(path, `${JSON.stringify(pkg, null, 2)}\n`)
+          NODE
+          echo "Using react-easy-crop@${latest_version}"
+
+      - name: Install docs dependencies
+        run: pnpm --dir docs install --no-frozen-lockfile --ignore-scripts
+
+      - name: Deploy docs to GitHub Pages
+        run: pnpm --dir docs deploy
+        env:
+          CURRENT_BRANCH: main
+          GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
+          GIT_USER: github-actions[bot]
+          GIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_USER_NAME: github-actions[bot]
+          USE_SSH: false
