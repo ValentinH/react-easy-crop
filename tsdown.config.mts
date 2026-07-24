@@ -17,7 +17,6 @@ const sharedConfig = {
   entry: 'src/index.ts',
   format: ['cjs', 'esm'] as Array<'cjs' | 'esm'>,
   dts: {
-    cjsReexport: true,
     sourcemap: true,
   },
   env: {
@@ -42,6 +41,6 @@ export default defineConfig({
   ...sharedConfig,
   outExtensions: ({ format }) => ({
     js: format === 'es' ? '.module.mjs' : '.js',
-    dts: '.d.mts',
+    dts: format === 'es' ? '.d.mts' : '.d.ts',
   }),
 })
