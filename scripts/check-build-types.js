@@ -1,3 +1,4 @@
+// Compile representative consumers against dist to catch broken CJS or ESM type exports.
 /* eslint-disable no-console, import/no-extraneous-dependencies */
 const { execFileSync } = require('child_process')
 const path = require('path')
