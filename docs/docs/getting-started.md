@@ -15,6 +15,8 @@ pnpm add react-easy-crop
 npm install react-easy-crop --save
 ```
 
+Version 7 requires React 19.2 or newer. See [Migrate from v6 to v7](./migration-v7) when upgrading an existing application.
+
 The cropper fills its parent with `position: absolute`, so wrap it in an element with a stable size and `position: relative`.
 
 ```tsx

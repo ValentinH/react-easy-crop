@@ -1,3 +1,5 @@
+'use client'
+
 import Cropper, { CropperProps } from './Cropper'
 import {
   getInitialCropFromCroppedAreaPixels,

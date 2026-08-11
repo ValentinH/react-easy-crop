@@ -1,6 +1,8 @@
 /// <reference types="node" />
 
 import { readFileSync } from 'node:fs'
+import babel from '@rolldown/plugin-babel'
+import { reactCompilerPreset } from '@vitejs/plugin-react'
 import { defineConfig } from 'tsdown'
 
 const rawCssPlugin = () => ({
@@ -22,7 +24,13 @@ const sharedConfig = {
   env: {
     NODE_ENV: 'production',
   },
-  plugins: [rawCssPlugin()],
+  plugins: [
+    rawCssPlugin(),
+    babel({
+      // Published hooks must never silently fall back to uncompiled code.
+      presets: [reactCompilerPreset({ target: '19', panicThreshold: 'all_errors' })],
+    }),
+  ],
   sourcemap: true,
   target: 'es2015',
   outputOptions: {
@@ -33,7 +41,13 @@ const sharedConfig = {
     dts: '.d.mts',
   }),
   deps: {
-    neverBundle: ['react', 'normalize-wheel'],
+    neverBundle: [
+      'react',
+      'react/compiler-runtime',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      'normalize-wheel',
+    ],
   },
 }
 

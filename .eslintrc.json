@@ -2,14 +2,17 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "react-app",
+    "plugin:react-hooks/recommended",
     "prettier",
     "plugin:cypress/recommended"
   ],
-  "plugins": ["@typescript-eslint/eslint-plugin", "cypress"],
+  "plugins": ["@typescript-eslint/eslint-plugin", "cypress", "react-hooks"],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/ban-ts-ignore": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/ban-types": 0
+    "@typescript-eslint/ban-types": 0,
+    "react-hooks/exhaustive-deps": "error",
+    "react-hooks/rule-suppression": "error"
   }
 }

@@ -31,7 +31,7 @@ Called when rotation changes through gestures or controlled UI.
 
 ## `onCropComplete`
 
-Called when the user stops moving or zooming the media.
+Called once after media initialization, when a mouse, touch, or keyboard interaction ends, and after wheel or resize activity has been quiet for 250 ms.
 
 ```tsx
 function onCropComplete(croppedArea, croppedAreaPixels) {
@@ -53,9 +53,11 @@ Both arguments have this shape:
 
 `croppedArea` is percentages. `croppedAreaPixels` is pixels.
 
+Unrelated renders and values that calculate the same crop do not emit the callback again. If the cropper corrects a controlled crop or zoom value, crop callbacks run after the corrected value commits.
+
 ## `onCropAreaChange`
 
-Same arguments as `onCropComplete`, but called during interaction instead of waiting for the interaction to end.
+Same arguments as `onCropComplete`, but called once per committed crop change during interactions and relevant controlled updates instead of waiting for completion.
 
 ## `onMediaLoaded`
 
@@ -68,6 +70,10 @@ Called when the media loads.
   }}
 />
 ```
+
+## Size changes
+
+`onMediaSizeChange` receives `{ width, height, naturalWidth, naturalHeight }` when the measured media size changes. `onCropSizeChange` receives `{ width, height }` when the crop area size changes. Equal measurements and unrelated renders do not emit either callback.
 
 ## Interaction gates
 

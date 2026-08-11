@@ -31,6 +31,8 @@ jobs:
           restore-keys: |
             pnpm-deps-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm install --frozen-lockfile
+      - name: Run type checking
+        run: pnpm type-check
 
       - name: Create Build
         run: pnpm build
@@ -46,6 +48,12 @@ jobs:
 
       - name: Run unit tests
         run: pnpm unit
+
+      - name: Install documentation dependencies
+        run: pnpm --dir docs install --ignore-workspace --frozen-lockfile --ignore-scripts
+
+      - name: Build documentation
+        run: pnpm docs:build
 
       - name: Cypress run
         uses: cypress-io/github-action@v7

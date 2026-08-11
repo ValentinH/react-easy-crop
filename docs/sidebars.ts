@@ -7,6 +7,7 @@ const sidebars: SidebarsConfig = {
     'props',
     'callbacks',
     'advanced',
+    'migration-v7',
     'known-issues',
     {
       type: 'category',

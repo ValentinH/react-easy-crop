@@ -9,13 +9,17 @@ interface Props {
 
 export default function Iframe({ children }: Props) {
   const [iframeBody, setIframeBody] = React.useState<HTMLElement>()
-
-  const iFrameRef = React.useRef<HTMLIFrameElement>(null)
+  const iframeRef = React.useRef<HTMLIFrameElement>(null)
 
   React.useEffect(() => {
+    const element = iframeRef.current
+    if (!element) return
+
     function setDocumentIfReady() {
-      const { contentDocument } = iFrameRef.current as HTMLIFrameElement
-      const { readyState, documentElement } = contentDocument as Document
+      const { contentDocument } = element
+      if (!contentDocument) return false
+
+      const { readyState, documentElement } = contentDocument
 
       if (readyState !== 'interactive' && readyState !== 'complete') {
         return false
@@ -26,17 +30,16 @@ export default function Iframe({ children }: Props) {
       return true
     }
 
-    // Document set with srcDoc is not immediately ready.
-    if (iFrameRef.current) {
-      iFrameRef.current.addEventListener('load', setDocumentIfReady)
-    }
-  }, [iFrameRef])
+    element.addEventListener('load', setDocumentIfReady)
+
+    return () => element.removeEventListener('load', setDocumentIfReady)
+  }, [])
 
   return (
     <>
       <iframe
         style={{ height: '100vh', width: '100vw' }}
-        ref={iFrameRef}
+        ref={iframeRef}
         srcDoc="<!doctype html>"
         title="test iframed"
         data-cy="iframe"

@@ -5,9 +5,15 @@ title: Styling
 
 # Styling
 
-`react-easy-crop` injects its required CSS automatically.
+`react-easy-crop` renders its CSS automatically as a React-managed stylesheet resource. React hoists it into the document head and deduplicates it. A cropper rendered through a portal into an iframe uses that iframe's document.
 
-If you disable automatic injection, import the CSS yourself:
+Pass `nonce` when your Content Security Policy requires a nonce for inline styles. This switches to a nonce-bearing inline stylesheet so it also works with non-streaming server rendering:
+
+```tsx
+<Cropper nonce={cspNonce} />
+```
+
+If you disable the managed stylesheet, import the CSS yourself:
 
 ```tsx
 import 'react-easy-crop/react-easy-crop.css'
