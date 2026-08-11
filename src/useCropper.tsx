@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffectEvent } from 'react'
 import normalizeWheel from 'normalize-wheel'
 import {
   clamp,
@@ -27,6 +28,12 @@ const MIN_ZOOM = 1
 const MAX_ZOOM = 3
 const KEYBOARD_STEP = 1
 const DEFAULT_ASPECT = 4 / 3
+const ARROW_DELTAS: Readonly<Record<string, Point | undefined>> = {
+  ArrowUp: { x: 0, y: -1 },
+  ArrowDown: { x: 0, y: 1 },
+  ArrowLeft: { x: -1, y: 0 },
+  ArrowRight: { x: 1, y: 0 },
+}
 
 const useSafeLayoutEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect
 
@@ -99,8 +106,7 @@ type CommittedInputs = {
   aspect: number
   minZoom: number
   maxZoom: number
-  cropSizeWidth?: number
-  cropSizeHeight?: number
+  cropSize?: Size
   objectFit: NonNullable<CropperProps['objectFit']>
   restrictPosition: boolean
   zoomWithScroll: boolean
@@ -169,6 +175,19 @@ type Runtime = {
 type Measurement = {
   cropSize: Size
   cropSizeChanged: boolean
+}
+
+type InteractionHandlers = {
+  dragAnimationFrame: () => void
+  pinchAnimationFrame: () => void
+  documentMouseMove: (event: MouseEvent) => void
+  documentMouseUp: () => void
+  documentTouchMove: (event: TouchEvent) => void
+  documentTouchEnd: (event: TouchEvent) => void
+  nativeGestureChange: (event: GestureEvent) => void
+  nativeGestureEnd: (event: GestureEvent) => void
+  wheelSettled: () => void
+  resizeSettled: () => void
 }
 
 type GestureEvent = UIEvent & {
@@ -259,7 +278,7 @@ function pointsEqual(first: Point, second: Point) {
   return first.x === second.x && first.y === second.y
 }
 
-function sizesEqual(first: Size | null, second: Size | null) {
+function sizesEqual(first: Size | null | undefined, second: Size | null | undefined) {
   return first?.width === second?.width && first?.height === second?.height
 }
 
@@ -336,6 +355,7 @@ export function useCropper(props: CropperProps) {
   } = props
   const mediaSignature = getMediaSignature(image, video)
   const runtimeRef = React.useRef<Runtime | null>(null)
+  const interactionHandlersRef = React.useRef<InteractionHandlers | null>(null)
   const [ui, setUi] = React.useState<UiState>(() => ({
     cropSize: null,
     mediaObjectFit: objectFit === 'cover' ? 'horizontal-cover' : objectFit,
@@ -355,8 +375,9 @@ export function useCropper(props: CropperProps) {
       aspect,
       minZoom,
       maxZoom,
-      cropSizeWidth: requestedCropSize?.width,
-      cropSizeHeight: requestedCropSize?.height,
+      cropSize: requestedCropSize
+        ? { width: requestedCropSize.width, height: requestedCropSize.height }
+        : undefined,
       objectFit,
       restrictPosition: shouldRestrictPosition,
       zoomWithScroll,
@@ -537,7 +558,7 @@ export function useCropper(props: CropperProps) {
     runtime.releaseRequests = null
   }
 
-  const cancelExternalWorkEvent = React.useEffectEvent(() => {
+  const cancelExternalWorkEvent = useEffectEvent(() => {
     cancelExternalWork()
   })
 
@@ -613,13 +634,17 @@ export function useCropper(props: CropperProps) {
     return true
   }
 
-  const onDragAnimationFrame = React.useEffectEvent(() => {
+  function handleDragAnimationFrame() {
     const runtime = getRuntime()
     runtime.rafDrag = null
     const point = runtime.pendingDragPoint
     runtime.pendingDragPoint = null
     if (point) applyDrag(point)
-  })
+  }
+
+  function onDragAnimationFrame() {
+    interactionHandlersRef.current?.dragAnimationFrame()
+  }
 
   function scheduleDrag(point: Point) {
     const runtime = getRuntime()
@@ -652,13 +677,17 @@ export function useCropper(props: CropperProps) {
     return changed
   }
 
-  const onPinchAnimationFrame = React.useEffectEvent(() => {
+  function handlePinchAnimationFrame() {
     const runtime = getRuntime()
     runtime.rafPinch = null
     const pinch = runtime.pendingPinch
     runtime.pendingPinch = null
     if (pinch) applyPinch(pinch)
-  })
+  }
+
+  function onPinchAnimationFrame() {
+    interactionHandlersRef.current?.pinchAnimationFrame()
+  }
 
   function schedulePinch(event: TouchEvent) {
     const runtime = getRuntime()
@@ -711,16 +740,24 @@ export function useCropper(props: CropperProps) {
     onInteractionEnd?.({ source })
   }
 
-  const onDocumentMouseMove = React.useEffectEvent((event: MouseEvent) => {
+  function handleDocumentMouseMove(event: MouseEvent) {
     const runtime = getRuntime()
     if (runtime.dragInteractionSource === 'mouse') scheduleDrag(getMousePoint(event))
-  })
+  }
 
-  const onDocumentMouseUp = React.useEffectEvent(() => {
+  function onDocumentMouseMove(event: MouseEvent) {
+    interactionHandlersRef.current?.documentMouseMove(event)
+  }
+
+  function handleDocumentMouseUp() {
     if (getRuntime().dragInteractionSource === 'mouse') stopDrag()
-  })
+  }
 
-  const onDocumentTouchMove = React.useEffectEvent((event: TouchEvent) => {
+  function onDocumentMouseUp() {
+    interactionHandlersRef.current?.documentMouseUp()
+  }
+
+  function handleDocumentTouchMove(event: TouchEvent) {
     const runtime = getRuntime()
     if (runtime.dragInteractionSource !== 'touch') return
     event.preventDefault()
@@ -729,9 +766,13 @@ export function useCropper(props: CropperProps) {
     } else if (event.touches.length === 1) {
       scheduleDrag(getTouchPoint(event.touches[0]))
     }
-  })
+  }
 
-  const onDocumentTouchEnd = React.useEffectEvent((event: TouchEvent) => {
+  function onDocumentTouchMove(event: TouchEvent) {
+    interactionHandlersRef.current?.documentTouchMove(event)
+  }
+
+  function handleDocumentTouchEnd(event: TouchEvent) {
     const runtime = getRuntime()
     if (runtime.dragInteractionSource === 'touch') {
       stopDrag()
@@ -747,7 +788,11 @@ export function useCropper(props: CropperProps) {
       runtime.gestureCleanup?.()
       runtime.gestureCleanup = null
     }
-  })
+  }
+
+  function onDocumentTouchEnd(event: TouchEvent) {
+    interactionHandlersRef.current?.documentTouchEnd(event)
+  }
 
   function attachDragListeners(source: CropperInteractionSource) {
     const runtime = getRuntime()
@@ -808,22 +853,30 @@ export function useCropper(props: CropperProps) {
     return startDrag(getCenter(pointA, pointB), 'touch')
   }
 
-  const onNativeGestureChange = React.useEffectEvent((event: GestureEvent) => {
+  function handleNativeGestureChange(event: GestureEvent) {
     event.preventDefault()
     const runtime = getRuntime()
     if (!runtime.gestureActive || runtime.touching || runtime.suppressNativeGesture) return
     const point = getMousePoint(event)
     setNewZoom(runtime.gestureZoomStart - 1 + event.scale, point, true)
     onRotationChange?.(runtime.gestureRotationStart + event.rotation)
-  })
+  }
 
-  const onNativeGestureEnd = React.useEffectEvent((event: GestureEvent) => {
+  function onNativeGestureChange(event: GestureEvent) {
+    interactionHandlersRef.current?.nativeGestureChange(event)
+  }
+
+  function handleNativeGestureEnd(event: GestureEvent) {
     event.preventDefault()
     const runtime = getRuntime()
     runtime.gestureActive = false
     runtime.gestureCleanup?.()
     runtime.gestureCleanup = null
-  })
+  }
+
+  function onNativeGestureEnd(event: GestureEvent) {
+    interactionHandlersRef.current?.nativeGestureEnd(event)
+  }
 
   function attachGestureListeners() {
     const runtime = getRuntime()
@@ -839,7 +892,7 @@ export function useCropper(props: CropperProps) {
     return true
   }
 
-  const onNativeGestureStart = React.useEffectEvent((event: GestureEvent) => {
+  const onNativeGestureStart = useEffectEvent((event: GestureEvent) => {
     event.preventDefault()
     const runtime = getRuntime()
     if (!attachGestureListeners()) return
@@ -853,14 +906,18 @@ export function useCropper(props: CropperProps) {
     runtime.gestureRotationStart = rotation
   })
 
-  const onWheelSettled = React.useEffectEvent(() => {
+  function handleWheelSettled() {
     const runtime = getRuntime()
     runtime.wheelTimer = null
     if (!runtime.wheelActive) return
     runtime.wheelActive = false
     emitCropComplete()
     onInteractionEnd?.({ source: 'wheel' })
-  })
+  }
+
+  function onWheelSettled() {
+    interactionHandlersRef.current?.wheelSettled()
+  }
 
   function restartWheelTimer() {
     const runtime = getRuntime()
@@ -869,7 +926,7 @@ export function useCropper(props: CropperProps) {
     runtime.wheelTimer = runtime.window.setTimeout(onWheelSettled, WHEEL_EMIT_DEBOUNCE_TIME)
   }
 
-  const onNativeWheel = React.useEffectEvent((event: WheelEvent) => {
+  const onNativeWheel = useEffectEvent((event: WheelEvent) => {
     if (!zoomWithScroll) return
     if (onWheelRequest && !onWheelRequest(event)) return
 
@@ -886,7 +943,7 @@ export function useCropper(props: CropperProps) {
     if (runtime.wheelActive) restartWheelTimer()
   })
 
-  const onResizeSettled = React.useEffectEvent(() => {
+  function handleResizeSettled() {
     const runtime = getRuntime()
     runtime.resizeTimer = null
     if (runtime.pendingCrop || runtime.pendingInteractionCompletion) {
@@ -894,7 +951,11 @@ export function useCropper(props: CropperProps) {
       return
     }
     emitCropComplete()
-  })
+  }
+
+  function onResizeSettled() {
+    interactionHandlersRef.current?.resizeSettled()
+  }
 
   function scheduleResizeCompletion() {
     const runtime = getRuntime()
@@ -925,7 +986,7 @@ export function useCropper(props: CropperProps) {
     if (isResize) scheduleResizeCompletion()
   }
 
-  const onExternalResize = React.useEffectEvent(() => {
+  const onExternalResize = useEffectEvent(() => {
     recomputeLayout(true)
   })
 
@@ -977,7 +1038,7 @@ export function useCropper(props: CropperProps) {
     emitCropComplete()
   }
 
-  const onMountedImageReady = React.useEffectEvent(() => {
+  const onMountedImageReady = useEffectEvent(() => {
     const runtime = getRuntime()
     const media = runtime.media
     if (
@@ -1049,16 +1110,14 @@ export function useCropper(props: CropperProps) {
       previous.rotation !== rotation ||
       previous.aspect !== aspect ||
       previous.objectFit !== objectFit ||
-      previous.cropSizeWidth !== requestedCropSize?.width ||
-      previous.cropSizeHeight !== requestedCropSize?.height
+      !sizesEqual(previous.cropSize, requestedCropSize)
     const cropInputsChanged =
       !pointsEqual(previous.crop, crop) ||
       previous.zoom !== zoom ||
       previous.rotation !== rotation ||
       previous.aspect !== aspect ||
       previous.restrictPosition !== shouldRestrictPosition ||
-      previous.cropSizeWidth !== requestedCropSize?.width ||
-      previous.cropSizeHeight !== requestedCropSize?.height ||
+      !sizesEqual(previous.cropSize, requestedCropSize) ||
       previous.objectFit !== objectFit
 
     if (measurementInputsChanged) {
@@ -1087,11 +1146,7 @@ export function useCropper(props: CropperProps) {
     if (completionDue) emitCropComplete()
   }
 
-  const synchronizeCommittedInputs = React.useEffectEvent((signature: string) => {
-    synchronizeInputs(signature)
-  })
-
-  const onDocumentScroll = React.useEffectEvent((event: Event) => {
+  const onDocumentScroll = useEffectEvent((event: Event) => {
     event.preventDefault()
     saveContainerBounds()
   })
@@ -1113,10 +1168,13 @@ export function useCropper(props: CropperProps) {
     return () => cleanupAssignedRef(ref, refCleanup, element)
   }
 
-  function setImageElement(element: HTMLImageElement | null) {
+  function setMediaElement<T extends HTMLImageElement | HTMLVideoElement>(
+    element: T | null,
+    tagName: 'IMG' | 'VIDEO'
+  ) {
     const runtime = getRuntime()
     if (!element) {
-      if (runtime.media?.tagName === 'IMG') runtime.media = null
+      if (runtime.media?.tagName === tagName) runtime.media = null
       assignRef(mediaRef, null)
       return
     }
@@ -1128,19 +1186,12 @@ export function useCropper(props: CropperProps) {
     }
   }
 
+  function setImageElement(element: HTMLImageElement | null) {
+    return setMediaElement(element, 'IMG')
+  }
+
   function setVideoElement(element: HTMLVideoElement | null) {
-    const runtime = getRuntime()
-    if (!element) {
-      if (runtime.media?.tagName === 'VIDEO') runtime.media = null
-      assignRef(mediaRef, null)
-      return
-    }
-    runtime.media = element
-    const refCleanup = assignRef(mediaRef, element)
-    return () => {
-      if (runtime.media === element) runtime.media = null
-      cleanupAssignedRef(mediaRef, refCleanup, element)
-    }
+    return setMediaElement(element, 'VIDEO')
   }
 
   function setCropAreaElement(element: HTMLDivElement | null) {
@@ -1178,24 +1229,12 @@ export function useCropper(props: CropperProps) {
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     const runtime = getRuntime()
     if (!runtime.initialized || !runtime.cropSize) return
+    const delta = ARROW_DELTAS[event.key]
+    if (!delta) return
     const step = event.shiftKey ? keyboardStep * 0.2 : keyboardStep
-    const nextCrop = { ...crop }
-
-    switch (event.key) {
-      case 'ArrowUp':
-        nextCrop.y -= step
-        break
-      case 'ArrowDown':
-        nextCrop.y += step
-        break
-      case 'ArrowLeft':
-        nextCrop.x -= step
-        break
-      case 'ArrowRight':
-        nextCrop.x += step
-        break
-      default:
-        return
+    const nextCrop = {
+      x: crop.x + delta.x * step,
+      y: crop.y + delta.y * step,
     }
     event.preventDefault()
     const restrictedCrop = shouldRestrictPosition
@@ -1212,20 +1251,12 @@ export function useCropper(props: CropperProps) {
 
   function onKeyUp(event: React.KeyboardEvent<HTMLDivElement>) {
     const runtime = getRuntime()
-    switch (event.key) {
-      case 'ArrowUp':
-      case 'ArrowDown':
-      case 'ArrowLeft':
-      case 'ArrowRight':
-        event.preventDefault()
-        if (!runtime.keyboardKeys.delete(event.key)) return
-        if (runtime.keyboardKeys.size > 0) return
-        emitCropComplete()
-        onInteractionEnd?.({ source: 'keyboard' })
-        return
-      default:
-        return
-    }
+    if (!ARROW_DELTAS[event.key]) return
+    event.preventDefault()
+    if (!runtime.keyboardKeys.delete(event.key)) return
+    if (runtime.keyboardKeys.size > 0) return
+    emitCropComplete()
+    onInteractionEnd?.({ source: 'keyboard' })
   }
 
   React.useEffect(() => {
@@ -1275,22 +1306,20 @@ export function useCropper(props: CropperProps) {
   }, [])
 
   useSafeLayoutEffect(() => {
-    synchronizeCommittedInputs(mediaSignature)
-  }, [
-    mediaSignature,
-    crop.x,
-    crop.y,
-    zoom,
-    rotation,
-    aspect,
-    minZoom,
-    maxZoom,
-    requestedCropSize?.width,
-    requestedCropSize?.height,
-    objectFit,
-    shouldRestrictPosition,
-    zoomWithScroll,
-  ])
+    interactionHandlersRef.current = {
+      dragAnimationFrame: handleDragAnimationFrame,
+      pinchAnimationFrame: handlePinchAnimationFrame,
+      documentMouseMove: handleDocumentMouseMove,
+      documentMouseUp: handleDocumentMouseUp,
+      documentTouchMove: handleDocumentTouchMove,
+      documentTouchEnd: handleDocumentTouchEnd,
+      nativeGestureChange: handleNativeGestureChange,
+      nativeGestureEnd: handleNativeGestureEnd,
+      wheelSettled: handleWheelSettled,
+      resizeSettled: handleResizeSettled,
+    }
+    synchronizeInputs(mediaSignature)
+  })
 
   return {
     cropSize: ui.cropSize,

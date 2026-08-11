@@ -49,11 +49,12 @@ jobs:
       - name: Run unit tests
         run: pnpm unit
 
-      - name: Install documentation dependencies
+      # docs/package.json links ../dist so this validates the build from this commit.
+      - name: Install documentation dependencies against local build
         run: pnpm --dir docs install --ignore-workspace --frozen-lockfile --ignore-scripts
 
       - name: Build documentation
-        run: pnpm docs:build
+        run: pnpm --dir docs build:site
 
       - name: Cypress run
         uses: cypress-io/github-action@v7

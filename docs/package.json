@@ -6,8 +6,11 @@
   "author": "ValentinH",
   "license": "MIT",
   "scripts": {
-    "build": "docusaurus build",
+    "build": "pnpm build:library && pnpm build:site",
+    "build:library": "pnpm --dir .. build",
+    "build:site": "docusaurus build",
     "deploy": "docusaurus deploy",
+    "prestart": "pnpm build:library",
     "serve": "docusaurus serve",
     "start": "docusaurus start"
   },
@@ -19,7 +22,7 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-easy-crop": "5.5.6"
+    "react-easy-crop": "link:../dist"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.1",

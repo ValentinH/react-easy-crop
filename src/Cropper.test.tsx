@@ -388,6 +388,133 @@ describe('Cropper hooks implementation', () => {
     ).toBe(true)
   })
 
+  test('active mouse listeners use the latest controlled crop and callbacks', () => {
+    const firstCropChange = vi.fn()
+    const secondCropChange = vi.fn()
+    const firstInteractionEnd = vi.fn()
+    const secondInteractionEnd = vi.fn()
+    const view = render(
+      <Cropper
+        {...requiredProps({
+          onCropChange: firstCropChange,
+          onInteractionEnd: firstInteractionEnd,
+        })}
+      />
+    )
+    const container = view.getByTestId('container')
+    const image = view.container.querySelector('img') as HTMLImageElement
+    setMediaDimensions(container, image)
+    fireEvent.load(image)
+    firstCropChange.mockClear()
+
+    fireEvent.mouseDown(container, { clientX: 100, clientY: 100 })
+    fireEvent.mouseMove(document, { clientX: 90, clientY: 100 })
+    expect(firstCropChange).toHaveBeenCalledWith({ x: -10, y: 0 })
+
+    view.rerender(
+      <Cropper
+        {...requiredProps({
+          crop: { x: -10, y: 0 },
+          onCropChange: secondCropChange,
+          onInteractionEnd: secondInteractionEnd,
+        })}
+      />
+    )
+    fireEvent.mouseMove(document, { clientX: 80, clientY: 100 })
+    fireEvent.mouseUp(document)
+
+    expect(firstCropChange).toHaveBeenCalledOnce()
+    expect(secondCropChange).toHaveBeenCalledWith({ x: -20, y: 0 })
+    expect(firstInteractionEnd).not.toHaveBeenCalled()
+    expect(secondInteractionEnd).toHaveBeenCalledWith({ source: 'mouse' })
+  })
+
+  test('active touch and gesture listeners use the latest callbacks', () => {
+    const firstCropChange = vi.fn()
+    const secondCropChange = vi.fn()
+    const firstRotationChange = vi.fn()
+    const secondRotationChange = vi.fn()
+    const view = render(
+      <Cropper
+        {...requiredProps({
+          onCropChange: firstCropChange,
+          onRotationChange: firstRotationChange,
+        })}
+      />
+    )
+    const container = view.getByTestId('container')
+    const image = view.container.querySelector('img') as HTMLImageElement
+    setMediaDimensions(container, image)
+    fireEvent.load(image)
+    firstCropChange.mockClear()
+
+    fireEvent.touchStart(container, { touches: [{ clientX: 100, clientY: 100 }] })
+    view.rerender(
+      <Cropper
+        {...requiredProps({
+          onCropChange: secondCropChange,
+          onRotationChange: secondRotationChange,
+        })}
+      />
+    )
+    fireEvent.touchMove(document, { touches: [{ clientX: 80, clientY: 100 }] })
+    fireEvent.touchEnd(document)
+
+    expect(firstCropChange).not.toHaveBeenCalled()
+    expect(secondCropChange).toHaveBeenCalledWith({ x: -20, y: 0 })
+
+    const gesture = (type: string) => {
+      const event = new Event(type, { bubbles: true, cancelable: true })
+      Object.assign(event, { clientX: 100, clientY: 100, rotation: 5, scale: 1 })
+      return event
+    }
+    container.dispatchEvent(gesture('gesturestart'))
+    view.rerender(
+      <Cropper
+        {...requiredProps({
+          onCropChange: secondCropChange,
+          onRotationChange: secondRotationChange,
+        })}
+      />
+    )
+    document.dispatchEvent(gesture('gesturechange'))
+
+    expect(firstRotationChange).not.toHaveBeenCalled()
+    expect(secondRotationChange).toHaveBeenCalledWith(5)
+  })
+
+  test('pending wheel completion uses the latest callback', () => {
+    vi.useFakeTimers()
+    const firstInteractionEnd = vi.fn()
+    const secondInteractionEnd = vi.fn()
+    const view = render(
+      <Cropper
+        {...requiredProps({
+          onZoomChange: vi.fn(),
+          onInteractionEnd: firstInteractionEnd,
+        })}
+      />
+    )
+    const container = view.getByTestId('container')
+    const image = view.container.querySelector('img') as HTMLImageElement
+    setMediaDimensions(container, image)
+    fireEvent.load(image)
+
+    fireEvent.wheel(container, { clientX: 100, clientY: 100, deltaY: -100 })
+    view.rerender(
+      <Cropper
+        {...requiredProps({
+          onZoomChange: vi.fn(),
+          onInteractionEnd: secondInteractionEnd,
+        })}
+      />
+    )
+    act(() => vi.advanceTimersByTime(250))
+
+    expect(firstInteractionEnd).not.toHaveBeenCalled()
+    expect(secondInteractionEnd).toHaveBeenCalledWith({ source: 'wheel' })
+  })
+
   test('installs high-frequency document listeners only for an active interaction', () => {
     const addEventListener = vi.spyOn(Document.prototype, 'addEventListener')
     const removeEventListener = vi.spyOn(Document.prototype, 'removeEventListener')

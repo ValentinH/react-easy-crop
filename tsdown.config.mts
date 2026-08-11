@@ -2,8 +2,8 @@
 
 import { readFileSync } from 'node:fs'
 import babel from '@rolldown/plugin-babel'
-import { reactCompilerPreset } from '@vitejs/plugin-react'
 import { defineConfig } from 'tsdown'
+import { createReactCompilerBabelConfig } from './react-compiler.config.mts'
 
 const rawCssPlugin = () => ({
   name: 'raw-css',
@@ -24,13 +24,7 @@ const sharedConfig = {
   env: {
     NODE_ENV: 'production',
   },
-  plugins: [
-    rawCssPlugin(),
-    babel({
-      // Published hooks must never silently fall back to uncompiled code.
-      presets: [reactCompilerPreset({ target: '19', panicThreshold: 'all_errors' })],
-    }),
-  ],
+  plugins: [rawCssPlugin(), babel(createReactCompilerBabelConfig())],
   sourcemap: true,
   target: 'es2015',
   outputOptions: {
