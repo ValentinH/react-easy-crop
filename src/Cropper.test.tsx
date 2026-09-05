@@ -79,6 +79,305 @@ afterEach(() => {
 })
 
 describe('Cropper hooks implementation', () => {
+  test.each([
+    { zoom: 2 },
+    { rotation: 90 },
+    { aspect: 1 },
+    { cropSize: { width: 180, height: 180 } },
+  ])('completes external geometry updates: %j', (update) => {
+    const onCropComplete = vi.fn()
+    const onCropAreaChange = vi.fn()
+    const props = requiredProps({ onCropComplete, onCropAreaChange })
+    const view = render(<Cropper {...props} />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    fireEvent.load(image)
+    onCropComplete.mockClear()
+    onCropAreaChange.mockClear()
+    view.rerender(<Cropper {...props} {...update} />)
+    expect(onCropComplete).toHaveBeenCalledOnce()
+    expect(onCropComplete.mock.lastCall).toEqual(onCropAreaChange.mock.lastCall)
+    view.rerender(<Cropper {...props} {...update} />)
+    expect(onCropComplete).toHaveBeenCalledOnce()
+  })
+
+  test('completes with the zoom set by onMediaLoaded', () => {
+    const onCropComplete = vi.fn()
+    function Controlled() {
+      const [zoom, setZoom] = React.useState(1)
+      return (
+        <Cropper
+          {...requiredProps()}
+          zoom={zoom}
+          onZoomChange={setZoom}
+          onMediaLoaded={() => setZoom(2)}
+          onCropComplete={onCropComplete}
+        />
+      )
+    }
+    const view = render(<Controlled />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    fireEvent.load(image)
+    expect(onCropComplete).toHaveBeenCalledOnce()
+    expect(onCropComplete.mock.lastCall?.[1]).toMatchObject({ width: 333, height: 250 })
+  })
+
+  test('retains aspect changes across a zoom-bound correction', () => {
+    const onCropSizeChange = vi.fn()
+    function Controlled() {
+      const [zoom, setZoom] = React.useState(3)
+      const [square, setSquare] = React.useState(false)
+      return (
+        <>
+          <button onClick={() => setSquare(true)}>square</button>
+          <Cropper
+            {...requiredProps()}
+            zoom={zoom}
+            onZoomChange={setZoom}
+            maxZoom={square ? 2 : 3}
+            aspect={square ? 1 : 4 / 3}
+            onCropSizeChange={onCropSizeChange}
+          />
+        </>
+      )
+    }
+    const view = render(<Controlled />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    fireEvent.load(image)
+    fireEvent.click(view.getByText('square'))
+    expect(onCropSizeChange).toHaveBeenLastCalledWith({ width: 200, height: 200 })
+  })
+
+  test.each(['crop-first', 'zoom-first'])(
+    'waits for both deferred restoration values: %s',
+    (order) => {
+      const onCropChange = vi.fn<(crop: { x: number; y: number }) => void>()
+      const onZoomChange = vi.fn<(zoom: number) => void>()
+      const onCropComplete = vi.fn()
+      const area = { x: 25, y: 25, width: 25, height: 37.5 }
+      const props = requiredProps({
+        onCropChange,
+        onZoomChange,
+        onCropComplete,
+        initialCroppedAreaPercentages: area,
+      })
+      const view = render(<Cropper {...props} />)
+      const image = view.container.querySelector('img')
+      if (!image) throw new Error('Expected image')
+      setMediaDimensions(view.getByTestId('container'), image)
+      fireEvent.load(image)
+      expect(onCropComplete).not.toHaveBeenCalled()
+      const crop = onCropChange.mock.lastCall?.[0]
+      const zoom = onZoomChange.mock.lastCall?.[0]
+      if (!crop || zoom === undefined) throw new Error('Expected restoration requests')
+      view.rerender(
+        <Cropper
+          {...props}
+          crop={order === 'crop-first' ? crop : props.crop}
+          zoom={order === 'zoom-first' ? zoom : 1}
+        />
+      )
+      expect(onCropComplete).not.toHaveBeenCalled()
+      view.rerender(<Cropper {...props} crop={crop} zoom={zoom} />)
+      expect(onCropComplete).toHaveBeenCalledOnce()
+      expect(onCropComplete.mock.lastCall?.[0]).toEqual({
+        x: 25,
+        y: 25,
+        width: expect.closeTo(25),
+        height: expect.closeTo(37.5),
+      })
+    }
+  )
+
+  test.each([false, true])(
+    'restricts a flushed translated pinch using final geometry, rotate=%s',
+    (rotate) => {
+      vi.stubGlobal('requestAnimationFrame', () => 1)
+      const onCropComplete = vi.fn()
+      const onCropChange = vi.fn()
+      function Controlled() {
+        const [crop, setCrop] = React.useState({ x: 0, y: 0 })
+        const [zoom, setZoom] = React.useState(2)
+        const [rotation, setRotation] = React.useState(0)
+        return (
+          <Cropper
+            {...requiredProps()}
+            crop={crop}
+            zoom={zoom}
+            rotation={rotation}
+            onRotationChange={setRotation}
+            onZoomChange={setZoom}
+            onCropChange={(next) => {
+              onCropChange(next)
+              setCrop(next)
+            }}
+            onCropComplete={onCropComplete}
+          />
+        )
+      }
+      const view = render(<Controlled />)
+      const container = view.getByTestId('container')
+      const image = view.container.querySelector('img')
+      if (!image) throw new Error('Expected image')
+      setMediaDimensions(container, image)
+      fireEvent.load(image)
+      onCropComplete.mockClear()
+      fireEvent.touchStart(container, {
+        touches: [
+          { clientX: 100, clientY: 100 },
+          { clientX: 300, clientY: 100 },
+        ],
+      })
+      fireEvent.touchMove(document, {
+        touches: rotate
+          ? [
+              { clientX: 350, clientY: 50 },
+              { clientX: 350, clientY: 150 },
+            ]
+          : [
+              { clientX: 250, clientY: 100 },
+              { clientX: 350, clientY: 100 },
+            ],
+      })
+      fireEvent.touchEnd(document, { touches: [] })
+      expect(onCropComplete).toHaveBeenCalledOnce()
+      expect(onCropChange.mock.lastCall?.[0].x).toBeCloseTo(rotate ? 0 : 400 / 6)
+      expect(onCropComplete.mock.lastCall?.[1]).toMatchObject({
+        x: 0,
+        width: rotate ? 500 : 667,
+        height: rotate ? 375 : 500,
+      })
+    }
+  )
+
+  test('remeasures small media after the object-fit class commits', () => {
+    const onMediaSizeChange = vi.fn()
+    const props = requiredProps({ onMediaSizeChange })
+    const view = render(<Cropper {...props} />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    Object.defineProperties(image, {
+      naturalWidth: { configurable: true, value: 100 },
+      naturalHeight: { configurable: true, value: 50 },
+      offsetWidth: {
+        configurable: true,
+        get: () => (image.classList.contains('reactEasyCrop_Contain') ? 100 : 400),
+      },
+      offsetHeight: {
+        configurable: true,
+        get: () => (image.classList.contains('reactEasyCrop_Contain') ? 50 : 200),
+      },
+    })
+    fireEvent.load(image)
+    view.rerender(<Cropper {...props} objectFit="horizontal-cover" />)
+    expect(onMediaSizeChange).toHaveBeenLastCalledWith({
+      width: 400,
+      height: 200,
+      naturalWidth: 100,
+      naturalHeight: 50,
+    })
+  })
+
+  test('keeps layout work pending while the parent defers a crop correction', () => {
+    const onCropChange = vi.fn<(crop: { x: number; y: number }) => void>()
+    const onZoomChange = vi.fn<(zoom: number) => void>()
+    const onCropComplete = vi.fn()
+    const props = requiredProps({
+      crop: { x: 100, y: 0 },
+      zoom: 3,
+      onCropChange,
+      onZoomChange,
+      onCropComplete,
+    })
+    const view = render(<Cropper {...props} />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    fireEvent.load(image)
+    onCropComplete.mockClear()
+    view.rerender(<Cropper {...props} zoom={1} />)
+    const correction = onCropChange.mock.lastCall?.[0]
+    if (!correction) throw new Error('Expected restricted crop')
+    view.rerender(<Cropper {...props} zoom={1} minZoom={2} aspect={1} />)
+    expect(onCropComplete).not.toHaveBeenCalled()
+    view.rerender(<Cropper {...props} crop={correction} zoom={1} minZoom={2} aspect={1} />)
+    expect(onZoomChange).toHaveBeenLastCalledWith(2)
+    view.rerender(<Cropper {...props} crop={correction} zoom={2} minZoom={2} aspect={1} />)
+    const finalCrop = onCropChange.mock.lastCall?.[0]
+    if (!finalCrop) throw new Error('Expected square crop adjustment')
+    view.rerender(<Cropper {...props} crop={finalCrop} zoom={2} minZoom={2} aspect={1} />)
+    expect(view.getByTestId('cropper').style.width).toBe('200px')
+    expect(onCropComplete).toHaveBeenCalledOnce()
+    expect(onCropComplete.mock.lastCall?.[1]).toMatchObject({ width: 250, height: 250 })
+  })
+
+  test('completes native gestures after rotation restriction settles', () => {
+    const onCropComplete = vi.fn()
+    const onCropAreaChange = vi.fn()
+    function Controlled() {
+      const [crop, setCrop] = React.useState({ x: 0, y: 0 })
+      const [zoom, setZoom] = React.useState(2)
+      const [rotation, setRotation] = React.useState(0)
+      return (
+        <Cropper
+          {...requiredProps()}
+          crop={crop}
+          zoom={zoom}
+          rotation={rotation}
+          onCropChange={setCrop}
+          onZoomChange={setZoom}
+          onRotationChange={setRotation}
+          onCropComplete={onCropComplete}
+          onCropAreaChange={onCropAreaChange}
+        />
+      )
+    }
+    const view = render(<Controlled />)
+    const container = view.getByTestId('container')
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(container, image)
+    fireEvent.load(image)
+    onCropComplete.mockClear()
+    const gesture = (type: string) => {
+      const event = new Event(type, { bubbles: true, cancelable: true })
+      Object.assign(event, { clientX: 0, clientY: 100, rotation: 90, scale: 0.5 })
+      return event
+    }
+    fireEvent(container, gesture('gesturestart'))
+    fireEvent(document, gesture('gesturechange'))
+    expect(onCropComplete).not.toHaveBeenCalled()
+    fireEvent(document, gesture('gestureend'))
+    expect(onCropComplete).toHaveBeenCalledOnce()
+    expect(onCropComplete.mock.lastCall).toEqual(onCropAreaChange.mock.lastCall)
+  })
+
+  test('does not complete a layout update before deferred zoom correction commits', () => {
+    const onZoomChange = vi.fn()
+    const onCropComplete = vi.fn()
+    const props = requiredProps({ zoom: 3, onZoomChange, onCropComplete })
+    const view = render(<Cropper {...props} />)
+    const image = view.container.querySelector('img')
+    if (!image) throw new Error('Expected image')
+    setMediaDimensions(view.getByTestId('container'), image)
+    fireEvent.load(image)
+    onCropComplete.mockClear()
+    view.rerender(<Cropper {...props} maxZoom={2} aspect={1} />)
+    expect(onZoomChange).toHaveBeenLastCalledWith(2)
+    view.rerender(<Cropper {...props} maxZoom={2} aspect={1} showGrid={false} />)
+    expect(onCropComplete).not.toHaveBeenCalled()
+    expect(onZoomChange).toHaveBeenCalledOnce()
+    view.rerender(<Cropper {...props} zoom={2} maxZoom={2} aspect={1} />)
+    expect(onCropComplete).toHaveBeenCalledOnce()
+    expect(onCropComplete.mock.lastCall?.[1]).toMatchObject({ width: 250, height: 250 })
+  })
+
   test('measures media and exposes the React 19 refs', () => {
     const containerRef = React.createRef<HTMLDivElement>()
     const mediaRef = React.createRef<HTMLImageElement | HTMLVideoElement>()

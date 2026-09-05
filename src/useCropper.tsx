@@ -145,7 +145,12 @@ type Runtime = {
   initialized: boolean
   committedInputs: CommittedInputs | null
   pendingCrop: PendingCrop | null
-  pendingInitialCompletion: boolean
+  pendingZoom: PendingNumber | null
+  pendingInitialCompletion: PendingInteractionCompletion | null
+  pendingLayout: 'initial' | 'props' | 'resize' | null
+  cropSyncDue: boolean
+  zoomBoundsCheckDue: boolean
+  externalCompletionDue: boolean
   pendingInteractionCompletion: PendingInteractionCompletion | null
   releaseRequests: PendingInteractionCompletion | null
   resizeCompletionDue: boolean
@@ -157,6 +162,7 @@ type Runtime = {
   gestureActive: boolean
   gestureZoomStart: number
   gestureRotationStart: number
+  gestureRequests: PendingInteractionCompletion | null
   lastPinchDistance: number
   lastPinchRotation: number
   pendingDragPoint: Point | null
@@ -222,7 +228,12 @@ function createRuntime(): Runtime {
     initialized: false,
     committedInputs: null,
     pendingCrop: null,
-    pendingInitialCompletion: false,
+    pendingZoom: null,
+    pendingInitialCompletion: null,
+    pendingLayout: null,
+    cropSyncDue: false,
+    zoomBoundsCheckDue: false,
+    externalCompletionDue: false,
     pendingInteractionCompletion: null,
     releaseRequests: null,
     resizeCompletionDue: false,
@@ -234,6 +245,7 @@ function createRuntime(): Runtime {
     gestureActive: false,
     gestureZoomStart: 0,
     gestureRotationStart: 0,
+    gestureRequests: null,
     lastPinchDistance: 0,
     lastPinchRotation: 0,
     pendingDragPoint: null,
@@ -414,6 +426,11 @@ export function useCropper(props: CropperProps) {
     if (!naturalWidth || !naturalHeight) return null
 
     const resolvedObjectFit = resolveObjectFit(naturalWidth, naturalHeight, containerRect)
+    // Offset dimensions still describe the old class until React commits this update.
+    if (ui.mediaObjectFit !== resolvedObjectFit) {
+      setUi((current) => ({ ...current, mediaObjectFit: resolvedObjectFit }))
+      return null
+    }
     const containerAspect = containerRect.width / containerRect.height
     const mediaAspect = naturalWidth / naturalHeight
     const isMediaScaledDown = media.offsetWidth < naturalWidth || media.offsetHeight < naturalHeight
@@ -513,6 +530,13 @@ export function useCropper(props: CropperProps) {
     onCropComplete?.(data.croppedAreaPercentages, data.croppedAreaPixels)
   }
 
+  function interactionCompletionCommitted(completion: PendingInteractionCompletion) {
+    const cropCommitted = !completion.crop || pointsEqual(crop, completion.crop.requested)
+    const zoomCommitted = !completion.zoom || zoom === completion.zoom.requested
+    const rotationCommitted = !completion.rotation || rotation === completion.rotation.requested
+    return cropCommitted && zoomCommitted && rotationCommitted
+  }
+
   function requestRestrictedCrop(position: Point) {
     const runtime = getRuntime()
     if (!runtime.cropSize) return false
@@ -521,6 +545,15 @@ export function useCropper(props: CropperProps) {
       : position
     if (pointsEqual(nextPosition, crop)) return false
     runtime.pendingCrop = { requested: nextPosition, previous: crop }
+    for (const completion of [
+      runtime.pendingInteractionCompletion,
+      runtime.pendingInitialCompletion,
+      runtime.gestureRequests,
+    ]) {
+      if (completion && interactionCompletionCommitted(completion)) {
+        completion.crop = { requested: nextPosition, previous: crop }
+      }
+    }
     onCropChange(nextPosition)
     return true
   }
@@ -553,6 +586,7 @@ export function useCropper(props: CropperProps) {
     runtime.touching = false
     runtime.suppressNativeGesture = false
     runtime.gestureActive = false
+    runtime.gestureRequests = null
     runtime.pendingDragPoint = null
     runtime.pendingPinch = null
     runtime.releaseRequests = null
@@ -566,7 +600,12 @@ export function useCropper(props: CropperProps) {
     const runtime = getRuntime()
     cancelExternalWork()
     runtime.pendingCrop = null
-    runtime.pendingInitialCompletion = false
+    runtime.pendingZoom = null
+    runtime.pendingInitialCompletion = null
+    runtime.pendingLayout = null
+    runtime.cropSyncDue = false
+    runtime.zoomBoundsCheckDue = false
+    runtime.externalCompletionDue = false
     runtime.pendingInteractionCompletion = null
     runtime.resizeCompletionDue = false
   }
@@ -657,16 +696,45 @@ export function useCropper(props: CropperProps) {
 
   function applyPinch({ pointA, pointB, center }: { pointA: Point; pointB: Point; center: Point }) {
     const runtime = getRuntime()
-    if (!runtime.dragInteractionSource) return false
+    if (!runtime.dragInteractionSource || !runtime.cropSize) return false
     const distance = getDistanceBetweenPoints(pointA, pointB)
-    let changed = setNewZoom(zoom * (distance / runtime.lastPinchDistance), center, false)
+    const nextZoom = onZoomChange
+      ? clamp(zoom * (distance / runtime.lastPinchDistance), minZoom, maxZoom)
+      : zoom
     runtime.lastPinchDistance = distance
-
     const pinchRotation = getRotationBetweenPoints(pointA, pointB)
-    const nextRotation = rotation + pinchRotation - runtime.lastPinchRotation
+    const nextRotation = onRotationChange
+      ? rotation + pinchRotation - runtime.lastPinchRotation
+      : rotation
+    const requestedPosition = {
+      x: runtime.dragStartCrop.x + center.x - runtime.dragStartPosition.x,
+      y: runtime.dragStartCrop.y + center.y - runtime.dragStartPosition.y,
+    }
+    const nextPosition = shouldRestrictPosition
+      ? restrictPosition(
+          requestedPosition,
+          runtime.mediaSize,
+          runtime.cropSize,
+          nextZoom,
+          nextRotation
+        )
+      : requestedPosition
+    const changed =
+      !pointsEqual(nextPosition, crop) || nextZoom !== zoom || nextRotation !== rotation
+    if (!pointsEqual(nextPosition, crop)) {
+      if (runtime.releaseRequests) {
+        runtime.releaseRequests.crop = { requested: nextPosition, previous: crop }
+      }
+      onCropChange(nextPosition)
+    }
+    if (nextZoom !== zoom) {
+      if (runtime.releaseRequests) {
+        runtime.releaseRequests.zoom = { requested: nextZoom, previous: zoom }
+      }
+      onZoomChange?.(nextZoom)
+    }
     if (onRotationChange) {
       if (nextRotation !== rotation) {
-        changed = true
         if (runtime.releaseRequests) {
           runtime.releaseRequests.rotation = { requested: nextRotation, previous: rotation }
         }
@@ -696,7 +764,6 @@ export function useCropper(props: CropperProps) {
     const pointB = getTouchPoint(event.touches[1])
     const center = getCenter(pointA, pointB)
     runtime.pendingPinch = { pointA, pointB, center }
-    scheduleDrag(center)
     if (runtime.rafPinch !== null) runtime.window.cancelAnimationFrame(runtime.rafPinch)
     const frame = runtime.window.requestAnimationFrame(onPinchAnimationFrame)
     runtime.rafPinch = runtime.pendingPinch ? frame : null
@@ -713,8 +780,8 @@ export function useCropper(props: CropperProps) {
     runtime.pendingDragPoint = null
     runtime.pendingPinch = null
     runtime.releaseRequests = {}
-    if (point) applyDrag(point)
     if (pinch) applyPinch(pinch)
+    else if (point) applyDrag(point)
     const completion = runtime.releaseRequests || {}
     runtime.releaseRequests = null
     return completion
@@ -858,8 +925,15 @@ export function useCropper(props: CropperProps) {
     const runtime = getRuntime()
     if (!runtime.gestureActive || runtime.touching || runtime.suppressNativeGesture) return
     const point = getMousePoint(event)
+    runtime.releaseRequests = runtime.gestureRequests || {}
     setNewZoom(runtime.gestureZoomStart - 1 + event.scale, point, true)
-    onRotationChange?.(runtime.gestureRotationStart + event.rotation)
+    const nextRotation = runtime.gestureRotationStart + event.rotation
+    if (onRotationChange && nextRotation !== rotation) {
+      runtime.releaseRequests.rotation = { requested: nextRotation, previous: rotation }
+      onRotationChange(nextRotation)
+    }
+    runtime.gestureRequests = runtime.releaseRequests
+    runtime.releaseRequests = null
   }
 
   function onNativeGestureChange(event: GestureEvent) {
@@ -869,9 +943,19 @@ export function useCropper(props: CropperProps) {
   function handleNativeGestureEnd(event: GestureEvent) {
     event.preventDefault()
     const runtime = getRuntime()
+    const wasActive = runtime.gestureActive
     runtime.gestureActive = false
     runtime.gestureCleanup?.()
     runtime.gestureCleanup = null
+    if (wasActive) {
+      const completion = runtime.gestureRequests
+      if (completion && !interactionCompletionCommitted(completion)) {
+        runtime.pendingInteractionCompletion = completion
+      } else {
+        emitCropComplete()
+      }
+    }
+    runtime.gestureRequests = null
   }
 
   function onNativeGestureEnd(event: GestureEvent) {
@@ -902,6 +986,7 @@ export function useCropper(props: CropperProps) {
     }
     saveContainerBounds()
     runtime.gestureActive = true
+    runtime.gestureRequests = null
     runtime.gestureZoomStart = zoom
     runtime.gestureRotationStart = rotation
   })
@@ -946,7 +1031,12 @@ export function useCropper(props: CropperProps) {
   function handleResizeSettled() {
     const runtime = getRuntime()
     runtime.resizeTimer = null
-    if (runtime.pendingCrop || runtime.pendingInteractionCompletion) {
+    if (
+      runtime.pendingCrop ||
+      runtime.pendingInteractionCompletion ||
+      runtime.pendingInitialCompletion ||
+      runtime.pendingLayout
+    ) {
       runtime.resizeCompletionDue = true
       return
     }
@@ -967,9 +1057,12 @@ export function useCropper(props: CropperProps) {
   function recomputeLayout(isResize: boolean) {
     const runtime = getRuntime()
     if (!runtime.initialized) return
+    runtime.pendingLayout = isResize || runtime.pendingLayout === 'resize' ? 'resize' : 'props'
     const previousCropSize = runtime.previousCropSize
     const measurement = measure()
     if (!measurement) return
+    const resize = runtime.pendingLayout === 'resize'
+    runtime.pendingLayout = null
     const nextCropSize = measurement.cropSize
     let adjustedCrop = crop
 
@@ -983,7 +1076,7 @@ export function useCropper(props: CropperProps) {
 
     const requestedCorrection = requestRestrictedCrop(adjustedCrop)
     if (!requestedCorrection) emitCropAreaChange()
-    if (isResize) scheduleResizeCompletion()
+    if (resize) scheduleResizeCompletion()
   }
 
   const onExternalResize = useEffectEvent(() => {
@@ -992,15 +1085,17 @@ export function useCropper(props: CropperProps) {
 
   function initializeMedia() {
     const runtime = getRuntime()
+    runtime.pendingLayout = 'initial'
     const measurement = measure()
     if (!measurement) return
+    runtime.pendingLayout = null
 
     runtime.loadedMediaSignature = mediaSignature
     runtime.initialized = true
     runtime.previousCropSize = measurement.cropSize
     runtime.lastAreaKey = null
     runtime.pendingCrop = null
-    runtime.pendingInitialCompletion = false
+    runtime.pendingInitialCompletion = null
     onMediaLoaded?.(runtime.mediaSize)
 
     const restored = initialCroppedAreaPercentages
@@ -1024,18 +1119,24 @@ export function useCropper(props: CropperProps) {
       : null
 
     if (restored) {
-      runtime.pendingInitialCompletion =
-        !pointsEqual(crop, restored.crop) || (Boolean(onZoomChange) && zoom !== restored.zoom)
+      const completion: PendingInteractionCompletion = {
+        crop: { requested: restored.crop, previous: crop },
+        zoom: { requested: onZoomChange ? restored.zoom : zoom, previous: zoom },
+      }
+      runtime.pendingInitialCompletion = interactionCompletionCommitted(completion)
+        ? null
+        : completion
       onCropChange(restored.crop)
       onZoomChange?.(restored.zoom)
       if (runtime.pendingInitialCompletion) return
     } else if (requestRestrictedCrop(crop)) {
-      runtime.pendingInitialCompletion = true
+      runtime.pendingInitialCompletion = { crop: runtime.pendingCrop || undefined }
       return
     }
 
-    emitCropAreaChange()
-    emitCropComplete()
+    // Let onMediaLoaded's controlled updates commit before publishing the initial crop.
+    runtime.pendingInitialCompletion = {}
+    setUi((current) => ({ ...current }))
   }
 
   const onMountedImageReady = useEffectEvent(() => {
@@ -1049,13 +1150,6 @@ export function useCropper(props: CropperProps) {
       initializeMedia()
     }
   })
-
-  function interactionCompletionCommitted(completion: PendingInteractionCompletion) {
-    const cropCommitted = !completion.crop || pointsEqual(crop, completion.crop.requested)
-    const zoomCommitted = !completion.zoom || zoom === completion.zoom.requested
-    const rotationCommitted = !completion.rotation || rotation === completion.rotation.requested
-    return cropCommitted && zoomCommitted && rotationCommitted
-  }
 
   function synchronizeInputs(signature: string) {
     const runtime = getRuntime()
@@ -1086,24 +1180,9 @@ export function useCropper(props: CropperProps) {
       }
       return
     }
-    if (!runtime.initialized) return
-
-    const pendingCrop = runtime.pendingCrop
-    if (pendingCrop) {
-      if (pointsEqual(crop, pendingCrop.requested) || !pointsEqual(crop, pendingCrop.previous)) {
-        runtime.pendingCrop = null
-      } else {
-        return
-      }
-    }
-
-    const zoomBoundsChanged = previous.minZoom !== minZoom || previous.maxZoom !== maxZoom
-    if (zoomBoundsChanged && onZoomChange) {
-      const restrictedZoom = clamp(zoom, minZoom, maxZoom)
-      if (restrictedZoom !== zoom) {
-        onZoomChange(restrictedZoom)
-        return
-      }
+    if (!runtime.initialized) {
+      if (runtime.pendingLayout === 'initial') initializeMedia()
+      return
     }
 
     const measurementInputsChanged =
@@ -1114,15 +1193,63 @@ export function useCropper(props: CropperProps) {
     const cropInputsChanged =
       !pointsEqual(previous.crop, crop) ||
       previous.zoom !== zoom ||
-      previous.rotation !== rotation ||
-      previous.aspect !== aspect ||
-      previous.restrictPosition !== shouldRestrictPosition ||
-      !sizesEqual(previous.cropSize, requestedCropSize) ||
-      previous.objectFit !== objectFit
+      measurementInputsChanged ||
+      previous.restrictPosition !== shouldRestrictPosition
 
-    if (measurementInputsChanged) {
-      recomputeLayout(false)
-    } else if (cropInputsChanged) {
+    // Record work before any controlled correction can defer this commit.
+    if (measurementInputsChanged && !runtime.pendingLayout) runtime.pendingLayout = 'props'
+    runtime.cropSyncDue = runtime.cropSyncDue || cropInputsChanged
+    runtime.zoomBoundsCheckDue =
+      runtime.zoomBoundsCheckDue || previous.minZoom !== minZoom || previous.maxZoom !== maxZoom
+    if (
+      (measurementInputsChanged || previous.zoom !== zoom) &&
+      !runtime.dragInteractionSource &&
+      !runtime.wheelActive &&
+      !runtime.gestureActive &&
+      runtime.keyboardKeys.size === 0 &&
+      !runtime.pendingInteractionCompletion &&
+      !runtime.pendingInitialCompletion &&
+      runtime.resizeTimer === null &&
+      !runtime.resizeCompletionDue
+    ) {
+      runtime.externalCompletionDue = true
+    }
+    if (
+      runtime.pendingInitialCompletion &&
+      !interactionCompletionCommitted(runtime.pendingInitialCompletion)
+    )
+      return
+
+    const pendingCrop = runtime.pendingCrop
+    if (pendingCrop) {
+      if (pointsEqual(crop, pendingCrop.requested) || !pointsEqual(crop, pendingCrop.previous)) {
+        runtime.pendingCrop = null
+      } else {
+        return
+      }
+    }
+
+    if (runtime.zoomBoundsCheckDue && onZoomChange) {
+      runtime.zoomBoundsCheckDue = false
+      const restrictedZoom = clamp(zoom, minZoom, maxZoom)
+      if (restrictedZoom !== zoom) {
+        runtime.pendingZoom = { requested: restrictedZoom, previous: zoom }
+        onZoomChange(restrictedZoom)
+        return
+      }
+      runtime.pendingZoom = null
+    }
+    if (runtime.pendingZoom) {
+      if (zoom === runtime.pendingZoom.previous) return
+      runtime.pendingZoom = null
+    }
+
+    if (runtime.pendingLayout) {
+      recomputeLayout(runtime.pendingLayout === 'resize')
+      if (runtime.pendingLayout) return
+      runtime.cropSyncDue = false
+    } else if (runtime.cropSyncDue) {
+      runtime.cropSyncDue = false
       if (requestRestrictedCrop(crop)) return
       emitCropAreaChange()
     }
@@ -1130,7 +1257,7 @@ export function useCropper(props: CropperProps) {
 
     let completionDue = false
     if (runtime.pendingInitialCompletion) {
-      runtime.pendingInitialCompletion = false
+      runtime.pendingInitialCompletion = null
       emitCropAreaChange()
       completionDue = true
     }
@@ -1141,6 +1268,10 @@ export function useCropper(props: CropperProps) {
     const interactionCompletion = runtime.pendingInteractionCompletion
     if (interactionCompletion && interactionCompletionCommitted(interactionCompletion)) {
       runtime.pendingInteractionCompletion = null
+      completionDue = true
+    }
+    if (runtime.externalCompletionDue && !runtime.pendingInteractionCompletion) {
+      runtime.externalCompletionDue = false
       completionDue = true
     }
     if (completionDue) emitCropComplete()
