@@ -394,7 +394,7 @@ class Cropper extends React.Component<CropperProps, State> {
       let renderedMediaSize: Size
 
       if (isMediaScaledDown) {
-        switch (this.state.mediaObjectFit) {
+        switch (this.state.mediaObjectFit ?? this.getObjectFit()) {
           default:
           case 'contain':
             renderedMediaSize =
