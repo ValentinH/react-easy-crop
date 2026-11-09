@@ -46,8 +46,14 @@
     "format": "prettier --write src/**/*.ts* docs/src/**/*.{js,css}"
   },
   "peerDependencies": {
+    "@types/react": "*",
     "react": ">=16.4.0",
     "react-dom": ">=16.4.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   },
   "dependencies": {
     "normalize-wheel": "^1.0.1"
